@@ -357,12 +357,12 @@ module Tr8n::HelperMethods
         when 0
           tr("None found", "Paginator no entries message", {}, options)
         when 1
-          tr("Displaying [strong: 1] #{entry_name}", "Paginator one page message", {}, options)
+          tr("Displaying [strong: 1] #{entry_name}", "Paginator one entry message", {}, options)
         else
-          tr("Displaying [strong: all {count}] #{entry_name.pluralize}", "Paginator all entries message", {:count => collection.size}, options)
+          tr("Displaying [strong: all {count}] {count|#{entry_name}}", "Paginator all entries message", {:count => collection.size}, options)
       end
     else
-      tr("Displaying #{entry_name.pluralize} [strong: {start_num} - {end_num}] of [strong: {total_count}] in total", 
+      tr("Displaying {total_count|#{entry_name}} [strong: {start_num} - {end_num}] of [strong: {total_count}] in total",
          "Paginator custom message", {
             :start_num    => collection.offset + 1,
             :end_num      => collection.offset + collection.length,
