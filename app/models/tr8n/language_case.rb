@@ -130,6 +130,7 @@ class Tr8n::LanguageCase < ActiveRecord::Base
   end
 
   def decorate_language_case(case_map_key, case_value, case_rule, options = {})
+    return case_value if Tr8n::Config.block_options[:skip_decorations]
     return case_value if options[:skip_decorations]
     return case_value if language.default?
     return case_value if Tr8n::Config.current_user_is_guest?

@@ -325,7 +325,7 @@ class Tr8n::Token
     # if there is only one element in the array, use it and get out
     return objects.first if objects.size == 1
  
-    list_options[:expandable] = false if options[:skip_decorations]
+    list_options[:expandable] = false if options[:skip_decorations] or Tr8n::Config.block_options[:skip_decorations]
     
     return objects.join(list_options[:separator]) unless list_options[:to_sentence]
 

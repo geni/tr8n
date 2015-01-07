@@ -505,6 +505,7 @@ class Tr8n::TranslationKey < ActiveRecord::Base
   end
   
   def decorate_translation(language, translated_label, translated = true, options = {})
+    return translated_label if Tr8n::Config.block_options[:skip_decorations]
     return translated_label if options[:skip_decorations]
     return translated_label if Tr8n::Config.current_user_is_guest?
     return translated_label unless Tr8n::Config.current_user_is_translator?
