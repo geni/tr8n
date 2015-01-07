@@ -909,6 +909,12 @@ class Tr8n::Config
     end
 
     Thread.current[:tr8n_block_options] ||= []   
+
+    # handle nesting - need to carry over previous block options
+    if prev_opts = Thread.current[:tr8n_block_options].last
+      opts = prev_opts.merge(opts)
+    end
+
     Thread.current[:tr8n_block_options].push(opts)
 
     component = Tr8n::Config.current_component_from_block_options
