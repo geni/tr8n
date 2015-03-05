@@ -283,7 +283,8 @@ class Tr8n::Translation < ActiveRecord::Base
      ["rejected translations", "rejected"]].collect{|option| [option.first.trl("Translation filter status option"), option.last]}    
   end
   
-  def self.filter_submitter_options(translators = [])
+  def self.filter_submitter_options(translators=nil)
+    translators ||= []
     values = [["anyone", "anyone"], ["me", "me"]].collect{|option| [option.first.trl("Translation filter submitter option"), option.last]}
     translators.each do |t|
       values << [t.name, t.id.to_s]
