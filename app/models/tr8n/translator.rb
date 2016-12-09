@@ -101,7 +101,7 @@ class Tr8n::Translator < ActiveRecord::Base
   end
 
   def rank
-    total_metric.rank
+    total_metric.rank if total_metric
   end
 
   def generate_access_key!(actor = self.user, reason = "No reason given")
