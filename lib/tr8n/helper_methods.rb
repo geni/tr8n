@@ -169,10 +169,16 @@ module Tr8n::HelperMethods
     end
     
     if linked
-      html << link_to(name, :controller => "/tr8n/language", 
-              :action => :switch, :language_action => :switch_language, 
-              :locale => lang.locale,
-              :source_url => opts[:source_url])
+      html << link_to(name,
+                      { :controller => "/tr8n/language",
+                        :action => :switch,
+                        :language_action => :switch_language,
+                        :locale => lang.locale,
+                        :source_url => opts[:source_url]
+                      }, {
+                        :method => :post
+                      }
+                     )
     else    
       html << name
     end

@@ -230,6 +230,7 @@ class Tr8n::LanguageController < Tr8n::BaseController
     language_action = params[:language_action]
     
     return redirect_to_source if tr8n_current_user_is_guest?
+    return redirect_to_source unless request.post?
     
     if tr8n_current_user_is_translator? # translator mode
       if language_action == "toggle_inline_mode"
