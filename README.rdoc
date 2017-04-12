@@ -37,6 +37,13 @@ Tr8n Supported Languages
 
 http://wiki.tr8n.org/index.php?title=Tr8n_Languages
 
+= Development Instructions
+
+If you are making changes to the javascript files,
+you need to cd into app/javascripts and run bin/compile
+This will auto-compile the javascript chagnes you make
+into public/javascripts/tr8n.js and public/javascripts/tr8n-compiled.js.
+
 = Installation Instructions
 
 Tr8n is mostly self-contained. The only two plugins it depends on are will_paginate created by Mislav Marohnić for results pagination 

@@ -2863,11 +2863,15 @@ Tr8n.LanguageSelector.prototype = {
   },
 
   enableInlineTranslations: function() {
-    window.location = "/tr8n/language/switch?language_action=enable_inline_mode&source_url=" + location;
+    Tr8n.element('source_url').value = location;
+    Tr8n.element('language_selector_action').value = 'enable_inline_mode';
+    Tr8n.element('language_selector_form').submit();
   },
 
   disableInlineTranslations: function() {
-    window.location = "/tr8n/language/switch?language_action=disable_inline_mode&source_url=" + location;
+    Tr8n.element('source_url').value = location;
+    Tr8n.element('language_selector_action').value = 'disable_inline_mode';
+    Tr8n.element('language_selector_form').submit();
   },
 
   showDashboard: function() {
@@ -2879,9 +2883,12 @@ Tr8n.LanguageSelector.prototype = {
   },
 
   toggleInlineTranslations: function() {
-    window.location = "/tr8n/language/switch?language_action=toggle_inline_mode&source_url=" + location;
+    Tr8n.element('source_url').value = location;
+    Tr8n.element('language_selector_action').value = 'toggle_inline_mode';
+    Tr8n.element('language_selector_form').submit();
   }
 }
+
 
 Tr8n.Lightbox = function() {
   this.container                = document.createElement('div');
