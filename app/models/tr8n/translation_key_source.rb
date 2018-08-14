@@ -41,25 +41,28 @@ class Tr8n::TranslationKeySource < ActiveRecord::Base
   end
 
   def self.find_or_create(translation_key, translation_source)
-    Tr8n::Cache.fetch(cache_key(translation_key.id, translation_source.id)) do 
+    raise ArgumentError.new("translation_key cannot be nil")    if translation_key.nil?
+    raise ArgumentError.new("translation_source cannot be nil") if translation_source.nil?
+
+    Tr8n::Cache.fetch(cache_key(translation_key.id, translation_source.id)) do
       tks = find(:first, :conditions => ["translation_key_id = ? and translation_source_id = ?", translation_key.id, translation_source.id])
       tks ||= begin
         translation_source.touch
         create(:translation_key => translation_key, :translation_source => translation_source)
       end
-    end  
+    end
   end
 
   def after_destroy
     Tr8n::Cache.delete(cache_key)
   end
-  
+
   def update_details!(options)
     return unless options[:caller_key]
-    
+
     self.details ||= {}
     return if details[options[:caller_key]]
-    
+
     details[options[:caller_key]] = options[:caller]
     save
   end
