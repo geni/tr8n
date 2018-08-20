@@ -53,7 +53,7 @@ class Tr8n::TranslationSource < ActiveRecord::Base
     source = Tr8n::Cache.fetch(cache_key(source)) do
       model = first(:conditions => ["source = ?", source]) || create(:source => source)
       model.update_attributes(
-        :key_count => Tr8n::TranslationKeySource.count(:id, :conditions => ["translation_source_id = ?", source.id])
+        :key_count => Tr8n::TranslationKeySource.count(:id, :conditions => ["translation_source_id = ?", model.id])
       )
       model
     end
