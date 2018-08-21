@@ -50,7 +50,7 @@ class Tr8n::TranslationSource < ActiveRecord::Base
     return source if source.is_a?(Tr8n::TranslationSource)
     source = source.to_s
 
-    source = Tr8n::Cache.fetch(cache_key(source)) do
+    result = Tr8n::Cache.fetch(cache_key(source)) do
       model = first(:conditions => ["source = ?", source]) || create(:source => source)
       model.update_attributes(
         :key_count => Tr8n::TranslationKeySource.count(:id, :conditions => ["translation_source_id = ?", model.id])
@@ -58,9 +58,9 @@ class Tr8n::TranslationSource < ActiveRecord::Base
       model
     end
 
-    raise ArgumentError.new("Failed to find or create source for: #{source}") if source.nil?
+    raise ArgumentError.new("Failed to find or create source for: #{source}") if result.nil?
 
-    return source
+    return result
   end
 
   def update_metrics!(language = Tr8n::Config.current_language)
