@@ -176,6 +176,7 @@ module Tr8n::HelperMethods
                         :locale => lang.locale,
                         :source_url => opts[:source_url]
                       }, {
+                        :confirm => trl('Are you sure you want to change your language to {name}', nil, :name => name),
                         :method => :post
                       }
                      )
