@@ -23,21 +23,21 @@
 
 class Tr8n::TranslationSource < ActiveRecord::Base
   set_table_name :tr8n_translation_sources
-  
+
   belongs_to  :translation_domain,            :class_name => "Tr8n::TranslationDomain"
-  
+
   has_many    :translation_key_sources,       :class_name => "Tr8n::TranslationKeySource",      :dependent => :destroy
   has_many    :translation_keys,              :class_name => "Tr8n::TranslationKey",            :through => :translation_key_sources
   has_many    :translation_source_languages,  :class_name => "Tr8n::TranslationSourceLanguage", :dependent => :destroy
   has_many    :translation_source_metrics,    :class_name => 'Tr8n::TranslationSourceMetric',   :dependent => :destroy
   has_many    :component_sources,             :class_name => "Tr8n::ComponentSource",           :dependent => :destroy
   has_many    :components,                    :class_name => "Tr8n::Component",                 :through => :component_sources
-  
+
   alias :domain   :translation_domain
   alias :sources  :translation_key_sources
   alias :keys     :translation_keys
   alias :metrics  :translation_source_metrics
-  
+
   def self.cache_key(source)
     "translation_source_#{source.to_s}"
   end
@@ -49,13 +49,12 @@ class Tr8n::TranslationSource < ActiveRecord::Base
   def self.find_or_create(source, url = nil)
     return source if source.is_a?(Tr8n::TranslationSource)
     source = source.to_s
+    result = fetch_source(source)
 
-    result = Tr8n::Cache.fetch(cache_key(source)) do
-      model = first(:conditions => ["source = ?", source]) || create(:source => source)
-      model.update_attributes(
-        :key_count => Tr8n::TranslationKeySource.count(:id, :conditions => ["translation_source_id = ?", model.id])
-      )
-      model
+    # cache broken - force re-fetch
+    if result.nil?
+      Tr8n::Cache.delete(cache_key(source))
+      result = fetch_source(source)
     end
 
     raise ArgumentError.new("Failed to find or create source for: #{source}") if result.nil?
@@ -63,17 +62,27 @@ class Tr8n::TranslationSource < ActiveRecord::Base
     return result
   end
 
+  def self.fetch_source(source)
+    Tr8n::Cache.fetch(cache_key(source)) do
+      model = first(:conditions => ["source = ?", source]) || create(:source => source)
+      model.update_attributes(
+        :key_count => Tr8n::TranslationKeySource.count(:id, :conditions => ["translation_source_id = ?", model.id])
+      )
+      model
+    end
+  end
+
   def update_metrics!(language = Tr8n::Config.current_language)
     metric = total_metric(language)
     Tr8n::OfflineTask.schedule(metric.class.name, :update_metrics_offline, {
-                               :translation_source_metric_id => metric.id, 
+                               :translation_source_metric_id => metric.id,
     })
   end
 
   def after_destroy
     Tr8n::Cache.delete(cache_key)
   end
-  
+
   def after_save
     Tr8n::Cache.delete(cache_key)
   end
