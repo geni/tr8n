@@ -105,6 +105,8 @@ class Tr8n::TranslationKey < ActiveRecord::Base
   # creates associations between the translation keys and sources
   # used for the site map and javascript support
   def self.track_source(translation_key, options = {})
+    return unless Tr8n::Config.enable_key_source_tracking?
+
     # we always track the source if the translator enabled inline translations or the request comes from the api
     # translation_mode = (Tr8n::Config.current_user_is_translator? and Tr8n::Config.current_translator.enable_inline_translations?)
     # return unless translation_mode or options[:api] != :translate
