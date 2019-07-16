@@ -39,13 +39,20 @@ class Tr8n::Translator < ActiveRecord::Base
   has_many  :languages,                     :class_name => "Tr8n::Language",                  :through => :language_users
 
   belongs_to :fallback_language,            :class_name => 'Tr8n::Language',                  :foreign_key => :fallback_language_id
-    
+
+  after_update  :invalidate_cache
+  after_destroy :invalidate_cache
+
   def self.cache_key(user_id)
     "translator_u#{user_id}"
   end
 
   def cache_key
     self.class.cache_key(user_id)
+  end
+
+  def invalidate_cache
+    Tr8n::Cache.delete(cache_key)
   end
 
   def self.for(user)
