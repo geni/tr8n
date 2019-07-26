@@ -303,9 +303,9 @@ module Tr8n::HelperMethods
     return "Deleted Translator" unless translator
     
     if options[:linked]
-      link_to(translator.name, translator.link)
+      link_to(h(translator.name), translator.link)
     else
-      translator.name
+      h(translator.name)
     end
   end
 
@@ -329,9 +329,9 @@ module Tr8n::HelperMethods
     return "Deleted Translator" unless translator
     
     if options[:linked]
-      link_to(translator.name, translator.url)
+      link_to(h(translator.name), translator.url)
     else
-      translator.name
+      h(translator.name)
     end
   end
 

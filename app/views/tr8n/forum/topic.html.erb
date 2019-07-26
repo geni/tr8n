@@ -17,7 +17,7 @@
 				<% else %>
 	        <%=link_to(tra("General Forum"), :action => :index)%>
 				<% end %>	 
-				 &raquo; <%=link_to(@topic.topic, :topic_id => @topic.id)%>
+				 &raquo; <%=link_to(h(@topic.topic), :topic_id => @topic.id)%>
 	    </div>
 			
 	    <div style="color:grey;font-size:12px;font-style:italic;padding-top:3px;padding-bottom:3px;">
