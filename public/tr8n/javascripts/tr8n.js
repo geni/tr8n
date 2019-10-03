@@ -3395,7 +3395,7 @@ Tr8n.Proxy.prototype = {
       }
     }); 
   },
-  
+
   updateMissingTranslationKeys: function(translations) {
     this.missing_translations_locked = true;
     this.log("Received " + translations.length + " registered phrases...");
@@ -3405,14 +3405,17 @@ Tr8n.Proxy.prototype = {
        this.log("Registering new key " + translation_key_data.key);
        this.translations[translation_key_data.key] = translation_key_data;
        var missing_key_data = this.missing_translation_keys[translation_key_data.key];
-       var tr8nElement = Tr8n.element(translation_key_data.key);
-      
-       if (tr8nElement && missing_key_data.translation_key) {
-         tr8nElement.setAttribute('translation_key_id', translation_key_data['id']);
-         tr8nElement.innerHTML = missing_key_data.translation_key.translate(this.language, missing_key_data.token_values);
+
+       if (missing_key_data && missing_key_data.translation_key) {
+         var tr8nElement = Tr8n.element(translation_key_data.key);
+
+         if (tr8nElement) {
+           tr8nElement.setAttribute('translation_key_id', translation_key_data['id']);
+           tr8nElement.innerHTML = missing_key_data.translation_key.translate(this.language, missing_key_data.token_values);
+         }
+
+         delete this.missing_translation_keys[missing_key_data.translation_key.key];
        }
-       
-       delete this.missing_translation_keys[missing_key_data.translation_key.key];
     }
     this.missing_translations_locked = false;
   },  
