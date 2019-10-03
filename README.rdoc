@@ -41,7 +41,7 @@ http://wiki.tr8n.org/index.php?title=Tr8n_Languages
 
 If you are making changes to the javascript files,
 you need to cd into app/javascripts and run bin/compile
-This will auto-compile the javascript chagnes you make
+This will auto-compile the javascript changes you make
 into public/javascripts/tr8n.js and public/javascripts/tr8n-compiled.js.
 
 = Installation Instructions

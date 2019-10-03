@@ -2430,8 +2430,14 @@ Tr8n.Utils = {
 
   ajax: function(url, options) {
     options = options || {};
-    options.parameters = Tr8n.Utils.toQueryParams(options.parameters);
     options.method = options.method || 'get';
+
+    if (options.method != 'get' && Tr8n.csrfParam) {
+      options.parameters = options.parameters || {};
+      options.parameters[Tr8n.csrfParam] = Tr8n.csrfToken;
+
+    }
+    options.parameters = Tr8n.Utils.toQueryParams(options.parameters);
 
     var self=this;
     if (options.method == 'get' && options.parameters != '') {
