@@ -61,7 +61,7 @@ class Tr8n::TranslationsController < Tr8n::BaseController
       @translation = Tr8n::Translation.find(params[:translation_id])
     end
     
-    @translation.label = sanitize_label(params[:translation][:label])
+    @translation.label = params[:translation][:label]
     @translation.rules = parse_rules
 
     unless @translation.can_be_edited_by?(tr8n_current_translator)
@@ -168,7 +168,7 @@ class Tr8n::TranslationsController < Tr8n::BaseController
     if request.post?
       mode = :view
       unless params[:label].strip.blank?
-        @translation.label = sanitize_label(params[:label])
+        @translation.label = params[:label]
         
         unless @translation.can_be_edited_by?(tr8n_current_translator)
           tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to update translation that is not his")
