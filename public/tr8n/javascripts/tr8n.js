@@ -624,7 +624,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   this.VKI_size = 2;  // Default keyboard size (1-5)
   this.VKI_sizeAdj = true;  // Allow user to adjust keyboard size
   this.VKI_clearPasswords = false;  // Clear password fields on focus
-  this.VKI_imageURI = "/tr8n/images/keyboard.png";  // If empty string, use imageless mode
+  this.VKI_imageURI = "/tr8n/images/keyboard.png?" + Tr8n.url_cache_version;  // If empty string, use imageless mode
   this.VKI_clickless = 0;  // 0 = disabled, > 0 = delay in ms
   this.VKI_activeTab = 0;  // Tab moves to next: 1 = element, 2 = keyboard enabled element
   this.VKI_enterSubmit = true;  // Submit forms when Enter is pressed
@@ -1493,7 +1493,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
       [[" ", " "], ["Alt", "Alt"]]
     ], 'lang': ["yi"] };
 
-  this.VKI_layout['\u05d9\u05d9\u05b4\u05d3\u05d9\u05e9 \u05dc\u05e2\u05d1\u05d8'] = { // from http://jidysz.net/ 
+  this.VKI_layout['\u05d9\u05d9\u05b4\u05d3\u05d9\u05e9 \u05dc\u05e2\u05d1\u05d8'] = { // from http://jidysz.net/
     'name': "Yiddish (Yidish Lebt)", 'keys': [
       [[";", "~"], ["1", "!", "\u05B2", "\u05B2"], ["2", "@", "\u05B3", "\u05B3"], ["3", "#", "\u05B1", "\u05B1"], ["4", "$", "\u05B4", "\u05B4"], ["5", "%", "\u05B5", "\u05B5"], ["6", "^", "\u05B7", "\u05B7"], ["7", "&", "\u05B8", "\u05B8"], ["8", "*", "\u05BB", "\u05BB"], ["9", ")", "\u05B6", "\u05B6"], ["0", "(", "\u05B0", "\u05B0"], ["-", "_", "\u05BF", "\u05BF"], ["=", "+", "\u05B9", "\u05B9"], ["Bksp", "Bksp"]],
       [["Tab", "Tab"], ["/", "", "\u05F4", "\u05F4"], ["'", "", "\u05F3", "\u05F3"], ["\u05E7", "", "\u20AC"], ["\u05E8"], ["\u05D0", "", "\u05D0\u05B7", "\uFB2E"], ["\u05D8", "", "\u05D0\u05B8", "\uFB2F"], ["\u05D5", "\u05D5\u05B9", "\u05D5\u05BC", "\uFB35"], ["\u05DF", "", "\u05D5\u05D5", "\u05F0"], ["\u05DD", "", "\u05BC"], ["\u05E4", "", "\u05E4\u05BC", "\uFB44"], ["]", "}", "\u201E", "\u201D"], ["[", "{", "\u201A", "\u2019"], ["\\", "|", "\u05BE", "\u05BE"]],
@@ -2317,6 +2317,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   // }, false);
 })();
 
+
 document.createElement('tr8n');
 document.createElement('tml');
 
@@ -2708,8 +2709,8 @@ Tr8n.LanguageCaseManager.prototype = {
       html += splash_screen.innerHTML;
     } else {
       html += "<div style='font-size:18px;text-align:center; margin:5px; padding:10px; background-color:black;'>";
-      html += "  <img src='/tr8n/images/tr8n_logo.jpg' style='width:280px; vertical-align:middle;'>";
-      html += "  <img src='/tr8n/images/loading3.gif' style='width:200px; height:20px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + Tr8n.url_cache_version + "' style='width:280px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/loading3.gif?" + Tr8n.url_cache_version + "' style='width:200px; height:20px; vertical-align:middle;'>";
       html += "</div>"
     }
     this.container.innerHTML = html;
@@ -2785,6 +2786,7 @@ Tr8n.LanguageCaseManager.prototype = {
   }
 }
 
+
 Tr8n.LanguageSelector = function(options) {
   this.options = options || {};
   this.keyboardMode = false;
@@ -2828,8 +2830,8 @@ Tr8n.LanguageSelector.prototype = {
         html += splash_screen.innerHTML;
       } else {
         html += "<div style='font-size:18px;text-align:center; margin:5px; padding:10px; background-color:black;'>";
-        html += "  <img src='/tr8n/images/tr8n_logo.jpg' style='width:280px; vertical-align:middle;'>";
-        html += "  <img src='/tr8n/images/loading3.gif' style='width:200px; height:20px; vertical-align:middle;'>";
+        html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + Tr8n.url_cache_version + "' style='width:280px; vertical-align:middle;'>";
+        html += "  <img src='/tr8n/images/loading3.gif?" + Tr8n.url_cache_version + "' style='width:200px; height:20px; vertical-align:middle;'>";
         html += "</div>";
       }
       this.container.innerHTML = html;
@@ -2927,8 +2929,8 @@ Tr8n.Lightbox.prototype = {
     if(tr8nLanguageCaseManager) tr8nLanguageCaseManager.hide();
     Tr8n.Utils.hideFlash();
 
-    this.container.innerHTML = "<div class='inner'><div class='bd' style='text-align:center;padding-top:50px;'><img src='/tr8n/images/loading_large.gif' style='vertical-align:middle'></div></div>";
-    
+    this.container.innerHTML = "<div class='inner'><div class='bd' style='text-align:center;padding-top:50px;'><img src='/tr8n/images/loading_large.gif?" + Tr8n.url_cache_version + "' style='vertical-align:middle'></div></div>";
+
     this.overlay.style.display  = "block";
 
     opts["width"] = opts["width"] || 700;
@@ -2986,7 +2988,7 @@ Tr8n.Translator = function(options) {
       if (key_id) {
         var url = "/tr8n/admin/translation_key/view?key_id=" + key_id;
         var win=window.open(url, '_blank');
-        win.focus();        
+        win.focus();
       }
       return false;
     }
@@ -3016,8 +3018,8 @@ Tr8n.Translator.prototype = {
       html += splash_screen.innerHTML;
     } else {
       html += "<div style='font-size:18px;text-align:center; margin:5px; padding:10px; background-color:black;'>";
-      html += "  <img src='/tr8n/images/tr8n_logo.jpg' style='width:280px; vertical-align:middle;'>";
-      html += "  <img src='/tr8n/images/loading3.gif' style='width:200px; height:20px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + Tr8n.url_cache_version + "' style='width:280px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/loading3.gif?" + Tr8n.url_cache_version + "' style='width:200px; height:20px; vertical-align:middle;'>";
       html += "</div>"
     }
     this.container.innerHTML = html;
@@ -3167,7 +3169,7 @@ Tr8n.Translator.prototype = {
   },
 
   processSuggestedTranslation: function(response) {
-    if (response == null ||response.data == null || response.data.translations==null || response.data.translations.length == 0) 
+    if (response == null ||response.data == null || response.data.translations==null || response.data.translations.length == 0)
       return;
     var suggestion = response.data.translations[0].translatedText;
     if (this.suggestion_tokens) {
@@ -3176,7 +3178,7 @@ Tr8n.Translator.prototype = {
       for (var i=0; i<tokens.length; i++) {
         suggestion = Tr8n.Utils.replaceAll(suggestion, "(" + i + ")", tokens[i]);
       }
-    }  
+    }
 
     if (Tr8n.element("tr8n_translator_translation_label")) {
       Tr8n.element("tr8n_translator_translation_label").value = suggestion;
@@ -3191,10 +3193,10 @@ Tr8n.Translator.prototype = {
     var suggestion_section = Tr8n.element('tr8n_google_suggestion_section');
     if (suggestion_section) suggestion_section.style.display = "block";
   },
-  
+
   suggestTranslation: function(translation_key_id, original, tokens, from_lang, to_lang) {
     if (Tr8n.google_api_key == null) return;
-    
+
     this.suggestion_tokens = tokens;
     this.translation_key_id = translation_key_id;
     var new_script = document.createElement('script');
@@ -3207,6 +3209,7 @@ Tr8n.Translator.prototype = {
   }
 
 }
+
 
 Tr8n.Proxy = function(options) {
   var self = this;
@@ -3456,7 +3459,7 @@ Tr8n.Proxy.Logger.prototype = {
     if (!this.options['proxy'].logger_enabled) return;
     if (!this.options['element_id']) return;
     if (!Tr8n.element(this.options['element_id'])) return;
-    Tr8n.element(this.options['element_id']).innerHTML = ""; 
+    Tr8n.element(this.options['element_id']).innerHTML = "";
   },
   append: function(msg) {
     if (!this.options['proxy'].logger_enabled) return;
@@ -3464,13 +3467,13 @@ Tr8n.Proxy.Logger.prototype = {
     if (!Tr8n.element(this.options['element_id'])) return;
 
     var str = msg + "<br>" + Tr8n.element(this.options['element_id']).innerHTML;
-    Tr8n.element(this.options['element_id']).innerHTML = str; 
+    Tr8n.element(this.options['element_id']).innerHTML = str;
   },
   log: function(msg) {
     if (!this.options['proxy'].logger_enabled) return;
     var now = new Date();
-    var str = "<span style='color:#ccc;'>" + (now.toLocaleDateString() + " " + now.toLocaleTimeString()) + "</span>: " + msg;  
-    this.append(str); 
+    var str = "<span style='color:#ccc;'>" + (now.toLocaleDateString() + " " + now.toLocaleTimeString()) + "</span>: " + msg;
+    this.append(str);
   },
   debug: function(msg) {
     if (!this.options['proxy'].logger_enabled) return;
@@ -3492,19 +3495,19 @@ Tr8n.Proxy.Logger.prototype = {
   guid: function() {
     return (this.S4()+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+this.S4()+this.S4());
   },
-  escapeHTML: function(str) { 
-    return( str.replace(/&/g,'&amp;').replace(/>/g,'&gt;').replace(/</g,'&lt;').replace(/"/g,'&quot;')); 
+  escapeHTML: function(str) {
+    return( str.replace(/&/g,'&amp;').replace(/>/g,'&gt;').replace(/</g,'&lt;').replace(/"/g,'&quot;'));
   },
   showObject: function (obj_key, flag) {
     if (flag) {
       Tr8n.Effects.hide("no_object_" + obj_key);
       Tr8n.Effects.show("object_" + obj_key);
-      Tr8n.element("expander_" + obj_key).innerHTML = "<img src='/tr8n/images/minus_node.png'>";
+      Tr8n.element("expander_" + obj_key).innerHTML = "<img src='/tr8n/images/minus_node.png?" + Tr8n.url_cache_version + "'>";
     } else {
       Tr8n.Effects.hide("object_" + obj_key);
       Tr8n.Effects.show("no_object_" + obj_key);
-      Tr8n.element("expander_" + obj_key).innerHTML = "<img src='/tr8n/images/plus_node.png'>";
-    } 
+      Tr8n.element("expander_" + obj_key).innerHTML = "<img src='/tr8n/images/plus_node.png?" + Tr8n.url_cache_version + "'>";
+    }
   },
   toggleNode: function(obj_key) {
     this.showObject(obj_key, (Tr8n.element("object_" + obj_key).style.display == 'none'));
@@ -3523,15 +3526,15 @@ Tr8n.Proxy.Logger.prototype = {
     this.object_keys = [];
     html = []
     html.push("<div style='float:right;padding-right:10px;'>");
-    html.push("<span style='padding:2px;' onClick=\"tr8nProxy.logger.expandAllNodes()\"><img src='/tr8n/images/plus_node.png'></span>");
-    html.push("<span style='padding:2px;' onClick=\"tr8nProxy.logger.collapseAllNodes()\"><img src='/tr8n/images/minus_node.png'></span>");
+    html.push("<span style='padding:2px;' onClick=\"tr8nProxy.logger.expandAllNodes()\"><img src='/tr8n/images/plus_node.png?" + Tr8n.url_cache_version + "'></span>");
+    html.push("<span style='padding:2px;' onClick=\"tr8nProxy.logger.collapseAllNodes()\"><img src='/tr8n/images/minus_node.png?" + Tr8n.url_cache_version + "'></span>");
     html.push("</div>");
 
     var results = data;
     if (typeof results == 'string') {
       try {
         results = eval("[" + results + "]")[0];
-      } 
+      }
       catch (err) {
         this.push(results);
         return;
@@ -3548,8 +3551,8 @@ Tr8n.Proxy.Logger.prototype = {
     if (obj == null) return "{<br>}";
 
     var html = [];
-    var obj_key = this.guid();  
-    html.push("<span class='tr8n_logger_expander' id='expander_" + obj_key + "' onClick=\"tr8nProxy.logger.toggleNode('" + obj_key + "')\"><img src='/tr8n/images/minus_node.png'></span> <span style='display:none' id='no_object_" + obj_key + "'>{...}</span> <span id='object_" + obj_key + "'>{");
+    var obj_key = this.guid();
+    html.push("<span class='tr8n_logger_expander' id='expander_" + obj_key + "' onClick=\"tr8nProxy.logger.toggleNode('" + obj_key + "')\"><img src='/tr8n/images/minus_node.png?" + Tr8n.url_cache_version + "'></span> <span style='display:none' id='no_object_" + obj_key + "'>{...}</span> <span id='object_" + obj_key + "'>{");
     this.object_keys.push(obj_key);
 
     var keys = Object.keys(obj).sort();
@@ -3573,42 +3576,42 @@ Tr8n.Proxy.Logger.prototype = {
     if (arr == null) return "[<br>]";
 
     var html = [];
-    var obj_key = this.guid();  
-    html.push("<span class='tr8n_logger_expander' id='expander_" + obj_key + "' onClick=\"tr8nProxy.logger.toggleNode('" + obj_key + "')\"><img src='/tr8n/images/minus_node.png'></span> <span style='display:none' id='no_object_" + obj_key + "'>[...]</span> <span id='object_" + obj_key + "'>[");
+    var obj_key = this.guid();
+    html.push("<span class='tr8n_logger_expander' id='expander_" + obj_key + "' onClick=\"tr8nProxy.logger.toggleNode('" + obj_key + "')\"><img src='/tr8n/images/minus_node.png?" + Tr8n.url_cache_version + "'></span> <span style='display:none' id='no_object_" + obj_key + "'>[...]</span> <span id='object_" + obj_key + "'>[");
     this.object_keys.push(obj_key);
 
     for (var i=0; i<arr.length; i++) {
       if (this.isObject(arr[i])) {
         if (this.isArray(arr[i])) {
-           html.push(this.createSpacer(level) + this.formatArray(arr[i], level + 1) + ","); 
+           html.push(this.createSpacer(level) + this.formatArray(arr[i], level + 1) + ",");
         } else {
-           html.push(this.createSpacer(level) + this.formatObject(arr[i], level + 1) + ",");  
-        }     
+           html.push(this.createSpacer(level) + this.formatObject(arr[i], level + 1) + ",");
+        }
       } else {
         html.push(this.createSpacer(level) + this.formatProperty(null, arr[i]) + ",");
       }
-    }  
+    }
     html.push(this.createSpacer(level-1) + "]</span>");
     return html.join("<br>");
   },
   formatProperty: function(key, value) {
     if (value == null) return "<span class='tr8n_logger_obj_key'>" + key + ":</span><span class='obj_value_null'>null</span>";
-    
+
     var cls = "tr8n_logger_obj_value_" + (typeof value);
     var value_span = "";
-    
-    if (this.isString(value)) 
+
+    if (this.isString(value))
       value_span = "<span class='" + cls + "'>\"" + this.escapeHTML(value) + "\"</span>";
     else
       value_span = "<span class='" + cls + "'>" + value + "</span>";
-       
+
     if (key == null)
       return value_span;
-      
+
     return "<span class='tr8n_logger_obj_key'>" + key + ":</span>" + value_span;
   },
   createSpacer: function(level) {
-    return "<img src='/tr8n/images/pixel.gif' style='height:1px;width:" + (level * 20) + "px;'>";
+    return "<img src='/tr8n/images/pixel.gif?" + Tr8n.url_cache_version + "' style='height:1px;width:" + (level * 20) + "px;'>";
   },
   isArray: function(obj) {
     if (obj == null) return false;
@@ -3915,7 +3918,7 @@ Tr8n.Proxy.DataToken = function(label, token, options) {
 Tr8n.Proxy.DataToken.prototype = new Tr8n.Proxy.Token();
 
 Tr8n.Proxy.DataToken.parse = function(label, options) {
-  var tokens = label.match(/(\{[^_][\w]+(::?[\w]+)?\})/g);
+  var tokens = label.match(/(\{[^_][\w]+(:[\w]+)?\})/g);
   if (!tokens) return [];
   
   var objects = [];

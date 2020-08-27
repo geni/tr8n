@@ -2,13 +2,13 @@
   <div class="supplemental" style="<%=tr8n_style_attribute_tag('float', 'right')%>">
     <%= tr8n_help_icon_tag %>
   </div>
-  
+
 	<% if @translation_key.is_a?(Tr8n::RelationshipKey) %>
     <div class="quiet small"><%=tra("Relationship Key")%></div>
     <div class="quote" dir="<%=Tr8n::Config.default_language.dir%>">
-      <%=image_tag("/tr8n/images/left_quote.png") %>
+      <%=image_tag( url_with_cache_version( url_with_cache_version("/tr8n/images/left_quote.png") ) ) %>
       <%=@translation_key.sanitized_label %>
-      <%=image_tag("/tr8n/images/right_quote.png") %>
+      <%=image_tag( url_with_cache_version( url_with_cache_version("/tr8n/images/right_quote.png") ) ) %>
     </div>
     <% unless @translation_key.default_translation.blank? %>
       <div class="desc" style="font-weight:bold;">
@@ -23,9 +23,9 @@
 	<% else %>
 	  <div class="quiet small"><%=tra("Original Phrase in {language}", nil, :language => @translation_key.language.native_name)%></div>
 	  <div class="quote" dir="<%=Tr8n::Config.default_language.dir%>" style="<%=tr8n_style_attribute_tag('text-align', 'left')%>">
-	    <%=image_tag("/tr8n/images/left_quote.png") %>
+	    <%=image_tag( url_with_cache_version( url_with_cache_version("/tr8n/images/left_quote.png") ) ) %>
 	    <%=@translation_key.sanitized_label %>
-	    <%=image_tag("/tr8n/images/right_quote.png") %>
+	    <%=image_tag( url_with_cache_version( url_with_cache_version("/tr8n/images/right_quote.png") ) ) %>
 	  </div>
 	  <% unless @translation_key.description.blank? %>
 	    <div class="desc" style="border:0px;border-<%=tr8n_current_language.align(:left)%>:1px solid #ccc;padding-<%=tr8n_current_language.align(:left)%>:5px;">

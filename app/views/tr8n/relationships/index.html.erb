@@ -1,6 +1,6 @@
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
 	<%= render :partial => "/tr8n/common/header" %>
-	
+
   <div class="section_box" style="margin-bottom:5px; background-color:#EFF8FF; margin-top:0px;">
 	  <% form_tag({:action => :index}, {:method => :get, :id => "translations_search_form"}) do %>
 		  <div style="<%=tr8n_style_attribute_tag('float', 'right')%>">
@@ -8,7 +8,7 @@
 	            <span><%=tra("Search", "Search button label")%></span>
 	        </button>
 		  </div>
-			
+
 	   	<%=text_field_tag(:search, params[:search], {:style => "width:90%;font-size:12px;height:20px"})%><br>
       <div style="margin-top:10px; padding:3px; font-size:11px; color:#666; font-weight:bold;">
             <%=tra("Search relationships", "Phrases search filter header")%>
@@ -20,10 +20,10 @@
             <%=tra("include", "Phrases search filter option")%>
             <%=select_tag(:phrase_lock, tr8n_options_for_select(Tr8n::TranslationKey.filter_phrase_lock_options, params[:phrase_lock]))%>
       </div>
-									
+
 	  <% end %>
 	</div>
-	
+
 	<div id="relationship_keys_toolbar" style="font-size:12px; margin-top:0px; background-color:#f8f7f6; border:1px solid #eee; padding:5px; color:grey; background: url('/wf/images/sort_bg.gif') repeat-x scroll 0 0 transparent;">
 	  <div style="<%=tr8n_style_attribute_tag('float', 'right')%>">
       <%=tr8n_help_icon_tag("relationship_keys")%>
@@ -33,14 +33,14 @@
       actions << link_to(tra("+ Add new relationship key"), :action => :new) if Tr8n::Config.current_user_is_manager?
       actions << link_to(tra("Test relationship paths"), :action => :path)
     %>
-	  <%= actions.join(' &nbsp;|&nbsp; ') %>  
-	</div>		
-	
+	  <%= actions.join(' &nbsp;|&nbsp; ') %>
+	</div>
+
 	<div class="section_box" style="margin-top:10px; margin-bottom:10px; padding:10px;">
     <% if @relationship_keys.any? %>
       <%= render :partial => "/tr8n/common/paginator", :locals => {:objects => @relationship_keys, :subject => 'relationship'} %>
     <% end %>
-	
+
 	  <table style="width:100%">
 	    <tr style="border-bottom:2px solid #ccc;">
 	       <td style="width:30%;padding:5px; background: #f9f8f7; font-size:16px; color:grey; ">
@@ -49,13 +49,13 @@
 	       <td style="width:70%;padding:5px; font-size:16px; color:grey; " colspan="2">
 				   <%=tra("Top {language} Translations", nil, :language => tr8n_current_language.native_name) %>
 				 </td>
-	    </tr>  
+	    </tr>
 	    <% @relationship_keys.each do |rk| %>
 	      <tr style="border-bottom:1px solid #ccc;">
 	        <% color = rk.can_be_translated? ? "#FDFDDF" : "#ECFFEF"%>
 	        <td style="padding:5px; background: <%=color%>; ">
 	          <% unless rk.can_be_translated? %>
-	            <div style="float:right"><%=image_tag("/tr8n/images/lock.png", :style=>"width:12px", :title => trla("This relationship is locked"))%></div>
+	            <div style="float:right"><%=image_tag( url_with_cache_version("/tr8n/images/lock.png"), :style=>"width:12px", :title => trla("This relationship is locked"))%></div>
 	          <% end %>
 						<div style="font-size:18px;font-family:Arial;" dir="ltr">
 	           <%=link_to(rk.label, :controller => '/tr8n/phrases', :action => :view, :translation_key_id => rk.id)%>
@@ -71,30 +71,30 @@
 	          <div id="tr8n_translator_votes_for_<%=rk.id%>">
 	          <% translations = rk.translations_for(tr8n_current_language) %>
 				    <% if translations.empty? %>
-	            <%= tra("There are no translations for this relationship.") %> 
+	            <%= tra("There are no translations for this relationship.") %>
 							<% if rk.can_be_translated? %>
-		            <%= tra("[link: Be the first one to translate it], but only if it does exist in your language.", "", 
+		            <%= tra("[link: Be the first one to translate it], but only if it does exist in your language.", "",
 		                    :link => lambda{|str| link_to(str, :controller => "/tr8n/phrases", :action => :view, :translation_key_id => rk.id)}  ) %>
-							<% end %>				
-				    <% else %>   
+							<% end %>
+				    <% else %>
 	            <%= render :partial => "/tr8n/common/translation_votes", :locals => {:translation_key => rk, :translations => translations[0..4]} %>
-						<% end %>	
-	          </div>  
+						<% end %>
+	          </div>
 	        </td>
 	      </tr>
 	    <% end %>
 	  </table>
-	  
+
 		<% if @relationship_keys.empty? %>
 		    <div style="text-align:left; padding-top:10px; font-size:12px;"><%=trla("No phrases found")%></div>
 		<% end %>
-		
+
 		<% if @relationship_keys.any? %>
 	    <%= render :partial => "/tr8n/common/paginator", :locals => {:objects => @relationship_keys, :subject => 'relationship'} %>
 		<% end %>
 	</div>
 	<%= render :partial => "/tr8n/common/footer" %>
-	
+
   <script>
     function toggleFilterOptions() {
       if (Tr8n.element("phrase_type").value == "with") {
@@ -104,5 +104,5 @@
       }
     }
   </script>
-		
+
 <% end %>

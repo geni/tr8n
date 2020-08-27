@@ -60,7 +60,7 @@ Tr8n.Translator = function(options) {
       if (key_id) {
         var url = "/tr8n/admin/translation_key/view?key_id=" + key_id;
         var win=window.open(url, '_blank');
-        win.focus();        
+        win.focus();
       }
       return false;
     }
@@ -90,8 +90,8 @@ Tr8n.Translator.prototype = {
       html += splash_screen.innerHTML;
     } else {
       html += "<div style='font-size:18px;text-align:center; margin:5px; padding:10px; background-color:black;'>";
-      html += "  <img src='/tr8n/images/tr8n_logo.jpg' style='width:280px; vertical-align:middle;'>";
-      html += "  <img src='/tr8n/images/loading3.gif' style='width:200px; height:20px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + Tr8n.url_cache_version + "' style='width:280px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/loading3.gif?" + Tr8n.url_cache_version + "' style='width:200px; height:20px; vertical-align:middle;'>";
       html += "</div>"
     }
     this.container.innerHTML = html;
@@ -241,7 +241,7 @@ Tr8n.Translator.prototype = {
   },
 
   processSuggestedTranslation: function(response) {
-    if (response == null ||response.data == null || response.data.translations==null || response.data.translations.length == 0) 
+    if (response == null ||response.data == null || response.data.translations==null || response.data.translations.length == 0)
       return;
     var suggestion = response.data.translations[0].translatedText;
     if (this.suggestion_tokens) {
@@ -250,7 +250,7 @@ Tr8n.Translator.prototype = {
       for (var i=0; i<tokens.length; i++) {
         suggestion = Tr8n.Utils.replaceAll(suggestion, "(" + i + ")", tokens[i]);
       }
-    }  
+    }
 
     if (Tr8n.element("tr8n_translator_translation_label")) {
       Tr8n.element("tr8n_translator_translation_label").value = suggestion;
@@ -265,10 +265,10 @@ Tr8n.Translator.prototype = {
     var suggestion_section = Tr8n.element('tr8n_google_suggestion_section');
     if (suggestion_section) suggestion_section.style.display = "block";
   },
-  
+
   suggestTranslation: function(translation_key_id, original, tokens, from_lang, to_lang) {
     if (Tr8n.google_api_key == null) return;
-    
+
     this.suggestion_tokens = tokens;
     this.translation_key_id = translation_key_id;
     var new_script = document.createElement('script');

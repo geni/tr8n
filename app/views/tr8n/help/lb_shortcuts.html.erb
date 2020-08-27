@@ -1,7 +1,7 @@
 <div class="inner">
 	<div class="hd">
 		<span style="float:<%=tr8n_current_language.align(:right)%>;">
-			<%=link_to_function(image_tag("/tr8n/images/close.gif"), "tr8nLightbox.hide();")%>
+			<%= tr8n_lb_close_tag %>
 		</span>
 		<%=tra("Tr8n Translation Engine Shortcuts")%>
 	</div>
@@ -19,7 +19,7 @@
 				   	 <td style="font-size:10px; padding:5px;border-bottom:1px dotted #ccc; text-align:left;"><%=key%></td>
 			       <td style="font-size:10px; padding:5px;border-bottom:1px dotted #ccc; text-align:left;"><%=Tr8n::Config.default_shortcuts[key][:description]%></td>
 				   </tr>
-				<% end %>       
+				<% end %>
 
 			</table>
 		</div>

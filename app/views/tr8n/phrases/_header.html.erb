@@ -2,18 +2,18 @@
 <div class="section_box" style="margin-bottom:5px;<%=style%>;">
   <div style="<%=tr8n_style_attribute_tag('float', 'right')%>; font-size:12px; padding-right:3px;">
     <% if @translation_key.can_be_translated? %>
-    	<%=image_tag("/tr8n/images/lock_open.png", :style=>"vertical-align:bottom;", :title => trla("This phrase is unlocked.")) %>
-    <% else %>  
-    	<%=image_tag("/tr8n/images/lock.png", :style=>"vertical-align:bottom;", :title => trla("This phrase is locked.")) %>
+    	<%=image_tag( url_with_cache_version("/tr8n/images/lock_open.png"), :style=>"vertical-align:bottom;", :title => trla("This phrase is unlocked.")) %>
+    <% else %>
+    	<%=image_tag( url_with_cache_version("/tr8n/images/lock.png"), :style=>"vertical-align:bottom;", :title => trla("This phrase is locked.")) %>
     <% end %>
   </div>
-	
+
   <div style="color:grey;font-size:20px;padding-bottom:10px;"><%=@translation_key.class.title%></div>
-  
+
   <div style="padding-top:5px;padding-bottom:10px;font-size:14px" <%=tr8n_dir_attribute_tag(Tr8n::Config.default_language)%>>
-      <%=image_tag("/tr8n/images/left_quote.png", :style=>"text-align:bottom;padding-bottom:5px;") %>
+      <%=image_tag( url_with_cache_version("/tr8n/images/left_quote.png"), :style=>"text-align:bottom;padding-bottom:5px;") %>
       <%=@translation_key.sanitized_label %>
-      <%=image_tag("/tr8n/images/right_quote.png", :style=>"text-align:bottom;padding-top:5px;") %>
+      <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
   </div>
 
   <% if @translation_key.is_a?(Tr8n::RelationshipKey) %>
@@ -33,5 +33,5 @@
 	      <%=@translation_key.description %>
 	    </div>
 	  <% end %>
-	<% end %>	
+	<% end %>
 </div>

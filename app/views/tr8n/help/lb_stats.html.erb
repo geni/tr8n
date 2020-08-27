@@ -1,16 +1,16 @@
 <div class="inner">
 	<div class="hd">
 		<span style="float:<%=tr8n_current_language.align(:right)%>;">
-			<%=link_to_function(image_tag("/tr8n/images/close.gif"), "tr8nLightbox.hide();")%>
+			<%= tr8n_lb_close_tag %>
 		</span>
 		<%=tra("Tr8n Translation Memory Statistics")%>
 	</div>
 
 	<style>
 		.stats td {
-			font-size:12px; 
-			font-weight:bold; 
-			padding:5px; 
+			font-size:12px;
+			font-weight:bold;
+			padding:5px;
 			text-align:left;
 			border-bottom:1px solid #ccc;
 		}

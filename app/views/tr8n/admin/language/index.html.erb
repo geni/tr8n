@@ -4,19 +4,19 @@
 <%= tr8n_will_filter(@languages) %>
 
 <%=link_to_function("+ Add New Language", "tr8nLightbox.show('/tr8n/admin/language/lb_update', {height:400})")%>
- | 
+ |
 <%=link_to_function("Calculate Completeness", 'calculateCompleteness()')%>
 <br>
 
 <% form_tag("", :id => "languages_form") do %>
 	<%= will_filter_table_tag(@languages, :columns => [
     [:checkbox, 'languages'],
-	  [:flag, lambda{|lang| image_tag("/tr8n/images/flags/#{lang.flag}.png")}],
+	  [:flag, lambda{|lang| image_tag( url_with_cache_version("/tr8n/images/flags/#{lang.flag}.png") }],
 	  [:locale, lambda{|lang|
 	    html = []
 	    if lang.enabled?
 	      html << '<span style="color:green">'
-	    else  
+	    else
 	      html << '<span style="color:red">'
 	    end
 	    html << lang.locale
@@ -29,7 +29,7 @@
 	    html = []
 	    if lang.right_to_left?
 	      html << '<span style="color:red">'
-	    else  
+	    else
 	      html << '<span style="color:green">'
 	    end
 	    html << lang.right_to_left?
@@ -37,17 +37,17 @@
 	    html.join(' ')
 	  }],
 	  [:featured_index, lambda{|lang| lang.featured_index}, 'text-align:right;'],
-	  [:users, lambda{|lang| lang.total_metric.user_count}, 'text-align:right;'], 
-	  [:translators, lambda{|lang| lang.total_metric.translator_count}, 'text-align:right;'], 
-	  [:translations, lambda{|lang| lang.total_metric.translation_count}, 'text-align:right;'], 
+	  [:users, lambda{|lang| lang.total_metric.user_count}, 'text-align:right;'],
+	  [:translators, lambda{|lang| lang.total_metric.translator_count}, 'text-align:right;'],
+	  [:translations, lambda{|lang| lang.total_metric.translation_count}, 'text-align:right;'],
 	  [:completeness, lambda{|lang|
 	    html = []
 	    completeness = lang.completeness ? lang.completeness : 0
 	    if completeness > 90
 	      html << '<span style="color:green">'
-	    elsif completeness > 60 
+	    elsif completeness > 60
 	      html << '<span style="color:yellow">'
-	    else  
+	    else
 	      html << '<span style="color:red">'
 	    end
 	    html << "#{completeness}%"
@@ -55,22 +55,22 @@
 	    html.join(' ')
 	  }, 'text-align:right;'],
 	  [:actions, lambda{|lang|
-	     html = [] 
+	     html = []
 	     html << link_to_function("Update", "tr8nLightbox.show('/tr8n/admin/language/lb_update?lang_id=#{lang.id}', {height:400})")
 	     unless lang.default?
 	      if lang.enabled?
 	        html << link_to("Disable", :action => :disable, :lang_id => lang.id)
 	      else
-	        html << link_to("Enable", :action => :enable, :lang_id => lang.id) 
+	        html << link_to("Enable", :action => :enable, :lang_id => lang.id)
 	      end
-	     end 
-	     html.join(' | ') 
+	     end
+	     html.join(' | ')
 	  }, 'text-align:right;white-space:nowrap;']
 	]) %>
 <% end %>
 
 <%= will_filter_actions_bar_tag(@languages, [
-	['Enable Selected Languages', 'enableSelectedLanguages()'], 
+	['Enable Selected Languages', 'enableSelectedLanguages()'],
 	['Disable Selected Languages', 'disableSelectedLanguages()'],
 	['Add To Component', 'addSelectedLanguagesToComponent()'],
 ]) %>
@@ -79,20 +79,20 @@
 	function calculateCompleteness() {
 		if (!confirm('Are you sure you want to run this opperation?'))
 		   return;
-			    
-	  location = '/tr8n/admin/language/calculate_total_metrics'	
+
+	  location = '/tr8n/admin/language/calculate_total_metrics'
 	}
-	
+
   function disableSelectedLanguages() {
     if (!confirm("Are you sure you want to disable those languages?")) return;
-    
+
     Tr8n.element('languages_form').action = "/tr8n/admin/language/disable";
     Tr8n.element('languages_form').submit();
   }
 
   function enableSelectedLanguages() {
     if (!confirm("Are you sure you want to enable those languages?")) return;
-    
+
     Tr8n.element('languages_form').action = "/tr8n/admin/language/enable";
     Tr8n.element('languages_form').submit();
   }
@@ -107,7 +107,7 @@
       }
       checkbox = Tr8n.element('wf_check_' + (++i));
     }
-    return languages; 
+    return languages;
   }
 
   function addSelectedLanguagesToComponent() {
@@ -117,7 +117,7 @@
       return;
     }
     tr8nLightbox.show('/tr8n/admin/applications/lb_add_to_component?languages=' + languages, {height:400});
-  }    
+  }
 </script>
 
 <%= render :partial => "/tr8n/admin/common/footer" %>

@@ -11,8 +11,8 @@
 		<table>
 			<tr>
 				<td style="vertical-align:middle;text-align:center;padding:25px;">
-			   <%=image_tag("/tr8n/images/tr8n_logo2.png", :style => "height:180px;")%>
-				</td>	
+			   <%=image_tag( url_with_cache_version("/tr8n/images/tr8n_logo2.png"), :style => "height:180px;")%>
+				</td>
 				<td style="vertical-align:top;padding:15px;">
 					<div class="content_bd">
 						<h2 class="underscore content_hd">
@@ -30,9 +30,9 @@
 					    <li class="link"><%= link_to(tr("View help"), "/tr8n/help")%></li>
 					  </ul>
 					</div>
-				</td>	
-			</tr>	
-		</table>	
+				</td>
+			</tr>
+		</table>
 	</div>
-	
-<% end %>	
+
+<% end %>

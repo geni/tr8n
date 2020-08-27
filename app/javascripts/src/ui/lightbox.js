@@ -52,8 +52,8 @@ Tr8n.Lightbox.prototype = {
     if(tr8nLanguageCaseManager) tr8nLanguageCaseManager.hide();
     Tr8n.Utils.hideFlash();
 
-    this.container.innerHTML = "<div class='inner'><div class='bd' style='text-align:center;padding-top:50px;'><img src='/tr8n/images/loading_large.gif' style='vertical-align:middle'></div></div>";
-    
+    this.container.innerHTML = "<div class='inner'><div class='bd' style='text-align:center;padding-top:50px;'><img src='/tr8n/images/loading_large.gif?" + Tr8n.url_cache_version + "' style='vertical-align:middle'></div></div>";
+
     this.overlay.style.display  = "block";
 
     opts["width"] = opts["width"] || 700;

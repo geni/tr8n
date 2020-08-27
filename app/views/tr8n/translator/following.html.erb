@@ -1,7 +1,7 @@
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
 
   <%= render :partial => "/tr8n/common/header" %>
-  
+
   <div class="section_title">
     <%= render :partial => "/tr8n/translator/sections" %>
     <%=tra("Your Following") %>
@@ -23,7 +23,7 @@
           <th style="text-align:right;color:grey;"><%=tra('Total Translations', 'Awards section header')%></th>
           <th style="text-align:right;color:grey;"><%=tra('Total Votes', 'Awards section header')%></th>
         </tr>
-        
+
         <% @translators.each_with_index do |t, index| %>
           <% style = "border-bottom: 1px dotted #ccc;" unless @translators.last == t %>
           <tr style="<%=style%>">
@@ -37,7 +37,7 @@
                     <%=tr8n_translator_tag(t, :linked => true)%>
                   </td>
                 </tr>
-              </table>        
+              </table>
             </td>
             <td style="text-align:right;padding:5px;">
               <%=t.total_metric.total_translations%>
@@ -59,7 +59,7 @@
   <div class="section_box " style="margin-top:10px; margin-bottom:10px; padding:10px;">
     <% if @translation_keys.empty? %>
       <%=tra("You are not following any phrases") %>
-    <% else %>  
+    <% else %>
       <table style="width:100%">
         <tr style="border-bottom:2px solid #ccc;">
            <td style="width:30%;padding:5px; background: #f9f8f7; font-size:16px; color:grey; ">
@@ -68,13 +68,13 @@
            <td style="width:70%;padding:5px; font-size:16px; color:grey; " colspan="2">
              <%=tra("Top Translations") %>
            </td>
-        </tr>  
+        </tr>
         <% @translation_keys.each do |tk| %>
           <tr style="border-bottom:1px solid #ccc;">
             <% color = tk.can_be_translated? ? "#FDFDDF" : "#ECFFEF" %>
             <td style="padding:5px; background: <%=color%>; " dir="ltr">
               <% unless tk.can_be_translated? %>
-                <div style="<%=tr8n_style_attribute_tag('float', 'right')%>"><%=image_tag("/tr8n/images/lock.png", :style=>"width:12px", :title => trla("This phrase is locked"))%></div>
+                <div style="<%=tr8n_style_attribute_tag('float', 'right')%>"><%=image_tag( url_with_cache_version("/tr8n/images/lock.png"), :style=>"width:12px", :title => trla("This phrase is locked"))%></div>
               <% end %>
               <%=link_to(tk.default_decoration, :action => :view, :translation_key_id => tk.id, :section_key => @section_key)%>
               <div style="color:grey;font-size:10px;padding-top:3px;" dir="ltr"><%=tk.description%></div>
@@ -83,15 +83,15 @@
               <div id="tr8n_translator_votes_for_<%=tk.key%>">
               <% translations = tk.translations_for(nil) %>
               <% if translations.empty? %>
-                <%= tra("There are no translations for this phrase.") %> 
+                <%= tra("There are no translations for this phrase.") %>
                 <% if tk.can_be_translated? %>
-                  <%= tra("Be the first one to [link: translate it].", "", 
+                  <%= tra("Be the first one to [link: translate it].", "",
                           :link => lambda{|str| link_to(str, :controller => "/tr8n/phrases", :action => :view, :translation_key_id => tk.id, :section_key => @section_key)}  ) %>
-                <% end %>       
-              <% else %>   
+                <% end %>
+              <% else %>
                 <%= render :partial => "/tr8n/common/translation_votes", :locals => {:flag => true, :translation_key => tk, :translations => translations[0..4], :section_key => @section_key} %>
-              <% end %> 
-              </div>  
+              <% end %>
+              </div>
             </td>
           </tr>
         <% end %>
@@ -101,4 +101,4 @@
 
   <%= render :partial => "/tr8n/common/footer" %>
 
-<% end %>  
+<% end %>

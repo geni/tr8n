@@ -2,7 +2,7 @@
 <div class="inner">
     <div class="hd" style="background-color:white;font-size:12px;">
         <div style="float:<%=tr8n_current_language.align(:right)%>">
-            <%=link_to_function(image_tag("/tr8n/images/close.gif", :style => "border:0px; padding:5px;", :alt=>trla("Close")), "tr8nLightbox.hide()") %>
+            <%= tr8n_lb_close_tag(:style => "border:0px; padding:5px;") %>
         </div>
         <div style="padding-top:3px">
             <%=tra("Select your language") %>
@@ -26,7 +26,7 @@
                             <% else %>
                               <%= "#{language.completeness || 0}%" if Tr8n::Config.enable_language_stats? %>
                               <% unless user_language.manager? %>
-                                <%=link_to_function(image_tag("/tr8n/images/close.gif", :style=>"width:5px; padding-#{tr8n_current_language.align(:right)}:3px; padding-left:3px;"), "tr8nLanguageSelector.removeLanguage('#{language.id}');Tr8n.Effects.hide('lang_#{user_language.id}');") %>
+                                <%=link_to_function(image_tag( url_with_cache_version("/tr8n/images/close.gif"), :style=>"width:5px; padding-#{tr8n_current_language.align(:right)}:3px; padding-left:3px;"), "tr8nLanguageSelector.removeLanguage('#{language.id}');Tr8n.Effects.hide('lang_#{user_language.id}');") %>
                                 <% end %>
                             <% end %>
                           </span>

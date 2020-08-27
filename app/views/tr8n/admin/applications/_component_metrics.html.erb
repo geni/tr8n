@@ -19,36 +19,36 @@
 
 <% if languages.empty? or sources.empty? %>
   <div style="padding:10px 0px;">
-    In order to track translation progress of this component, you must 
+    In order to track translation progress of this component, you must
     <%= link_to_function("assign at least one language", "tr8nLightbox.show('/tr8n/admin/applications/lb_add_objects_to_component?type=language&comp_id=#{@comp.id}', {height:350})") %>
-    
-    and 
+
+    and
     <%= link_to_function("add at least one source", "tr8nLightbox.show('/tr8n/admin/applications/lb_add_objects_to_component?type=source&comp_id=#{@comp.id}', {height:350})") %>
 
-    to this component. 
+    to this component.
   </div>
 <% else %>
   <div style="padding-top:10px;padding-bottom:10px;">
     Jump to: <%= languages.collect{|lang| link_to(lang.english_name, params.merge(:show_language=>lang.id, :anchor => "language-#{lang.id}"))}.join(", ") %>
   </div>
 
-  <% languages.each do |language| 
-       metrics = sources.collect{|s| s.total_metric(language)} 
+  <% languages.each do |language|
+       metrics = sources.collect{|s| s.total_metric(language)}
   %>
   <div class="section_box" style="background-color:#FDFFF0; margin-bottom:10px; margin-top:0px;">
     <table>
       <tr>
         <td style="width:20%;text-align:left; padding:10px 0px; font-size:18px; vertical-align:middle;">
-          <%=tr8n_toggler_tag("lang_content_#{language.id}", "", params[:show_language] == language.id.to_s)%> 
+          <%=tr8n_toggler_tag("lang_content_#{language.id}", "", params[:show_language] == language.id.to_s)%>
           <span dir="ltr">
-            <a name="<%="language-#{language.id}"%>" style="text-decoration:none;color:black;"><%= tr8n_language_flag_tag(language) %> 
+            <a name="<%="language-#{language.id}"%>" style="text-decoration:none;color:black;"><%= tr8n_language_flag_tag(language) %>
               <%= link_to(language.english_name, params.merge(:show_language=>language.id, :anchor => "language-#{language.id}")) %>
             </a>
           </span>
         </td>
         <td style="text-align:center;width:40%;">
           <center>
-            <% 
+            <%
               percent = metrics.collect{|m| m.translation_completeness}.sum/metrics.count
               if percent < 20
                 bgcolor = "#FFD6D6"
@@ -68,7 +68,7 @@
         </td>
         <td style="text-align:center;width:40%;">
           <center>
-            <% 
+            <%
               percent = metrics.collect{|m| m.completeness}.sum/metrics.count
               if percent < 20
                 bgcolor = "#FFD6D6"
@@ -98,7 +98,7 @@
                   <div style="float:right">
                       <%
                         html = []
-                        html << link_to(image_tag("/tr8n/images/arrow_rotate_clockwise.png"), {:action => :recalculate_source, :source_id => source.id}, {:confirm => "Are you sure you want to recaluclate this source?"})
+                        html << link_to(image_tag( url_with_cache_version("/tr8n/images/arrow_rotate_clockwise.png") ), {:action => :recalculate_source, :source_id => source.id}, {:confirm => "Are you sure you want to recaluclate this source?"})
                       %>
                       <%= html.join(' | ') %>
                   </div>
@@ -109,7 +109,7 @@
         <% end %>
         <div style="clear:both;"></div>
       <% else %>
-        <table class="source_metrics">   
+        <table class="source_metrics">
           <tr>
             <th style="text-align:left">Source</th>
             <th>Total Keys</th>
@@ -140,13 +140,13 @@
                 <%=metrics[index].completeness %>%
               </td>
               <td>
-                <%=link_to(image_tag("/tr8n/images/arrow_rotate_clockwise.png"), {:action => :recalculate_source, :source_id => source.id}, {:confirm => "Are you sure you want to recaluclate this source?"}) %>
+                <%=link_to(image_tag( url_with_cache_version("/tr8n/images/arrow_rotate_clockwise.png") ), {:action => :recalculate_source, :source_id => source.id}, {:confirm => "Are you sure you want to recaluclate this source?"}) %>
               </td>
             </tr>
           <% end %>
         </table>
       <% end %>
-    </div>    
+    </div>
   </div>
 
   <% end %>

@@ -1,17 +1,17 @@
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
 
   <%= render :partial => "/tr8n/common/header" %>
-	
+
   <div class="section_box" style="margin-bottom:10px; background-color:#EFF8FF; margin-top:0px;">
 	  <div style="font-size:20px;font-weight:bold;padding-bottom:20px;"><%=tra("Relationship Path Evaluation Tool")%></div>
 			<div style="margin-bottom:10px;">
 	      <div style="font-size:12px;padding-bottom:5px;"><%=tra("Relationship path in TPS notation:")%></div>
-	      <%=text_field_tag(:etps, params[:etps], {:id => :relationship_key, :style => "width:90%;font-size:24px", :id => "etps", :onKeyUp => "etpsKeyUp(event)"})%> &nbsp; 
+	      <%=text_field_tag(:etps, params[:etps], {:id => :relationship_key, :style => "width:90%;font-size:24px", :id => "etps", :onKeyUp => "etpsKeyUp(event)"})%> &nbsp;
 	      <button type="button" class="translator_btn translator_small_btn" onClick="evaluateRelationshipPath(); return false;">
 	          <span><%=tra("Evaluate")%></span>
 	      </button>
 			</div>
-			
+
       <div style="margin-bottom:10px;">
 	      <div style="font-size:12px;padding-bottom:5px;"><%=tra("Translation:")%></div>
 				<div id="translation" style="border:1px solid #ccc; background-color: #eee; min-height:20px; padding:10px; font-weight:bold; font-size:14px;">
@@ -28,13 +28,13 @@
          <td style="width:70%;padding:5px; font-size:16px; color:grey; " colspan="2">
            <%=tra("Top {language} Translation", nil, :language => tr8n_current_language.native_name) %>
          </td>
-      </tr>  
+      </tr>
       <% @relationship_keys.each do |rk| %>
         <tr style="border-bottom:1px solid #ccc;">
           <% color = rk.locked? ? "#ECFFEF" : "#FDFDDF" %>
           <td style="padding:5px; background: <%=color%>; ">
             <% if rk.locked? %>
-              <div style="float:right"><%=image_tag("/tr8n/images/lock.png", :style=>"width:12px", :title => trla("This relationship is locked"))%></div>
+              <div style="float:right"><%=image_tag( url_with_cache_version("/tr8n/images/lock.png"), :style=>"width:12px", :title => trla("This relationship is locked"))%></div>
             <% end %>
             <div style="font-size:18px;font-family:Arial;">
              <%=link_to_function(rk.label, "Tr8n.element('etps').value='#{rk.label}';")%>
@@ -45,19 +45,19 @@
             <div id="tr8n_translator_votes_for_<%=rk.id%>">
             <% translations = rk.translations_for(tr8n_current_language) %>
 						<%= translations.first.label %>
-            </div>  
+            </div>
           </td>
         </tr>
       <% end %>
     </table>
-    
+
     <% if @relationship_keys.empty? %>
         <div style="text-align:left; padding-top:10px; font-size:12px;"><%=trla("No phrases found")%></div>
     <% end %>
   </div>
-	
+
   <%= render :partial => "/tr8n/common/footer" %>
-	
+
 <% end %>
 
 
@@ -68,9 +68,9 @@
 				return false;
 		 }
 	}
-	
+
 	function evaluateRelationshipPath() {
-    Tr8n.element("translation").innerHTML = "<div style='text-align:left;'><img src='/tr8n/images/spinner.gif' style='vertical-align:bottom'> Loading...</div>";
+    Tr8n.element("translation").innerHTML = "<div style='text-align:left;'><img src='/tr8n/images/spinner.gif?" + Tr8n.url_cache_version + "' style='vertical-align:bottom'> Loading...</div>";
     Tr8n.Utils.update('translation', "/tr8n/relationships/eval_path", {
 			parameters: {etps:Tr8n.value("etps")}
     });

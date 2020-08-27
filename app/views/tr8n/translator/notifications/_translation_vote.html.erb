@@ -13,14 +13,14 @@
         </div>
 
         <div style="margin-top:10px; padding:5px;font-size:12px; max-height:50px; overflow:auto;">
-          <%=image_tag("/tr8n/images/left_quote.png", :style=>"text-align:bottom;padding-bottom:5px;") %>
+          <%=image_tag( url_with_cache_version("/tr8n/images/left_quote.png"), :style=>"text-align:bottom;padding-bottom:5px;") %>
           <%=notification.object.translation.label %>
-          <%=image_tag("/tr8n/images/right_quote.png", :style=>"text-align:bottom;padding-top:5px;") %>
+          <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
         </div>
 
         <div>
           <%= render(:partial => "/tr8n/translator/notifications/phrase", :locals => {
-                                  :translation_key => notification.object.translation.translation_key, 
+                                  :translation_key => notification.object.translation.translation_key,
                                   :language => notification.object.translation.language
                                 }) %>
         </div>
@@ -31,6 +31,6 @@
         </div>
       </td>
     </tr>
-  </table>  
+  </table>
 
 <%= render :partial => "/tr8n/translator/notifications/footer" %>

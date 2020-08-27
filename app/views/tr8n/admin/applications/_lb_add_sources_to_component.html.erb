@@ -1,7 +1,7 @@
 <div class="inner">
     <div class="hd">
         <div style="float:right;">
-            <%=link_to_function(image_tag("/tr8n/images/close.gif"), "tr8nLightbox.hide();") %>
+            <%= tr8n_lb_close_tag %>
         </div>
         Add Sources To <%=@comp.name%>
     </div>
@@ -16,7 +16,7 @@
                     <%= check_box_tag("ids[]", source.id) %> &nbsp; <%= source.name_and_source %>
                 </div>
             <% end %>
-        </div>    
+        </div>
         <% end %>
     </div>
     <div class="ft">

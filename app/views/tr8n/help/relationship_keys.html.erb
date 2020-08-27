@@ -46,15 +46,15 @@
         <%=tr("It is crucial that you only provide translations for relationship keys that exist in your language.") %>
     </p>
     <p>
-        If you provide a translation for the above Hindi relationship: (0,0:m1<1m:f0,0) with "husband's older brother's wife", it 
-        will be evaluated in English, but it may not provide the best translation when a relationship path is translated. 
+        If you provide a translation for the above Hindi relationship: (0,0:m1<1m:f0,0) with "husband's older brother's wife", it
+        will be evaluated in English, but it may not provide the best translation when a relationship path is translated.
     </p>
     <h2><%=tr("Relationship Paths") %></h2>
     <p>
-        <%=tr("When a relationship between two people in a family tree (relationship path) is translated, relationship steps, comprasing the path, are reduced into relationship keys available for the selected language (keys that have at least one acceptable translation).") %> 
+        <%=tr("When a relationship between two people in a family tree (relationship path) is translated, relationship steps, comprasing the path, are reduced into relationship keys available for the selected language (keys that have at least one acceptable translation).") %>
     </p>
     <p>
-        <%=image_tag("/tr8n/images/help/path.png", :style=>"width:750px;") %>
+        <%=image_tag( url_with_cache_version("/tr8n/images/help/path.png"), :style=>"width:750px;") %>
     </p>
     <p>
         In the above example, the relationship path between Margaret Brackenbury and Tom Cruise is "Margaret Brackenbury is Tom Cruise's ex-wife's husband's second great uncle's wife's father's wife's great granddaughter.".
@@ -119,11 +119,11 @@
     <div class="snippet">
         "Thomas is her brother's wife's son."
     </div>
-		
+
 		<h3>
 			<%=tr("Complete example in Russian Language") %>
 		</h3>
-		
+
     <p>
         <%=tr("Russian language combines a few concepts together: it reduces relationships from right to left and uses language cases to properly construct the phrases in the path.") %>
         <%=tr("For this example we will make our user [bold: {name}] and the relationship path [bold: {path}].", "", :name => "Анна", :path => "[mother, brother, uncle, wife]") %>
@@ -146,10 +146,10 @@
         <br>
         <%=tr("And now we are done!") %><%=tr("When the original key '[bold: {key1}]' is evaluated it will be reduced to '[bold: {key2}]'", "", :key1 => "{user} is {rel}.", :key2 => "Анна это жена дяди брата вашего отца.") %>
     </p>
-		
+
     <div class="snippet">
         "Анна это жена дяди брата вашего отца."
     </div>
-		
+
 </div>
 <%= render :partial => "footer" %>

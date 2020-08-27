@@ -45,10 +45,10 @@ module Tr8n::CommonMethods
     end.collect do |l|
       l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
     end
-  rescue 
+  rescue
     []
   end
-  
+
   def tr8n_user_preffered_locale
     tr8n_browser_accepted_locales.each do |locale|
       lang = Tr8n::Language.for(locale)
@@ -56,7 +56,7 @@ module Tr8n::CommonMethods
     end
     Tr8n::Config.default_locale
   end
-  
+
   def tr8n_request_remote_ip
     @remote_ip ||= if request.env['HTTP_X_FORWARDED_FOR']
       request.env['HTTP_X_FORWARDED_FOR'].split(',').first
@@ -64,22 +64,22 @@ module Tr8n::CommonMethods
       request.remote_ip
     end
   end
-  
+
   def tr8n_source
     "#{self.class.name.underscore.gsub("_controller", "")}/#{self.action_name}"
   rescue
     self.class.name
-  end  
+  end
 
   def tr8n_component
     nil
-  end  
-  
+  end
+
   def init_tr8n
     return unless Tr8n::Config.enabled?
-    
+
     tr8n_current_locale = nil
-    
+
     begin
       tr8n_current_locale = eval(Tr8n::Config.current_locale_method)
     rescue Exception => ex
@@ -89,12 +89,12 @@ module Tr8n::CommonMethods
       session[:locale] = params[:locale] if params[:locale]
       tr8n_current_locale = session[:locale]
     end
-    
+
     tr8n_current_user = nil
     if Tr8n::Config.site_user_info_enabled?
       begin
         tr8n_current_user = eval(Tr8n::Config.current_user_method)
-        # TODO: verify what this was needed for 
+        # TODO: verify what this was needed for
         # tr8n_current_user = nil if tr8n_current_user.class.name != Tr8n::Config.user_class_name
       rescue Exception => ex
         raise Tr8n::Exception.new("Tr8n cannot be initialized because #{Tr8n::Config.current_user_method} failed with: #{ex.message}")
@@ -103,12 +103,12 @@ module Tr8n::CommonMethods
       tr8n_current_user = Tr8n::Translator.find_by_id(session[:tr8n_translator_id]) if session[:tr8n_translator_id]
       tr8n_current_user = Tr8n::Translator.new unless tr8n_current_user
     end
-    
+
     # initialize request thread variables
     Tr8n::Config.init(tr8n_current_locale, tr8n_current_user, tr8n_source, tr8n_component)
 
     # for logged out users, fallback onto tr8n_access_key
-    if Tr8n::Config.current_user_is_guest?  
+    if Tr8n::Config.current_user_is_guest?
       tr8n_access_key = params[:tr8n_access_key] || session[:tr8n_access_key]
       unless tr8n_access_key.blank?
         Tr8n::Config.set_translator(Tr8n::Translator.find_by_access_key(tr8n_access_key))
@@ -117,8 +117,8 @@ module Tr8n::CommonMethods
 
     # invalidate source for the current page
     Tr8n::Cache.invalidate_source(Tr8n::Config.current_source)
-    
-    # track user's last ip address  
+
+    # track user's last ip address
     if Tr8n::Config.enable_country_tracking? and Tr8n::Config.current_user_is_translator?
       Tr8n::Config.current_translator.update_last_ip(tr8n_request_remote_ip)
     end
@@ -155,11 +155,11 @@ module Tr8n::CommonMethods
     options.merge!(:caller => caller)
     options.merge!(:url => url)
     options.merge!(:host => host)
-    
+
     unless Tr8n::Config.enabled?
       return Tr8n::TranslationKey.substitute_tokens(label, tokens, options)
     end
-    
+
     Tr8n::Config.current_language.translate(label, desc, tokens, options)
   end
 
@@ -190,7 +190,7 @@ module Tr8n::CommonMethods
       Tr8n::Config.default_language.translate(label, desc, tokens, options)
     end
   end
-  
+
   # admin interface translations
   def trla(label, desc = "", tokens = {}, options = {})
     tra(label, desc, tokens, options.merge(:skip_decorations => true))

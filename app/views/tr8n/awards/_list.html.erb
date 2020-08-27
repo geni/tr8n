@@ -5,22 +5,22 @@
     <th style="text-align:right;color:grey;"><%=tra('Total Translations', 'Awards section header')%></th>
     <th style="text-align:right;color:grey;"><%=tra('Total Votes', 'Awards section header')%></th>
   </tr>
-  
+
   <% metrics.each_with_index do |tm, index| %>
     <% style = "border-bottom: 1px dotted #ccc;" unless metrics.last == tm %>
     <tr style="<%=style%>">
       <td>
-        <% if show_medals %> 
+        <% if show_medals %>
           <% if index == 0 %>
-            <%=image_tag("/tr8n/images/medals/gold.png", :style => "height:60px", :title => trla('Gold Medal', 'Awards section header'))%>
+            <%=image_tag( url_with_cache_version("/tr8n/images/medals/gold.png"), :style => "height:60px", :title => trla('Gold Medal', 'Awards section header'))%>
           <% elsif index == 1 %>
-            <%=image_tag("/tr8n/images/medals/silver.png", :style => "height:60px", :title => trla('Silver Medal', 'Awards section header'))%>
+            <%=image_tag( url_with_cache_version("/tr8n/images/medals/silver.png"), :style => "height:60px", :title => trla('Silver Medal', 'Awards section header'))%>
           <% elsif index == 2 %>
-            <%=image_tag("/tr8n/images/medals/bronze.png", :style => "height:60px", :title => trla('Bronze Medal', 'Awards section header'))%>
+            <%=image_tag( url_with_cache_version("/tr8n/images/medals/bronze.png"), :style => "height:60px", :title => trla('Bronze Medal', 'Awards section header'))%>
           <% end %>
         <% else %>
-            <%=image_tag("/tr8n/images/medals/runner.png", :style => "height:60px", :title => trla('Runner-Up', 'Awards section header'))%>
-        <% end %>  
+            <%=image_tag( url_with_cache_version("/tr8n/images/medals/runner.png"), :style => "height:60px", :title => trla('Runner-Up', 'Awards section header'))%>
+        <% end %>
       </td>
       <td>
         <table>
@@ -32,7 +32,7 @@
               <%=tr8n_translator_tag(tm.translator, :linked => true)%>
             </td>
           </tr>
-        </table>        
+        </table>
       </td>
       <td style="text-align:right;padding:5px;">
         <%=tm.total_translations%>

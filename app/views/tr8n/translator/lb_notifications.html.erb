@@ -1,7 +1,7 @@
 <div class="inner">
   <div class="hd" style="">
       <div style="float:<%=tr8n_current_language.align(:right)%>">
-        <%=link_to_function(image_tag("/tr8n/images/close.gif", :style => "border:0px; padding:5px;", :alt=>trla("Close")), "tr8nLightbox.hide()") %>
+        <%= tr8n_lb_close_tag(:style => "border:0px; padding:5px;") %>
       </div>
 
       <%=tra("Tr8n Notifications") %>

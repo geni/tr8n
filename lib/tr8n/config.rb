@@ -27,7 +27,7 @@ class Tr8n::Config
 
   #########################################################
   # Basic Stuff
-  
+
   # initializes language, user and translator
   # the variables are kept in a thread safe form throughout the request
   def self.init(site_current_locale, site_current_user = nil, source = nil, component = nil)
@@ -38,25 +38,25 @@ class Tr8n::Config
 
     # register source with component
     unless component.nil?
-      Thread.current[:tr8n_current_component]  = Tr8n::Component.find_or_create(component) 
+      Thread.current[:tr8n_current_component]  = Tr8n::Component.find_or_create(component)
       Tr8n::ComponentSource.find_or_create(current_component, current_source)
     else
       Thread.current[:tr8n_current_component]  = nil
     end
 
     # register the total metric for the current source and language
-    current_source.total_metric unless current_language.default? 
+    current_source.total_metric unless current_language.default?
 
     Thread.current[:tr8n_block_options]      = []
   end
-  
+
   def self.current_user
     Thread.current[:tr8n_current_user]
   end
-  
+
   def self.current_source
     Thread.current[:tr8n_current_source]
-  end  
+  end
 
   def self.set_source(source)
     Thread.current[:tr8n_current_source]     = Tr8n::TranslationSource.find_or_create(source)
@@ -64,12 +64,12 @@ class Tr8n::Config
 
   def self.current_component
     Thread.current[:tr8n_current_component]
-  end  
+  end
 
   def self.set_component(component)
     Thread.current[:tr8n_current_component]  = Tr8n::Component.find_or_create(component)
   end
-  
+
   def self.current_language
     Thread.current[:tr8n_current_language] ||= default_language
   end
@@ -81,7 +81,7 @@ class Tr8n::Config
   def self.current_user_is_translator?
     Thread.current[:tr8n_current_translator] != nil
   end
-  
+
   def self.current_user_is_authorized_to_view_component?(component = current_component)
     return true if component.nil? # no component present, so be it
 
@@ -95,7 +95,7 @@ class Tr8n::Config
       Tr8n::ComponentTranslator.find_or_create(component, Tr8n::Config.current_translator)
       return true
     end
-    
+
     false
   end
 
@@ -104,14 +104,14 @@ class Tr8n::Config
 
     component = Tr8n::Component.find_by_key(component.to_s) if component.is_a?(Symbol)
 
-    if Tr8n::Config.current_user_is_translator? 
+    if Tr8n::Config.current_user_is_translator?
       return true if component.translators.include?(Tr8n::Config.current_translator)
     end
 
     component.component_languages.each do |cl|
-      return cl.live? if cl.language_id == language.id 
+      return cl.live? if cl.language_id == language.id
     end
-    
+
     true
   end
 
@@ -126,12 +126,12 @@ class Tr8n::Config
   def self.set_translator(translator)
     Thread.current[:tr8n_current_translator]  = translator
   end
-  
+
   def self.default_language
     return Tr8n::Language.new(:locale => default_locale) if disabled?  # don't query database if disabled
     @default_language ||= Tr8n::Language.for(default_locale) || Tr8n::Language.new(:locale => default_locale)
   end
-  
+
   def self.reset!
     # thread based variables
     Thread.current[:tr8n_current_language]  = nil
@@ -144,20 +144,20 @@ class Tr8n::Config
   end
 
   def self.models
-    [ 
+    [
        Tr8n::LanguageRule, Tr8n::LanguageUser, Tr8n::Language, Tr8n::LanguageMetric,
        Tr8n::LanguageCase, Tr8n::LanguageCaseValueMap, Tr8n::LanguageCaseRule,
-       Tr8n::TranslationKey, Tr8n::RelationshipKey, Tr8n::ConfigurationKey, 
+       Tr8n::TranslationKey, Tr8n::RelationshipKey, Tr8n::ConfigurationKey,
        Tr8n::TranslationKeySource, Tr8n::TranslationKeyComment, Tr8n::TranslationKeyLock,
-       Tr8n::TranslationSource, Tr8n::TranslationDomain, Tr8n::TranslationSourceLanguage, 
+       Tr8n::TranslationSource, Tr8n::TranslationDomain, Tr8n::TranslationSourceLanguage,
        Tr8n::Translation, Tr8n::TranslationVote, Tr8n::TranslationSourceMetric,
-       Tr8n::Translator, Tr8n::TranslatorLog, Tr8n::TranslatorMetric, 
-       Tr8n::TranslatorFollowing, Tr8n::TranslatorReport, 
+       Tr8n::Translator, Tr8n::TranslatorLog, Tr8n::TranslatorMetric,
+       Tr8n::TranslatorFollowing, Tr8n::TranslatorReport,
        Tr8n::LanguageForumTopic, Tr8n::LanguageForumMessage, Tr8n::LanguageForumAbuseReport,
-       Tr8n::Glossary, Tr8n::IpLocation, Tr8n::SyncLog, Tr8n::Application, 
+       Tr8n::Glossary, Tr8n::IpLocation, Tr8n::SyncLog, Tr8n::Application,
        Tr8n::Component, Tr8n::ComponentSource, Tr8n::ComponentTranslator, Tr8n::ComponentLanguage,
        Tr8n::Notification
-    ]    
+    ]
   end
 
   # will clean all tables and initialize default values
@@ -187,27 +187,27 @@ class Tr8n::Config
       lang.update_attributes(info)
       lang.reset!
     end
-    puts "Created #{default_languages.size} languages."    
+    puts "Created #{default_languages.size} languages."
   end
 
   def self.init_glossary
     puts "Initializing default glossary..." unless env.test?
     default_glossary.each do |keyword, description|
       Tr8n::Glossary.create(:keyword => keyword, :description => description)
-    end    
+    end
   end
 
   def self.init_language_cases
     puts "Initializing default language cases..." unless env.test?
 
     Tr8n::LanguageCase.delete_all if env.test? or env.development?
-    
+
     sys_translator = system_translator
-    
+
     default_language_cases.each do |locale, cases|
       language = Tr8n::Language.for(locale)
       puts ">> Initializing language cases for #{language.english_name}..."
-      
+
       next unless language
       cases.keys.sort.each do |lkey|
         lcase = cases[lkey]
@@ -219,17 +219,25 @@ class Tr8n::Config
           Tr8n::LanguageCaseRule.create(:language_case => language_case, :language => language, :translator => sys_translator, :position => index, :definition => lcrule)
         end
       end
-    end    
+    end
   end
-  
+
   def self.root
     Rails.root
   end
-  
+
   def self.env
     Rails.env
   end
-  
+
+  def self.tr8n_root
+    @tr8n_root ||= File.dirname(File.expand_path(__FILE__)) + '/../../'
+  end
+
+  def self.tr8n_gem_version
+    @gem_version ||= File.read(tr8n_root + 'VERSION').chomp
+  end
+
   # json support
   def self.load_json(file_path)
     json = JSON.parse(File.read("#{root}#{file_path}"))
@@ -243,11 +251,11 @@ class Tr8n::Config
     yml = yml[for_env] unless for_env.nil?
     HashWithIndifferentAccess.new(yml)
   end
-  
+
   def self.dump_config
     save_to_yaml("config.yaml", config)
   end
-  
+
   def self.config
     @config ||= load_yml("/config/tr8n/config.yml")
   end
@@ -281,11 +289,11 @@ class Tr8n::Config
   def self.features
     @features ||= load_yml("/config/tr8n/site/features.yml")
   end
-  
+
   def self.enabled?
-    config[:enable_tr8n] 
+    config[:enable_tr8n]
   end
-  
+
   def self.disabled?
     not enabled?
   end
@@ -305,11 +313,11 @@ class Tr8n::Config
   def self.enable_inline_translations?
     config[:enable_inline_translations]
   end
-  
+
   def self.enable_language_cases?
     config[:enable_language_cases]
   end
-  
+
   def self.enable_key_source_tracking?
     config[:enable_key_source_tracking]
   end
@@ -353,7 +361,7 @@ class Tr8n::Config
   def self.open_registration_mode?
     config[:open_registration_mode]
   end
-  
+
   def self.enable_registration_disclaimer?
     config[:enable_registration_disclaimer]
   end
@@ -361,7 +369,7 @@ class Tr8n::Config
   def self.registration_disclaimer_path
     config[:registration_disclaimer_path]
   end
-  
+
   def self.enable_fallback_languages?
     config[:enable_fallback_languages]
   end
@@ -381,15 +389,15 @@ class Tr8n::Config
   def self.enable_country_tracking?
     config[:enable_country_tracking]
   end
-  
+
   def self.enable_relationships?
     config[:enable_relationships]
   end
-  
+
   def self.enable_translator_tabs?
     config[:enable_translator_tabs]
   end
-  
+
   def self.skip_key_registration_in_default_language?
     config[:skip_key_registration_in_default_language]
   end
@@ -404,7 +412,7 @@ class Tr8n::Config
   def self.logger
     config[:logger]
   end
-  
+
   def self.site_info
     config[:site_info]
   end
@@ -439,6 +447,10 @@ class Tr8n::Config
   def self.cache_version
     caching[:version]
   end
+
+  def self.url_cache_version
+    @url_cache_version ||= tr8n_gem_version.gsub(/\./, '_')
+  end
   #########################################################
 
   #########################################################
@@ -455,22 +467,22 @@ class Tr8n::Config
   def self.enable_paranoia_mode?
     logger[:enable_paranoia_mode]
   end
-  
+
   #########################################################
   # Site Info
   #########################################################
   def self.site_title
-    site_info[:title] 
+    site_info[:title]
   end
 
   def self.application_init?
-    site_info[:application_init] 
+    site_info[:application_init]
   end
 
   def self.splash_screen
-    site_info[:splash_screen]  
+    site_info[:splash_screen]
   end
-  
+
   def self.default_locale
     return block_options[:default_locale] if block_options[:default_locale]
     site_info[:default_locale]
@@ -491,7 +503,7 @@ class Tr8n::Config
   def self.enable_tr8n_method
     site_info[:enable_tr8n_method]
   end
-  
+
   def self.sitemap_sections
     @sitemap_sections ||= load_json(site_info[:sitemap_path])
   end
@@ -513,7 +525,7 @@ class Tr8n::Config
     return [] unless site_info[:admin_helpers]
     @admin_helpers ||= site_info[:admin_helpers].collect{|helper| helper.to_sym}
   end
-  
+
   def self.skip_before_filters
     return [] unless site_info[:skip_before_filters]
     @skip_before_filters ||= site_info[:skip_before_filters].collect{|filter| filter.to_sym}
@@ -548,10 +560,10 @@ class Tr8n::Config
   def self.site_user_info_disabled?
     !site_user_info_enabled?
   end
-  
+
   def self.user_class_name
     return site_user_info[:class_name] if site_user_info_enabled?
-    "Tr8n::Translator"  
+    "Tr8n::Translator"
   end
 
   def self.user_class
@@ -617,13 +629,13 @@ class Tr8n::Config
   def self.current_user_is_admin?
     admin_user?
   end
-  
+
   def self.current_user_is_manager?
     return false unless current_user_is_translator?
     return true if current_user_is_admin?
     current_translator.manager?
   end
-  
+
   def self.guest_user?(user = current_user)
     return true unless user
     begin
@@ -631,13 +643,13 @@ class Tr8n::Config
     rescue Exception => ex
       Tr8n::Logger.error("Failed to fetch #{user_class_name} guest flag: #{ex.to_s}")
       return true
-    end  
+    end
   end
-  
+
   def self.current_user_is_guest?
     guest_user?
   end
-  
+
   def self.silhouette_image
     "/tr8n/images/photo_silhouette.gif"
   end
@@ -645,7 +657,7 @@ class Tr8n::Config
   def self.system_image
     "/tr8n/images/photo_system.gif"
   end
-  
+
   #########################################################
   # RULES ENGINE
   #########################################################
@@ -659,7 +671,7 @@ class Tr8n::Config
       language_rule_classes.each do |cls|
         if depts[cls.dependency]
           raise Tr8n::Exception.new("The same dependency key #{cls.dependency} has been registered for multiple rules. This is not allowed.")
-        end  
+        end
         depts[cls.dependency] = cls
       end
       depts
@@ -702,7 +714,7 @@ class Tr8n::Config
   def self.allow_nil_token_values?
     rules_engine[:allow_nil_token_values]
   end
-  
+
   def self.data_token_classes
     @data_token_classes ||= rules_engine[:data_token_classes].collect{|tc| tc.constantize}
   end
@@ -710,7 +722,7 @@ class Tr8n::Config
   def self.decoration_token_classes
     @decoration_token_classes ||= rules_engine[:decoration_token_classes].collect{|tc| tc.constantize}
   end
-  
+
   def self.viewing_user_token_for(label)
     Tr8n::Tokens::DataToken.new(label, "{#{rules_engine[:viewing_user_token]}:gender}")
   end
@@ -726,7 +738,7 @@ class Tr8n::Config
         range = Range.new(*(key.to_s.split("..").map{|v| v.to_i}))
         styles[range] = value
       end
-      styles  
+      styles
     end
   end
 
@@ -735,7 +747,7 @@ class Tr8n::Config
     @default_rules ||= {}
     @default_rules[rules_type] ||= load_yml("/config/tr8n/rules/default_#{rules_type}_rules.yml", nil)
     rules_for_locale = @default_rules[rules_type][locale.to_s]
-    
+
     return rules_for_locale.values unless rules_for_locale.nil?
     return [] if @default_rules[rules_type][default_locale].nil?
     @default_rules[rules_type][default_locale].values
@@ -780,22 +792,22 @@ class Tr8n::Config
       "%B" => "{month_name}",
       "%p" => "{am_pm}",
       "%d" => "{days}",
-      "%e" => "{day_of_month}", 
+      "%e" => "{day_of_month}",
       "%j" => "{year_days}",
       "%m" => "{months}",
       "%W" => "{week_num}",
       "%w" => "{week_days}",
       "%y" => "{short_years}",
       "%Y" => "{years}",
-      "%l" => "{trimed_hour}", 
-      "%H" => "{full_hours}", 
-      "%I" => "{short_hours}", 
-      "%M" => "{minutes}", 
-      "%S" => "{seconds}", 
+      "%l" => "{trimed_hour}",
+      "%H" => "{full_hours}",
+      "%I" => "{short_hours}",
+      "%M" => "{minutes}",
+      "%S" => "{seconds}",
       "%s" => "{since_epoch}"
     }[symbol]
   end
-  
+
   def self.default_day_names
     localization[:default_day_names]
   end
@@ -811,7 +823,7 @@ class Tr8n::Config
   def self.default_abbr_month_names
     localization[:default_abbr_month_names]
   end
-  
+
   def self.default_date_formats
     localization[:custom_date_formats]
   end
@@ -826,13 +838,13 @@ class Tr8n::Config
       '100'   =>  'professional',
       '1000'  =>  'manager',
       '10000' =>  'curator'
-    } 
+    }
   end
 
   def self.manager_level
     1000
   end
-  
+
   def self.curator_level
     10000
   end
@@ -844,7 +856,7 @@ class Tr8n::Config
   def self.admin_level
     100000000
   end
-  
+
   #########################################################
   ### API
   #########################################################
@@ -908,7 +920,7 @@ class Tr8n::Config
       return ""
     end
 
-    Thread.current[:tr8n_block_options] ||= []   
+    Thread.current[:tr8n_block_options] ||= []
 
     # handle nesting - need to carry over previous block options
     if prev_opts = Thread.current[:tr8n_block_options].last
@@ -927,7 +939,7 @@ class Tr8n::Config
 
     if Tr8n::Config.current_user_is_authorized_to_view_component?(component)
       selected_language = Tr8n::Config.current_language
-      
+
       unless Tr8n::Config.current_user_is_authorized_to_view_language?(component, selected_language)
         Tr8n::Config.set_language(Tr8n::Config.default_language)
       end
@@ -944,7 +956,7 @@ class Tr8n::Config
     Thread.current[:tr8n_block_options].pop
     ret
   end
-  
+
   def self.block_options
     (Thread.current[:tr8n_block_options] || []).last || {}
   end
@@ -956,25 +968,25 @@ class Tr8n::Config
     # overwrite this method in the initializer class
     @system_user = User.first || User.create
   end
-    
+
   def self.system_translator
     Tr8n::Translator.find_by_level(system_level) || Tr8n::Translator.create(:user => system_user, :level => system_level)
   end
-  
+
   def self.init_relationship_keys
     puts "Initializing default relationship keys..." unless env.test?
 
     Tr8n::RelationshipKey.delete_all if env.test? or env.development?
-    
+
     sys_translator = system_translator
-    
+
     default_relationship_keys.each do |key, data|
       puts key unless env.test?
       rkey = Tr8n::RelationshipKey.find_or_create(key)
       rkey.description ||= data.delete(:description)
       rkey.level = curator_level # only admins and curators can see them for now
       rkey.save
-      
+
       data.each do |locale, labels|
         language = Tr8n::Language.for(locale)
         next unless language
@@ -985,24 +997,24 @@ class Tr8n::Config
       end
     end
   end
-  
+
   def self.default_relationship_keys
     @default_relationship_keys ||= load_yml("/config/tr8n/data/default_relationship_keys.yml", nil)
   end
-  
+
   def self.init_configuration_keys
     puts "Initializing default configuration keys..." unless env.test?
 
     Tr8n::ConfigurationKey.delete_all if env.test? or env.development?
-    
+
     sys_translator = system_translator
-    
+
     default_configuration_keys.each do |key, value|
       puts key unless env.test?
       rkey = Tr8n::ConfigurationKey.find_or_create(key, value[:label], value[:description])
       rkey.level = curator_level # only admins and curators can see them for now
       rkey.save
-      
+
       translations = value[:translations] || {}
       translations.each do |locale, lbl|
         language = Tr8n::Language.for(locale)
@@ -1011,7 +1023,7 @@ class Tr8n::Config
       end
     end
   end
-  
+
   def self.default_configuration_keys
     @default_configuration_keys ||= load_yml("/config/tr8n/data/default_configuration_keys.yml", nil)
   end
@@ -1024,7 +1036,7 @@ class Tr8n::Config
     location = IpToLocation.find_by_ip(remote_ip)
     (location and location.cntry) ? location.cntry : (config["default_country"] || "USA")
   end
-  
+
   ###################################
   ######################
   # Sync Process
@@ -1032,11 +1044,11 @@ class Tr8n::Config
   def self.synchronization_batch_size
     synchronization[:batch_size]
   end
-  
+
   def self.synchronization_server
     synchronization[:server]
   end
-  
+
   def self.synchronization_key
     synchronization[:key]
   end
@@ -1052,9 +1064,9 @@ class Tr8n::Config
   def self.synchronization_push_enabled?
     synchronization[:enable_push]
   end
-  
+
   def self.synchronization_push_servers
     synchronization[:push_servers]
   end
-  
+
 end

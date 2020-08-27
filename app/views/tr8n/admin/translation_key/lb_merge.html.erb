@@ -1,7 +1,7 @@
 <div class="inner">
     <div class="hd">
         <div style="float:right;">
-            <%=link_to_function(image_tag("/tr8n/images/close.gif"), "tr8nLightbox.hide();") %>
+            <%= tr8n_lb_close_tag %>
         </div>
         Merging Translation Keys
     </div>
@@ -11,10 +11,10 @@
   <%= form.hidden_field :id %>
   <%= hidden_field_tag :keys, @keys.collect{|key| key.id}.join(',') %>
   <%= hidden_field_tag :source_url, request.env['HTTP_REFERER'] %>
-  
+
 	<div style="background-color:#f1f4fa; padding:5px; max-height:120px; overflow:auto; margin-bottom: 10px; border: 1px solid #ccc;">
 		<table style="width:100%">
-			<% @keys.each_with_index do |key, index| %> 
+			<% @keys.each_with_index do |key, index| %>
 			<tr style="<%= "border-bottom:1px solid #ccc;" unless index == @keys.count-1 %>">
         <td style="padding:5px;width:20px;">
           <%= index+1 %>)
@@ -28,7 +28,7 @@
 			<% end %>
 		</table>
 	</div>
-	
+
   <table class="admin_table">
       <tr>
           <th>
@@ -47,7 +47,7 @@
           </td>
       </tr>
   </table>
-  
+
   <div><em>Note: merging translation keys will join all of the translations for each language and unlock the merged key.</em></div>
 
 <% end %>

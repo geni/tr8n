@@ -4,7 +4,7 @@
       <ul class="language_list">
       <% @user_languages.each do |user_language|%>
         <% language = user_language.language %>
-        <% next unless language %> 
+        <% next unless language %>
         <li>
             <span style="font-size:8px; float:right; color:#ccc;">
 						  <% if language.default? %>
@@ -12,11 +12,11 @@
 							<% else %>
 	               <%= "#{language.completeness || 0}%" if Tr8n::Config.enable_language_stats?%>
                  <% unless user_language.manager? %>
-	                 <%=link_to_function(image_tag("/tr8n/images/close.gif", :style=>"width:5px; padding-right:3px; padding-left:3px;"), "tr8nLanguageSelector.removeLanguage('#{language.id}');") %>
+	                 <%=link_to_function(image_tag( url_with_cache_version("/tr8n/images/close.gif"), :style=>"width:5px; padding-right:3px; padding-left:3px;"), "tr8nLanguageSelector.removeLanguage('#{language.id}');") %>
  								 <% end %>
 		          <% end %>
     			  </span>
-						
+
 	          <div onClick="Tr8n.element('language_selector_locale').value='<%=language.locale%>'; Tr8n.element('language_selector_form').submit();" dir="ltr">
           	<%= tr8n_language_flag_tag(language) %>
             <span dir="ltr">
@@ -29,9 +29,9 @@
           </div>
         </li>
       <% end %>
-    </ul>      
+    </ul>
   </div>
-  
+
   <div style="font-size:11px; border-bottom: 1px solid #ccc;">
 	   <%=tr8n_toggler_tag("tr8n_languages_list", "<span style='color:grey;'>#{trl("Other Languages")}</span>", (@user_languages.size <= 1) )%>
 	</div>
@@ -50,7 +50,7 @@
         <span style="font-size:8px; float:right; color:#ccc;" dir="ltr">
           <%= "#{language.default? ? '100' : (language.completeness || 0)}%" if Tr8n::Config.enable_language_stats? %>
 				</span>
-				  				
+
       	<%= tr8n_language_flag_tag(language) %>
         <span dir="ltr">
           <%= language.full_name %>

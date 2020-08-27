@@ -1,15 +1,15 @@
 <% form_tag("", :id => "lang_form") do %>
 <%= hidden_field_tag(:type, "language") %>
 <%= will_filter_table_tag(@results, :columns => [
-    [:checkbox, 'component_objects'],     
+    [:checkbox, 'component_objects'],
     [:id, lambda{|ulang| ulang.language ?  ulang.language.id : ''}, 'width:60px;'],
-    [:flag, lambda{|ulang| ulang.language ? image_tag("/tr8n/images/flags/#{ulang.language.flag}.png") : ''}, 'width:30px;'],
+    [:flag, lambda{|ulang| ulang.language ? image_tag( url_with_cache_version("/tr8n/images/flags/#{ulang.language.flag}.png") ) : ''}, 'width:30px;'],
     [:locale, lambda{|ulang|
       lang = ulang.language
       html = []
       if lang.enabled?
         html << '<span style="color:green">'
-      else  
+      else
         html << '<span style="color:red">'
       end
       html << lang.locale
@@ -27,7 +27,7 @@
       end
       html << link_to("Remove", {:action => :remove_objects_from_component, :component_object_id => ulang.id, :type => :language}, {:confirm => "Are you sure you want to remove this language from the component?"})
       html.join(' | ')
-    }, 'padding:5px;text-align:right;white-space:nowrap;width:200px;']        
+    }, 'padding:5px;text-align:right;white-space:nowrap;width:200px;']
   ]) %>
 <% end %>
 
@@ -42,4 +42,4 @@
     Tr8n.element('lang_form').action = "/tr8n/admin/applications/remove_objects_from_component";
     Tr8n.element('lang_form').submit();
   }
-</script>   
+</script>
