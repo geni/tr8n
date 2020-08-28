@@ -624,7 +624,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   this.VKI_size = 2;  // Default keyboard size (1-5)
   this.VKI_sizeAdj = true;  // Allow user to adjust keyboard size
   this.VKI_clearPasswords = false;  // Clear password fields on focus
-  this.VKI_imageURI = "/tr8n/images/keyboard.png?" + Tr8n.url_cache_version;  // If empty string, use imageless mode
+  this.VKI_imageURI = "/tr8n/images/keyboard.png?" + (Tr8n ? Tr8n.url_cache_version : '');  // If empty string, use imageless mode
   this.VKI_clickless = 0;  // 0 = disabled, > 0 = delay in ms
   this.VKI_activeTab = 0;  // Tab moves to next: 1 = element, 2 = keyboard enabled element
   this.VKI_enterSubmit = true;  // Submit forms when Enter is pressed
@@ -2709,8 +2709,8 @@ Tr8n.LanguageCaseManager.prototype = {
       html += splash_screen.innerHTML;
     } else {
       html += "<div style='font-size:18px;text-align:center; margin:5px; padding:10px; background-color:black;'>";
-      html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + Tr8n.url_cache_version + "' style='width:280px; vertical-align:middle;'>";
-      html += "  <img src='/tr8n/images/loading3.gif?" + Tr8n.url_cache_version + "' style='width:200px; height:20px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='width:280px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/loading3.gif?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='width:200px; height:20px; vertical-align:middle;'>";
       html += "</div>"
     }
     this.container.innerHTML = html;
@@ -2830,8 +2830,8 @@ Tr8n.LanguageSelector.prototype = {
         html += splash_screen.innerHTML;
       } else {
         html += "<div style='font-size:18px;text-align:center; margin:5px; padding:10px; background-color:black;'>";
-        html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + Tr8n.url_cache_version + "' style='width:280px; vertical-align:middle;'>";
-        html += "  <img src='/tr8n/images/loading3.gif?" + Tr8n.url_cache_version + "' style='width:200px; height:20px; vertical-align:middle;'>";
+        html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='width:280px; vertical-align:middle;'>";
+        html += "  <img src='/tr8n/images/loading3.gif?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='width:200px; height:20px; vertical-align:middle;'>";
         html += "</div>";
       }
       this.container.innerHTML = html;
@@ -2929,7 +2929,7 @@ Tr8n.Lightbox.prototype = {
     if(tr8nLanguageCaseManager) tr8nLanguageCaseManager.hide();
     Tr8n.Utils.hideFlash();
 
-    this.container.innerHTML = "<div class='inner'><div class='bd' style='text-align:center;padding-top:50px;'><img src='/tr8n/images/loading_large.gif?" + Tr8n.url_cache_version + "' style='vertical-align:middle'></div></div>";
+    this.container.innerHTML = "<div class='inner'><div class='bd' style='text-align:center;padding-top:50px;'><img src='/tr8n/images/loading_large.gif?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='vertical-align:middle'></div></div>";
 
     this.overlay.style.display  = "block";
 
@@ -3018,8 +3018,8 @@ Tr8n.Translator.prototype = {
       html += splash_screen.innerHTML;
     } else {
       html += "<div style='font-size:18px;text-align:center; margin:5px; padding:10px; background-color:black;'>";
-      html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + Tr8n.url_cache_version + "' style='width:280px; vertical-align:middle;'>";
-      html += "  <img src='/tr8n/images/loading3.gif?" + Tr8n.url_cache_version + "' style='width:200px; height:20px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='width:280px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/loading3.gif?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='width:200px; height:20px; vertical-align:middle;'>";
       html += "</div>"
     }
     this.container.innerHTML = html;
@@ -3502,11 +3502,11 @@ Tr8n.Proxy.Logger.prototype = {
     if (flag) {
       Tr8n.Effects.hide("no_object_" + obj_key);
       Tr8n.Effects.show("object_" + obj_key);
-      Tr8n.element("expander_" + obj_key).innerHTML = "<img src='/tr8n/images/minus_node.png?" + Tr8n.url_cache_version + "'>";
+      Tr8n.element("expander_" + obj_key).innerHTML = "<img src='/tr8n/images/minus_node.png?" + (Tr8n ? Tr8n.url_cache_version : '') + "'>";
     } else {
       Tr8n.Effects.hide("object_" + obj_key);
       Tr8n.Effects.show("no_object_" + obj_key);
-      Tr8n.element("expander_" + obj_key).innerHTML = "<img src='/tr8n/images/plus_node.png?" + Tr8n.url_cache_version + "'>";
+      Tr8n.element("expander_" + obj_key).innerHTML = "<img src='/tr8n/images/plus_node.png?" + (Tr8n ? Tr8n.url_cache_version : '') + "'>";
     }
   },
   toggleNode: function(obj_key) {
@@ -3526,8 +3526,8 @@ Tr8n.Proxy.Logger.prototype = {
     this.object_keys = [];
     html = []
     html.push("<div style='float:right;padding-right:10px;'>");
-    html.push("<span style='padding:2px;' onClick=\"tr8nProxy.logger.expandAllNodes()\"><img src='/tr8n/images/plus_node.png?" + Tr8n.url_cache_version + "'></span>");
-    html.push("<span style='padding:2px;' onClick=\"tr8nProxy.logger.collapseAllNodes()\"><img src='/tr8n/images/minus_node.png?" + Tr8n.url_cache_version + "'></span>");
+    html.push("<span style='padding:2px;' onClick=\"tr8nProxy.logger.expandAllNodes()\"><img src='/tr8n/images/plus_node.png?" + (Tr8n ? Tr8n.url_cache_version : '') + "'></span>");
+    html.push("<span style='padding:2px;' onClick=\"tr8nProxy.logger.collapseAllNodes()\"><img src='/tr8n/images/minus_node.png?" + (Tr8n ? Tr8n.url_cache_version : '') + "'></span>");
     html.push("</div>");
 
     var results = data;
@@ -3552,7 +3552,7 @@ Tr8n.Proxy.Logger.prototype = {
 
     var html = [];
     var obj_key = this.guid();
-    html.push("<span class='tr8n_logger_expander' id='expander_" + obj_key + "' onClick=\"tr8nProxy.logger.toggleNode('" + obj_key + "')\"><img src='/tr8n/images/minus_node.png?" + Tr8n.url_cache_version + "'></span> <span style='display:none' id='no_object_" + obj_key + "'>{...}</span> <span id='object_" + obj_key + "'>{");
+    html.push("<span class='tr8n_logger_expander' id='expander_" + obj_key + "' onClick=\"tr8nProxy.logger.toggleNode('" + obj_key + "')\"><img src='/tr8n/images/minus_node.png?" + (Tr8n ? Tr8n.url_cache_version : '') + "'></span> <span style='display:none' id='no_object_" + obj_key + "'>{...}</span> <span id='object_" + obj_key + "'>{");
     this.object_keys.push(obj_key);
 
     var keys = Object.keys(obj).sort();
@@ -3577,7 +3577,7 @@ Tr8n.Proxy.Logger.prototype = {
 
     var html = [];
     var obj_key = this.guid();
-    html.push("<span class='tr8n_logger_expander' id='expander_" + obj_key + "' onClick=\"tr8nProxy.logger.toggleNode('" + obj_key + "')\"><img src='/tr8n/images/minus_node.png?" + Tr8n.url_cache_version + "'></span> <span style='display:none' id='no_object_" + obj_key + "'>[...]</span> <span id='object_" + obj_key + "'>[");
+    html.push("<span class='tr8n_logger_expander' id='expander_" + obj_key + "' onClick=\"tr8nProxy.logger.toggleNode('" + obj_key + "')\"><img src='/tr8n/images/minus_node.png?" + (Tr8n ? Tr8n.url_cache_version : '') + "'></span> <span style='display:none' id='no_object_" + obj_key + "'>[...]</span> <span id='object_" + obj_key + "'>[");
     this.object_keys.push(obj_key);
 
     for (var i=0; i<arr.length; i++) {
@@ -3611,7 +3611,7 @@ Tr8n.Proxy.Logger.prototype = {
     return "<span class='tr8n_logger_obj_key'>" + key + ":</span>" + value_span;
   },
   createSpacer: function(level) {
-    return "<img src='/tr8n/images/pixel.gif?" + Tr8n.url_cache_version + "' style='height:1px;width:" + (level * 20) + "px;'>";
+    return "<img src='/tr8n/images/pixel.gif?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='height:1px;width:" + (level * 20) + "px;'>";
   },
   isArray: function(obj) {
     if (obj == null) return false;
