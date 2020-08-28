@@ -74,7 +74,7 @@ var VKI_attach, VKI_close;
   this.VKI_size = 2;  // Default keyboard size (1-5)
   this.VKI_sizeAdj = true;  // Allow user to adjust keyboard size
   this.VKI_clearPasswords = false;  // Clear password fields on focus
-  this.VKI_imageURI = "/tr8n/images/keyboard.png?" + Tr8n.url_cache_version;  // If empty string, use imageless mode
+  this.VKI_imageURI = "/tr8n/images/keyboard.png?" + (Tr8n ? Tr8n.url_cache_version : '');  // If empty string, use imageless mode
   this.VKI_clickless = 0;  // 0 = disabled, > 0 = delay in ms
   this.VKI_keyCenter = 3;
 

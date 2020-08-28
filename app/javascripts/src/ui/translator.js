@@ -90,8 +90,8 @@ Tr8n.Translator.prototype = {
       html += splash_screen.innerHTML;
     } else {
       html += "<div style='font-size:18px;text-align:center; margin:5px; padding:10px; background-color:black;'>";
-      html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + Tr8n.url_cache_version + "' style='width:280px; vertical-align:middle;'>";
-      html += "  <img src='/tr8n/images/loading3.gif?" + Tr8n.url_cache_version + "' style='width:200px; height:20px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='width:280px; vertical-align:middle;'>";
+      html += "  <img src='/tr8n/images/loading3.gif?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='width:200px; height:20px; vertical-align:middle;'>";
       html += "</div>"
     }
     this.container.innerHTML = html;
