@@ -112,7 +112,11 @@ class Tr8n::Translation < ActiveRecord::Base
     @rules_definitions ||= begin
       rulz = {}
       rules.each do |rule|
-        rulz[rule[:token].clone] = rule[:rule].to_hash  
+        if rule[:rule].respond_to?(:to_hash)
+          rulz[rule[:token].clone] = rule[:rule].to_hash  
+        else
+          rulz[rule[:token].clone] = rule[:rule].attributes
+        end
       end
       rulz
     end
