@@ -50,7 +50,8 @@ module Tr8n::HelperMethods
 
       opts[:sources].each do |source_name|
         source = Tr8n::TranslationSource.find_or_create(source_name, request.url)
-        js_source = url_with_cache_version("/tr8n/api/v1/language/translate.js?cache=true&sdk_jsvar=#{client_sdk_var_name}&source=#{CGI.escape(source_name)}&t=#{source.updated_at.to_i}")
+        locale = Tr8n::Config.current_language.locale
+        js_source = url_with_cache_version("/tr8n/api/v1/language/translate.js?cache=true&sdk_jsvar=#{client_sdk_var_name}&source=#{CGI.escape(source_name)}&t=#{source.updated_at.to_i}&locale=#{locale}")
         html << "<script type='text/javascript' src='#{js_source}'></script>"
       end
 
