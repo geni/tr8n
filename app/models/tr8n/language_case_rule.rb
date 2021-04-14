@@ -123,9 +123,9 @@ class Tr8n::LanguageCaseRule < ActiveRecord::Base
           return value.gsub(/(#{regex})\b/, definition["operation_value"])
         end
       when "prepand"
-        return value.gsub(/\b(#{regex})/, "#{definition["operation_value"]}\\1")
+        return value.sub(/^(\P{word}*)/, "\\1#{definition["operation_value"]}")
       when "append"
-        return value.gsub(/(#{regex})\b/, "\\1#{definition["operation_value"]}")
+        return value.sub(/(\P{word}*)$/, "#{definition["operation_value"]}\\1")
     end
 
     value
