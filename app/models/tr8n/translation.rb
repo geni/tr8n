@@ -27,11 +27,11 @@ class Tr8n::Translation < ActiveRecord::Base
   belongs_to :language,         :class_name => "Tr8n::Language"
   belongs_to :translation_key,  :class_name => "Tr8n::TranslationKey"
   belongs_to :translator,       :class_name => "Tr8n::Translator"
-  
+
   has_many   :translation_votes, :class_name => "Tr8n::TranslationVote", :dependent => :destroy
-  
+
   serialize :rules
-    
+
   alias :key :translation_key
   alias :votes :translation_votes
 
@@ -46,43 +46,43 @@ class Tr8n::Translation < ActiveRecord::Base
 
     update_rank!
     self.translator.update_rank!(language) if self.translator
-    
+
     # add the translator to the watch list
     self.translator.update_attributes(:reported => true) if score < VIOLATION_INDICATOR
-    
+
     translator.voted_on_translation!(self)
     translator.update_metrics!(language)
     translation_key.update_metrics!(language)
   end
-  
+
   def update_rank!
     self.rank = Tr8n::TranslationVote.sum("vote", :conditions => ["translation_id = ?", self.id])
     save
   end
-  
+
   def reset_votes!(translator)
     Tr8n::TranslationVote.delete_all("translation_id = #{self.id}")
     vote!(translator, 1)
   end
-  
+
   def rank_style(rank)
     Tr8n::Config.default_rank_styles.each do |range, color|
       return color if range.include?(rank)
     end
     "color:grey"
   end
-  
+
   def rank_label
     return "<span style='color:grey'>0</span>" if rank.blank?
-    
+
     prefix = (rank > 0) ? "+" : ""
-    "<span style='#{rank_style(rank)}'>#{prefix}#{rank}</span>" 
+    "<span style='#{rank_style(rank)}'>#{prefix}#{rank}</span>"
   end
 
   # populate language rules from the internal rules hash
   def rules
     return nil if super.nil? or super.empty?
-    
+
     @loaded_rules ||= begin
       rulz = []
       super.each do |rule|
@@ -96,24 +96,24 @@ class Tr8n::Translation < ActiveRecord::Base
   end
 
   def rules_hash
-    return nil if rules.nil? or rules.empty? 
-    
+    return nil if rules.nil? or rules.empty?
+
     @rules_hash ||= begin
       rulz = {}
       rules.each do |rule|
-        rulz[rule[:token]] = rule[:rule_id]  
+        rulz[rule[:token]] = rule[:rule_id]
       end
       rulz
     end
   end
 
   def rules_definitions
-    return nil if rules.nil? or rules.empty? 
+    return nil if rules.nil? or rules.empty?
     @rules_definitions ||= begin
       rulz = {}
       rules.each do |rule|
         if rule[:rule].respond_to?(:to_hash)
-          rulz[rule[:token].clone] = rule[:rule].to_hash  
+          rulz[rule[:token].clone] = rule[:rule].to_hash
         else
           rulz[rule[:token].clone] = rule[:rule].attributes
         end
@@ -123,12 +123,12 @@ class Tr8n::Translation < ActiveRecord::Base
   end
 
   def context
-    return nil if rules.nil? or rules.empty? 
-    
+    return nil if rules.nil? or rules.empty?
+
     @context ||= begin
-      context_rules = []  
+      context_rules = []
       rules.each do |rule|
-        context_rules << "<strong>#{rule[:token]}</strong> #{rule[:rule].description}" 
+        context_rules << "<strong>#{rule[:token]}</strong> #{rule[:rule].description}"
       end
       context_rules.join(" and ")
     end
@@ -137,24 +137,24 @@ class Tr8n::Translation < ActiveRecord::Base
   def matches_rules?(token_values)
     return true if rules.nil? # doesn't have any rules
     return false if rules.empty?  # had some rules that have been removed
-    
+
     rules.each do |rule|
       token_value = token_values[rule[:token].to_sym]
       token_value = token_value.first if token_value.is_a?(Array)
       result = rule[:rule].evaluate(token_value)
       return false unless result
     end
-    
+
     true
   end
-  
+
   def matches_rule_definitions?(new_rules_hash)
     rules_hash == new_rules_hash
   end
 
   def self.default_translation(translation_key, language, translator)
-    trans = find(:first, 
-      :conditions => ["translation_key_id = ? and language_id = ? and translator_id = ? and rules is null", 
+    trans = find(:first,
+      :conditions => ["translation_key_id = ? and language_id = ? and translator_id = ? and rules is null",
                        translation_key.id, language.id, translator.id], :order => "rank desc")
     return trans if trans
     label = translation_key.default_translation if translation_key.is_a?(Tr8n::RelationshipKey)
@@ -162,26 +162,26 @@ class Tr8n::Translation < ActiveRecord::Base
   end
 
   def blank?
-    self.label.blank?    
+    self.label.blank?
   end
 
   def uniq?
     # for now, treat all translations as uniq
     return true
-    
+
     conditions = ["translation_key_id = ? and language_id = ? and label = ?", translation_key.id, language.id, label]
     if self.id
       conditions[0] << " and id <> ?"
       conditions << self.id
     end
-    
+
     self.class.find(:all, :conditions => conditions).empty?
   end
-  
+
   def clean?
     language.clean_sentence?(label)
   end
-  
+
   def can_be_edited_by?(editor)
     return false if translation_key.locked?
     translator == editor
@@ -190,34 +190,35 @@ class Tr8n::Translation < ActiveRecord::Base
   def can_be_deleted_by?(editor)
     return false if translation_key.locked?
     return true if editor.manager?
-    
+
     translator == editor
   end
 
   def save_with_log!(translator)
     if self.id
       translator.updated_translation!(self) if changed?
-    else  
+    else
       translator.added_translation!(self)
     end
-    
+
     save
   end
-  
+
   def destroy_with_log!(translator)
     translator.deleted_translation!(self)
-    
+
     destroy
   end
-  
+
   def clear_cache
     Tr8n::Cache.delete("translations_#{language.locale}_#{translation_key.key}") if language and translation_key
     language.translations_changed! if language
     translation_key.translations_changed!(language) if translation_key
   end
-  
+
   def after_create
-    Tr8n::Notification.distribute(self)    
+    clear_cache # geni/geni#2583
+    Tr8n::Notification.distribute(self)
   end
 
   def after_save
@@ -227,7 +228,7 @@ class Tr8n::Translation < ActiveRecord::Base
   def after_destroy
     clear_cache
   end
-  
+
   ###############################################################
   ## Synchronization Methods
   ###############################################################
@@ -243,27 +244,27 @@ class Tr8n::Translation < ActiveRecord::Base
   # serilaize translation to API hash to be used for synchronization
   def to_sync_hash(opts = {})
     return {"locale" => language.locale, "label" => label, "rules" => rules_sync_hash(opts)} if opts[:comparible]
-    
+
     hash = {"locale" => language.locale, "label" => label, "rank" => rank, "rules" => rules_sync_hash(opts)}
     if translator
       if opts[:include_translator] # tr8n.net => local = include full translator info
         hash["translator"] = translator.to_sync_hash(opts)
-      elsif translator.remote_id  # local => tr8n.net = include only the remote id of the translator if the translator is linked 
+      elsif translator.remote_id  # local => tr8n.net = include only the remote id of the translator if the translator is linked
         hash["translator_id"] = translator.remote_id
-      end  
-    end  
-    hash  
+      end
+    end
+    hash
   end
 
   # create translation from API hash for a specific key
   def self.create_from_sync_hash(tkey, translator, thash, opts = {})
     return if thash["label"].blank?  # don't add empty translations
-    
+
     lang = Tr8n::Language.for(thash["locale"])
     return unless lang  # don't add translations for an unsupported language
 
     # generate rules for the translation
-    rules = []    
+    rules = []
     if thash["rules"] and thash["rules"].any?
       thash["rules"].each do |rhash|
         rule = Tr8n::LanguageRule.create_from_sync_hash(lang, translator, rhash, opts)
@@ -272,21 +273,21 @@ class Tr8n::Translation < ActiveRecord::Base
       end
     end
     rules = nil if rules.empty?
-    
+
     tkey.add_translation(thash["label"], rules, lang, translator)
   end
-  
+
   ###############################################################
   ## Search Related Stuff
   ###############################################################
-  
+
   def self.filter_status_options
-    [["all translations", "all"], 
-     ["accepted translations", "accepted"], 
-     ["pending translations", "pending"], 
-     ["rejected translations", "rejected"]].collect{|option| [option.first.trl("Translation filter status option"), option.last]}    
+    [["all translations", "all"],
+     ["accepted translations", "accepted"],
+     ["pending translations", "pending"],
+     ["rejected translations", "rejected"]].collect{|option| [option.first.trl("Translation filter status option"), option.last]}
   end
-  
+
   def self.filter_submitter_options(translators=nil)
     translators ||= []
     values = [["anyone", "anyone"], ["me", "me"]].collect{|option| [option.first.trl("Translation filter submitter option"), option.last]}
@@ -295,43 +296,43 @@ class Tr8n::Translation < ActiveRecord::Base
     end
     values
   end
-  
+
   def self.filter_date_options
-    [["any date", "any"], 
-     ["today", "today"], 
-     ["yesterday", "yesterday"], 
+    [["any date", "any"],
+     ["today", "today"],
+     ["yesterday", "yesterday"],
      ["in the last week", "last_week"]].collect{|option| [option.first.trl("Translation filter date option"), option.last]}
   end
-  
+
   def self.filter_order_by_options
-    [["date", "date"], 
+    [["date", "date"],
      ["rank", "rank"]].collect{|option| [option.first.trl("Translation filter order by option"), option.last]}
   end
-  
+
 
   def self.filter_group_by_options
-    [["nothing", "nothing"], 
-     ["translator", "translator"], 
-     ["context rule", "context"], 
-     ["rank", "rank"], 
+    [["nothing", "nothing"],
+     ["translator", "translator"],
+     ["context rule", "context"],
+     ["rank", "rank"],
      ["date", "date"]].collect{|option| [option.first.trl("Translation filter group by option"), option.last]}
   end
-  
+
   def self.search_conditions_for(params, language = Tr8n::Config.current_language)
-    conditions = ["language_id = ?", language.id]    
-    
-    # ensure that only allowed translations are visible 
-    conditions[0] << " and translation_key_id in (select id from tr8n_translation_keys where level <= ? " 
-    if params[:only_phrases]  
+    conditions = ["language_id = ?", language.id]
+
+    # ensure that only allowed translations are visible
+    conditions[0] << " and translation_key_id in (select id from tr8n_translation_keys where level <= ? "
+    if params[:only_phrases]
       conditions[0] << " and (type is null or type = 'Tr8n::TranslationKey' or type = 'TranslationKey')) "
     else
       conditions[0] << " ) "
     end
     conditions << (Tr8n::Config.current_user_is_translator? ? Tr8n::Config.current_translator.level : 0)
-    
+
     unless params[:search].blank?
       conditions[0] << " and " unless conditions[0].blank?
-      conditions[0] << "label like ?" 
+      conditions[0] << "label like ?"
       conditions << "%#{params[:search]}%"
     end
 
@@ -347,11 +348,11 @@ class Tr8n::Translation < ActiveRecord::Base
       conditions[0] << " and " unless conditions[0].blank?
       conditions[0] << " rank < 0 "
     end
-    
+
     unless params[:submitted_by].blank?
-      if params[:submitted_by] == "anyone" 
+      if params[:submitted_by] == "anyone"
         translator_id = nil
-      elsif params[:submitted_by] == "me" 
+      elsif params[:submitted_by] == "me"
         translator_id = Tr8n::Config.current_translator.id
       else
         translator_id = params[:submitted_by]
@@ -366,23 +367,23 @@ class Tr8n::Translation < ActiveRecord::Base
     if params[:submitted_on] == "today"
       date = Date.today
       conditions[0] << " and " unless conditions[0].blank?
-      conditions[0] << "created_at >= ? and created_at < ?" 
+      conditions[0] << "created_at >= ? and created_at < ?"
       conditions << date
       conditions << (date + 1.day)
     elsif params[:submitted_on] == "yesterday"
       date = Date.today - 1.days
       conditions[0] << " and " unless conditions[0].blank?
-      conditions[0] << "created_at >= ? and created_at < ?" 
+      conditions[0] << "created_at >= ? and created_at < ?"
       conditions << date
       conditions << (date + 1.day)
     elsif params[:submitted_on] == "last_week"
       date = Date.today - 7.days
       conditions[0] << " and " unless conditions[0].blank?
-      conditions[0] << "created_at >= ? and created_at < ?" 
+      conditions[0] << "created_at >= ? and created_at < ?"
       conditions << date
       conditions << Date.today
-    end    
+    end
     conditions
-  end 
-    
+  end
+
 end
