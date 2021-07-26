@@ -110,7 +110,7 @@ class Tr8n::TranslatorLog < ActiveRecord::Base
     elsif [:added_translation, :updated_translation, :deleted_translation, :voted_on_translation].include?(act)
       trans = Tr8n::Translation.find_by_id(reference) unless reference.blank?
       html << " in " << trans.language.english_name if trans and trans.language
-      html << " : " << trans.translation_key.label if trans
+      html << " : " << trans.translation_key.label  if trans and trans.translation_key
     elsif [:locked_translation_key, :unlocked_translation_key].include?(act)
       trans_key = Tr8n::TranslationKey.find_by_id(reference) unless reference.blank?
       html << " : " << trans_key.label if trans
