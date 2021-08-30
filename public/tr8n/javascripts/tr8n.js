@@ -3918,7 +3918,9 @@ Tr8n.Proxy.DataToken = function(label, token, options) {
 Tr8n.Proxy.DataToken.prototype = new Tr8n.Proxy.Token();
 
 Tr8n.Proxy.DataToken.parse = function(label, options) {
-  var tokens = label.match(/(\{[^_][\w]+(:[\w]+)?\})/g);
+  // Issue: geni/geni#2480
+  var tokens = label.match(/(\{[^_][\w]+(::?[\w]+)?\})/g);
+
   if (!tokens) return [];
 
   var objects = [];
@@ -3941,7 +3943,8 @@ Tr8n.Proxy.TransformToken = function(label, token, options) {
 Tr8n.Proxy.TransformToken.prototype = new Tr8n.Proxy.Token();
 
 Tr8n.Proxy.TransformToken.parse = function(label, options) {
-  var tokens = label.match(/(\{[^_][\w]+(:[\w]+)?\s*\|\|?[^{^}]+\})/g);
+  // Issue: geni/geni#2480
+  var tokens = label.match(/(\{[^_][\w]+(::?[\w]+)?\s*\|\|?[^{^}]+\})/g);
   if (!tokens) return [];
 
   var objects = [];
