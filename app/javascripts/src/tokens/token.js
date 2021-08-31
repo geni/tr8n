@@ -37,16 +37,16 @@ Tr8n.Proxy.Token.prototype = {
   register: function(label, options) {
     if (this.getExpression() == null)
       alert("Token expression must be provided");
-      
+
     var tokens = label.match(this.getExpression());
     if (!tokens) return [];
-    
+
     var objects = [];
     var uniq = {};
     for(i=0; i<tokens.length; i++) {
       if (uniq[tokens[i]]) continue;
       options['proxy'].debug("Registering data token: " + tokens[i]);
-      objects.push(new Tr8n.Proxy.TransformToken(label, tokens[i], options)); 
+      objects.push(new Tr8n.Proxy.TransformToken(label, tokens[i], options));
       uniq[tokens[i]] = true;
     }
     return objects;
@@ -62,23 +62,23 @@ Tr8n.Proxy.Token.prototype = {
   },
   getName: function() {
     if (!this.name) {
-      this.name = Tr8n.Utils.trim(this.getDeclaredName().split(':')[0]); 
+      this.name = Tr8n.Utils.trim(this.getDeclaredName().split(':')[0]);
     }
     return this.name;
   },
   getLanguageRule: function() {
-    
+
     return null;
   },
   substitute: function(label, token_values) {
     var value = token_values[this.getName()];
-    
+
     if (value == null) {
       this.getLogger().error("Value for token: " + this.getFullName() + " was not provided");
       return label;
     }
 
-    return Tr8n.Utils.replaceAll(label, this.getFullName(), this.getTokenValue(value)); 
+    return Tr8n.Utils.replaceAll(label, this.getFullName(), this.getTokenValue(value));
   },
   getTokenValue: function(token_value) {
     if (typeof token_value == 'string') return token_value;
@@ -93,13 +93,13 @@ Tr8n.Proxy.Token.prototype = {
   getType: function() {
     if (this.getDeclaredName().indexOf(':') == -1)
       return null;
-    
+
     if (!this.type) {
       this.type = this.getDeclaredName().split('|')[0].split(':');
       this.type = this.type[this.type.length - 1];
     }
-    
-    return this.type;     
+
+    return this.type;
   },
   getSuffix: function() {
     if (!this.suffix) {
@@ -111,7 +111,7 @@ Tr8n.Proxy.Token.prototype = {
   getLanguageRule: function() {
     if (!this.language_rule) {
       if (this.getType()) {
-        this.language_rule = this.getProxy().getLanguageRuleForType(this.getType()); 
+        this.language_rule = this.getProxy().getLanguageRuleForType(this.getType());
       } else {
         this.language_rule = this.getProxy().getLanguageRuleForTokenSuffix(this.getSuffix());
       }

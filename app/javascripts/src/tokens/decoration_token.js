@@ -32,7 +32,7 @@ Tr8n.Proxy.DecorationToken.prototype = new Tr8n.Proxy.Token();
 Tr8n.Proxy.DecorationToken.parse = function(label, options) {
   var tokens = label.match(/(\[\w+:[^\]]+\])/g);
   if (!tokens) return [];
-  
+
   var objects = [];
   var uniq = {};
   for(i=0; i<tokens.length; i++) {
@@ -56,7 +56,7 @@ Tr8n.Proxy.DecorationToken.prototype.getDecoratedValue = function() {
 Tr8n.Proxy.DecorationToken.prototype.substitute = function(label, token_values) {
   var object = token_values[this.getName()];
   var decoration = object;
-  
+
   if (!object || typeof object == 'object') {
     // look for the default decoration
     decoration = this.getProxy().getDecorationFor(this.getName());
@@ -64,7 +64,7 @@ Tr8n.Proxy.DecorationToken.prototype.substitute = function(label, token_values) 
       this.getLogger().error("Default decoration is not defined for token " + this.getName());
       return label;
     }
-    
+
     decoration = Tr8n.Utils.replaceAll(decoration, '{$0}', this.getDecoratedValue());
     if (object) {
       for (var key in object) {
@@ -77,6 +77,6 @@ Tr8n.Proxy.DecorationToken.prototype.substitute = function(label, token_values) 
     this.getLogger().error("Unknown type of decoration token " + this.getFullName());
     return label;
   }
-  
+
   return Tr8n.Utils.replaceAll(label, this.getFullName(), decoration);
 }

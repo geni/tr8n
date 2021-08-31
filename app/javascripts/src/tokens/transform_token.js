@@ -32,13 +32,13 @@ Tr8n.Proxy.TransformToken.prototype = new Tr8n.Proxy.Token();
 Tr8n.Proxy.TransformToken.parse = function(label, options) {
   var tokens = label.match(/(\{[^_][\w]+(:[\w]+)?\s*\|\|?[^{^}]+\})/g);
   if (!tokens) return [];
-  
+
   var objects = [];
   var uniq = {};
   for(i=0; i<tokens.length; i++) {
     if (uniq[tokens[i]]) continue;
     options['proxy'].debug("Registering transform token: " + tokens[i]);
-    objects.push(new Tr8n.Proxy.TransformToken(label, tokens[i], options)); 
+    objects.push(new Tr8n.Proxy.TransformToken(label, tokens[i], options));
     uniq[tokens[i]] = true;
   }
   return objects;
@@ -46,7 +46,7 @@ Tr8n.Proxy.TransformToken.parse = function(label, options) {
 
 Tr8n.Proxy.TransformToken.prototype.getName = function() {
   if (!this.name) {
-    this.name = Tr8n.Utils.trim(this.getDeclaredName().split('|')[0].split(':')[0]); 
+    this.name = Tr8n.Utils.trim(this.getDeclaredName().split('|')[0].split(':')[0]);
   }
   return this.name;
 }
@@ -69,12 +69,12 @@ Tr8n.Proxy.TransformToken.prototype.substitute = function(label, token_values) {
     this.getLogger().error("Value for token: " + this.getFullName() + " was not provided");
     return label;
   }
-  
+
   var token_object = this.getTokenObject(object);
   this.getLogger().debug("Registered " + this.getPipedParams().length + " piped params");
-  
+
   var lang_rule_name = this.getLanguageRule();
-  
+
   if (!lang_rule_name) {
     this.getLogger().error("Rule type cannot be determined for the transform token: " + this.getFullName());
     return label;
@@ -84,13 +84,13 @@ Tr8n.Proxy.TransformToken.prototype.substitute = function(label, token_values) {
 
   var transform_value = eval(lang_rule_name).transform(token_object, this.getPipedParams());
   this.getLogger().debug("Registered transform value: " + transform_value);
-  
+
   // for double pipes - show the actual value as well
   if (this.isAllowedInTranslation()) {
     var token_value = this.getTokenValue(object);
-    transform_value = token_value + " " + transform_value; 
+    transform_value = token_value + " " + transform_value;
   }
-  
+
   return Tr8n.Utils.replaceAll(label, this.getFullName(), transform_value);
 }
 

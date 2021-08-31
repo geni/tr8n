@@ -32,7 +32,7 @@ Tr8n.Proxy.DataToken.prototype = new Tr8n.Proxy.Token();
 Tr8n.Proxy.DataToken.parse = function(label, options) {
   var tokens = label.match(/(\{[^_][\w]+(:[\w]+)?\})/g);
   if (!tokens) return [];
-  
+
   var objects = [];
   var uniq = {};
   for(i=0; i<tokens.length; i++) {
