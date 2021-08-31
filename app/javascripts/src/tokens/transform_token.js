@@ -30,7 +30,7 @@ Tr8n.Proxy.TransformToken = function(label, token, options) {
 Tr8n.Proxy.TransformToken.prototype = new Tr8n.Proxy.Token();
 
 Tr8n.Proxy.TransformToken.parse = function(label, options) {
-  var tokens = label.match(/(\{[^_][\w]+(:[\w]+)?\s*\|\|?[^{^}]+\})/g);
+  var tokens = label.match(/(\{[^_][\w]+(::?[\w]+)?\s*\|\|?[^{^}]+\})/g);
   if (!tokens) return [];
 
   var objects = [];
