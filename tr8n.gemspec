@@ -12,7 +12,6 @@ Gem::Specification.new do |gem|
   gem.license       = 'MIT'
 
   gem.add_dependency 'rails', '~> 2.3.0'
-  gem.add_dependency 'will_filter', '~> 2.3.0'
 
   gem.add_development_dependency 'fssm', '~> 0.2.10'
 
