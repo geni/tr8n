@@ -4028,7 +4028,7 @@ Tr8n.Proxy.DecorationToken = function(label, token, options) {
 Tr8n.Proxy.DecorationToken.prototype = new Tr8n.Proxy.Token();
 
 Tr8n.Proxy.DecorationToken.parse = function(label, options) {
-  var tokens = label.match(/(\[\w+:[^\]]+\])/g);
+  var tokens = label.match(/(\[\w+::?[^\]]+\])/g);
   if (!tokens) return [];
 
   var objects = [];
