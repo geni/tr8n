@@ -425,6 +425,9 @@ shortcut = {
       //Find Which key is pressed
       if (e.keyCode) code = e.keyCode;
       else if (e.which) code = e.which;
+
+      if (!code) return;
+
       var character = String.fromCharCode(code).toLowerCase();
       
       if(code == 188) character=","; //If the user presses , when the type is onkeydown
@@ -4447,3 +4450,4 @@ function initializeTr8n() {
 
   Tr8n.Utils.addEvent(window, 'load', setup);
 }
+
