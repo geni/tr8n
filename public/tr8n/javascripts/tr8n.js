@@ -607,6 +607,7 @@ shortcut = {
     else ele['on'+type] = false;
   }
 }
+
 var VKI_attach, VKI_close;
 var VKI_default_layout = VKI_default_layout || "US International";
 
@@ -4451,4 +4452,3 @@ function initializeTr8n() {
 
   Tr8n.Utils.addEvent(window, 'load', setup);
 }
-
