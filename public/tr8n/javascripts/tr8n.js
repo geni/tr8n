@@ -423,6 +423,7 @@ shortcut = {
       }
   
       //Find Which key is pressed
+      var code;
       if (e.keyCode) code = e.keyCode;
       else if (e.which) code = e.which;
 
