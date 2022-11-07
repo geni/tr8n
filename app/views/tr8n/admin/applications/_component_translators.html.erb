@@ -38,15 +38,15 @@
       ctran.translator&.rank ? (ctran.translator&.rank * 100).to_i / 100.0 : 0
     }, 'text-align:right'], 
     [:translation_count, lambda{|ctran|
-      link_to(ctran.translator&.total_metric.total_translations || 0, "/tr8n/admin/translation?wf_c0=translator_id&wf_o0=is&wf_v0_0=#{ctran.translator&.id}")
+      link_to(ctran.translator&.total_metric&.total_translations || 0, "/tr8n/admin/translation?wf_c0=translator_id&wf_o0=is&wf_v0_0=#{ctran.translator&.id}")
     }, 'text-align:right;width:150px;'],
     [:vote_count, lambda{|ctran|
       html = []
-      html << (ctran.translator&.total_metric.total_votes || 0)
+      html << (ctran.translator&.total_metric&.total_votes || 0)
       html << " (<span style='color:green'>"
-      html << (ctran.translator&.total_metric.positive_votes || 0) 
+      html << (ctran.translator&.total_metric&.positive_votes || 0) 
       html << "</span>/<span style='color:red'>"
-      html << (ctran.translator&.total_metric.negative_votes || 0)
+      html << (ctran.translator&.total_metric&.negative_votes || 0)
       html << "</span>)"
       html.join("")     
     }, 'text-align:right;width:100px;'],
