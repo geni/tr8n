@@ -6,7 +6,7 @@
       ctran.translator&.id
     }],
     [:name, lambda{|ctran|
-       link_to(ctran.translator&.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => ctran.translator&.id) 
+       ctran.translator ? link_to(ctran.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => ctran.translator.id) : '(deleted)'
     }],
     [:country, lambda{|ctran|
       ctran.translator&.country_code
