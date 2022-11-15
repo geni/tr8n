@@ -3110,6 +3110,7 @@ Tr8n.Translator.prototype = {
   insertToken: function (token, txtarea_id) {
     txtarea_id = txtarea_id || 'tr8n_translator_translation_label';
     Tr8n.Utils.insertAtCaret(txtarea_id, "{" + token + "}");
+    this.validateTranslationTokens();
   },
 
   switchTranslatorMode: function(translation_key_id, mode, source_url) {
@@ -3117,6 +3118,73 @@ Tr8n.Translator.prototype = {
       parameters: {translation_key_id: translation_key_id, mode: mode, source_url: source_url},
       evalScripts: true
     });
+  },
+
+  validateTranslationTokens: function() {
+    var tokenLinks = document.querySelectorAll('#tr8n_translator_tokens_simple_view a');
+    var unusedTokens = [];
+    var invalidTokens = [];
+    var translationLabel = document.getElementById('tr8n_translator_translation_label').value;
+
+    // check which tokens have been used
+    tokenLinks.forEach(function(tokenLink, idx) {
+      var token = tokenLink.innerHTML;
+
+      if (translationLabel.indexOf(token) >= 0) {
+        tokenLink.classList.remove('unused-token');
+        tokenLink.classList.add('used-token');
+      } else {
+        tokenLink.classList.remove('used-token');
+        tokenLink.classList.add('unused-token');
+        unusedTokens.push(token);
+      }
+    })
+
+    // look for invalid tokens
+    var trTokens = []
+    tokenLinks.forEach(function(token, idx) { trTokens.push(token.innerHTML) });
+
+    translationLabel.match(/\{[^\}]+\}/g).forEach(function(inputToken, idx) {
+      if (!trTokens.include(inputToken)) {
+        invalidTokens.push(inputToken);
+      }
+    });
+
+    var disableSubmit = false;
+    var errors = '';
+
+    if (Tr8n.allow_invalid_tokens != 'true' && invalidTokens.length > 0) {
+      errors += "<span class='error-invalid-tokens-" + Tr8n.allow_invalid_tokens + "'>";
+      errors += trl('Invalid tokens:');
+      errors += ' ';
+      invalidTokens.forEach(function(token, idx) { errors += token });
+      errors += "</span>"
+
+      if (Tr8n.allow_invalid_tokens == 'error') disableSubmit = true;
+    }
+
+    if (Tr8n.allow_unused_tokens != 'true' && unusedTokens.length > 0) {
+      if (errors.length > 0) errors += '<br />';
+
+      errors += "<span class='error-unused-tokens-" + Tr8n.allow_unused_tokens + "'>";
+      errors += trl('Unused tokens:');
+      errors += ' ';
+      unusedTokens.forEach(function(token, idx) { errors += token });
+      errors += "</span>"
+
+      if (Tr8n.allow_unused_tokens == 'error') disableSubmit = true;
+    }
+
+    var errorDiv = document.getElementById('tr8n_token_errors');
+    if (errorDiv) errorDiv.innerHTML = errors;
+
+    var submitBtn = document.getElementById('tr8n_translator_buttons_container').querySelector('button[type="submit"]');
+    if (submitBtn) {
+      if (disableSubmit)
+        submitBtn.setAttribute('disabled','');
+      else
+        submitBtn.removeAttribute('disabled');
+    }
   },
 
   submitTranslation: function() {
