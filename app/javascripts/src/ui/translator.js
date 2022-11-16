@@ -349,3 +349,4 @@ Tr8n.Translator.prototype = {
   }
 
 }
+

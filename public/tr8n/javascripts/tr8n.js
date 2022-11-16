@@ -3284,6 +3284,7 @@ Tr8n.Translator.prototype = {
 }
 
 
+
 Tr8n.Proxy = function(options) {
   var self = this;
   this.options = options;
