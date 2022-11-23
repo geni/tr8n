@@ -197,25 +197,35 @@ Tr8n.Translator.prototype = {
     tokenLinks.forEach(function(tokenLink, idx) {
       var token = tokenLink.innerHTML;
 
-      if (translationLabel.indexOf(token) >= 0) {
-        tokenLink.classList.remove('unused-token');
-        tokenLink.classList.add('used-token');
-      } else {
-        tokenLink.classList.remove('used-token');
-        tokenLink.classList.add('unused-token');
-        unusedTokens.push(token);
+      if (token.startsWith('{')) {
+        if (translationLabel.indexOf(token) >= 0) {
+          tokenLink.classList.remove('unused-token');
+          tokenLink.classList.add('used-token');
+        } else {
+          tokenLink.classList.remove('used-token');
+          tokenLink.classList.add('unused-token');
+          unusedTokens.push(token);
+        }
       }
     })
 
     // look for invalid tokens
     var trTokens = []
-    tokenLinks.forEach(function(token, idx) { trTokens.push(token.innerHTML) });
-
-    translationLabel.match(/\{[^\}]+\}/g).forEach(function(inputToken, idx) {
-      if (!trTokens.include(inputToken)) {
-        invalidTokens.push(inputToken);
+    tokenLinks.forEach(function(tokenLink, idx) {
+      var token = tokenLink.innerHTML;
+      if (token.startsWith('{')) {
+        trTokens.push(token);
       }
     });
+
+    var labelMatch = translationLabel.match(/\{[^\}]+\}/g);
+    if (labelMatch) {
+      labelMatch.forEach(function(inputToken, idx) {
+        if (!trTokens.includes(inputToken)) {
+          invalidTokens.push(inputToken);
+        }
+      });
+    }
 
     var disableSubmit = false;
     var errors = '';

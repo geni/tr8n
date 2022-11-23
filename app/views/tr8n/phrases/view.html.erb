@@ -1,61 +1,61 @@
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
 
-	<%= render :partial => "/tr8n/common/header" %>
-	<%= render :partial => "breadcrumb" %>
-	<%= render :partial => "header" %>
+  <%= render :partial => "/tr8n/common/header" %>
+  <%= render :partial => "breadcrumb" %>
+  <%= render :partial => "header" %>
   <%= render :partial => "toolbar" %>
-	
-	<script>
-	  function addEvent(elm, evType, fn, useCapture) {
-	    useCapture = useCapture || false;
-	    if (elm.addEventListener) {
-	      elm.addEventListener(evType, fn, useCapture);
-	      return true;
-	    } else if (elm.attachEvent) {
-	      var r = elm.attachEvent('on' + evType, fn);
-	      return r;
-	    } else {
-	      elm['on' + evType] = fn;
-	    }
-	  }
-		
-		function addTranslation() {
-			Tr8n.Effects.hide('translation_key_toolbar');
-			Tr8n.Effects.hide('tranlsations_module'); 
-	    Tr8n.Effects.hide('comments_module'); 
-	    Tr8n.Effects.hide('permutations_module');
-			Tr8n.Effects.show('translation_module');
-		}
-		
-	  function addContextRules() {
+
+  <script>
+    function addEvent(elm, evType, fn, useCapture) {
+      useCapture = useCapture || false;
+      if (elm.addEventListener) {
+        elm.addEventListener(evType, fn, useCapture);
+        return true;
+      } else if (elm.attachEvent) {
+        var r = elm.attachEvent('on' + evType, fn);
+        return r;
+      } else {
+        elm['on' + evType] = fn;
+      }
+    }
+
+    function addTranslation() {
       Tr8n.Effects.hide('translation_key_toolbar');
-	    Tr8n.Effects.hide('tranlsations_module'); 
-	    Tr8n.Effects.hide('comments_module'); 
-	    Tr8n.Effects.hide('translation_module');
-	    Tr8n.Effects.show('permutations_module');
-	  }
-	
-	  function viewTranslations() {
+      Tr8n.Effects.hide('tranlsations_module');
+      Tr8n.Effects.hide('comments_module');
+      Tr8n.Effects.hide('permutations_module');
+      Tr8n.Effects.show('translation_module');
+    }
+
+    function addContextRules() {
+      Tr8n.Effects.hide('translation_key_toolbar');
+      Tr8n.Effects.hide('tranlsations_module');
+      Tr8n.Effects.hide('comments_module');
+      Tr8n.Effects.hide('translation_module');
+      Tr8n.Effects.show('permutations_module');
+    }
+
+    function viewTranslations() {
       Tr8n.Effects.show('translation_key_toolbar');
-	    Tr8n.Effects.hide('translation_module');
-	    Tr8n.Effects.hide('permutations_module');
-	    Tr8n.Effects.show('tranlsations_module'); 
-	    Tr8n.Effects.show('comments_module'); 
-	  }
-	</script>	
-	
-	<%= render :partial => "translations_module" %>
-	<%= render :partial => "translation_module" %>
-	<%= render :partial => "permutations_module" %>
-	<%= render :partial => "comments_module" %>
-	
-	<% if @show_add_dialog and @translation_key.can_be_translated? %>
-		<script>
-	    addEvent(window, "load", function(event) {
-			  addTranslation();
-	    });
-		</script>	
-	<% end %>
-	
-	<%= render :partial => "/tr8n/common/footer" %>
+      Tr8n.Effects.hide('translation_module');
+      Tr8n.Effects.hide('permutations_module');
+      Tr8n.Effects.show('tranlsations_module');
+      Tr8n.Effects.show('comments_module');
+    }
+  </script>
+
+  <%= render :partial => "translations_module" %>
+  <%= render :partial => "translation_module" %>
+  <%= render :partial => "permutations_module" %>
+  <%= render :partial => "comments_module" %>
+
+  <% if @show_add_dialog and @translation_key.can_be_translated? %>
+    <script>
+      addEvent(window, "load", function(event) {
+        addTranslation();
+      });
+    </script>
+  <% end %>
+
+  <%= render :partial => "/tr8n/common/footer" %>
 <% end %>
