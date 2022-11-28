@@ -5,25 +5,29 @@ class Tr8n::LoginController < ApplicationController
 
   def index
     if request.post?
+      verify_authenticity_token
+
       translator = Tr8n::Translator.find_by_email_and_password(params[:email], params[:password])
-      
+
       if translator
         login!(translator)
         return redirect_to("/tr8n/translator")
       end
-      
+
       trfe('Incorrect email or password')
     end
   end
 
   def register
     if request.post?
+      verify_authenticity_token
+
       unless validate_registration
-        translator = Tr8n::Translator.create(:user_id => 0, :email => params[:email], 
-                  :password => params[:password], :name => params[:name], :gender => params[:gender], 
+        translator = Tr8n::Translator.create(:user_id => 0, :email => params[:email],
+                  :password => params[:password], :name => params[:name], :gender => params[:gender],
                   :mugshot => params[:mugshot], :link => params[:link])
         login!(translator)
-        
+
         trfn('Thank you for registering.')
         return redirect_to("/tr8n/translator")
       end
@@ -32,14 +36,14 @@ class Tr8n::LoginController < ApplicationController
 
   def out
     logout!
-    redirect_to("/tr8n") 
+    redirect_to("/tr8n")
   end
 
 private
 
   def validate_registration
     params[:email].strip!
-     
+
     if params[:email].blank?
       return trfe('Email is missing')
     end
@@ -60,5 +64,5 @@ private
 
   def logout!
     session[:tr8n_translator_id] = nil
-  end  
+  end
 end

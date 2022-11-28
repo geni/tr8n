@@ -1,20 +1,20 @@
-<% form_tag("", :id => "votes_form") do %>
+<% form_tag("", :id => "votes_form", :method => :post) do %>
   <%= will_filter_table_tag(@votes, :columns => [
     [:checkbox, :votes],
     [:translator_id, lambda{|vote|
       if vote.translator
         link_to(vote.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => vote.translator.id)
       else
-        "Unknown" 
-      end  
+        "Unknown"
+      end
     }],
-    [:vote, lambda{|vote| 
+    [:vote, lambda{|vote|
       html = []
       if vote.vote == 1
         html << "<span style='color:green'>"
       else
         html << "<span style='color:red'>"
-      end     
+      end
       html << vote.vote
       html << "</span>"
       html.join("")
@@ -28,7 +28,7 @@
 <% end %>
 
 <%= will_filter_actions_bar_tag(@votes, [
-  ['Delete Selected Votes', 'deleteSelectedVotes()'] 
+  ['Delete Selected Votes', 'deleteSelectedVotes()']
 ]) %>
 
 <script>

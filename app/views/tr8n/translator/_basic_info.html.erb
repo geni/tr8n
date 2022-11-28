@@ -2,7 +2,7 @@
   <div class="section_title">
     <%=tra("Translator Details") %>
   </div>
-  
+
   <% form_for(:translator, tr8n_current_translator, :url => {:action => :index}, :html => {:id => 'basic_info_form', :method => :post}) do |f| %>
     <div class="section_box colored">
       <div>
@@ -23,7 +23,7 @@
             <td style="padding:3px;">
                 <%=tr8n_current_translator.access_key || "not generated" %>
 
-                (<%= link_to(tra('generate'), {:action => :generate_access_key}) %>)
+                (<%= link_to(tra('generate'), {:action => :generate_access_key}, {:method => :post}) %>)
                 <span style="color: #888"><%=tra("Allows you to access restricted sections when you are not logged in.") %></span>
 
             </td>
@@ -84,7 +84,7 @@
               </td>
             </tr>
           <% end %>
-					
+
         </table>
       </div>
     </div>

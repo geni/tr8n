@@ -12,9 +12,9 @@
 	  			links = []
 	  			links << link_to(tra("view profile", 'Translator action link'), @translator.link)
 	  			if Tr8n::TranslatorFollowing.following_for(tr8n_current_translator, @translator)
-		  			links << link_to(tra("unfollow", 'Translator action link'), :controller => "/tr8n/translator", :action => :unfollow, :translator_id => @translator.id)
+		  			links << link_to(tra("unfollow", 'Translator action link'), {:controller => "/tr8n/translator", :action => :unfollow, :translator_id => @translator.id}, {:method => :post})
 		  		else
-		  			links << link_to(tra("follow", 'Translator action link'), :controller => "/tr8n/translator", :action => :follow, :translator_id => @translator.id)
+		  			links << link_to(tra("follow", 'Translator action link'), {:controller => "/tr8n/translator", :action => :follow, :translator_id => @translator.id}, {:method => :post})
 		  		end
 	  		%>
 	  		<%=links.join(" | ")%>

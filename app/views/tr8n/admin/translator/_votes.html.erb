@@ -1,4 +1,4 @@
-<% form_tag("", :id => "votes_form") do %>
+<% form_tag("", :id => "votes_form", :method => :post) do %>
   <%= will_filter_table_tag(@results, :columns => [
     [:checkbox, :votes],
     [:translation_key, lambda{|vote|
@@ -10,15 +10,15 @@
         html << "</div>"
         html.join("")
       else
-        "Deleted Translation"  
-      end  
+        "Deleted Translation"
+      end
     }],
     [:language, lambda{|vote|
       if vote.translation and vote.translation.language
         link_to(vote.translation.language.english_name, :controller => "/tr8n/admin/language", :action => :view, :lang_id => vote.translation.language.id)
       else
-         "Deleted Language"    
-      end  
+         "Deleted Language"
+      end
     }],
     [:translation_id, lambda{|vote|
       if vote.translation
@@ -29,18 +29,18 @@
           html << "Context: #{vote.translation.context}"
           html << "</div>"
         end
-        html.join("") 
+        html.join("")
       else
-        "Deleted Translation"  
-      end  
+        "Deleted Translation"
+      end
     }],
-    [:vote, lambda{|vote| 
+    [:vote, lambda{|vote|
       html = []
       if vote.vote == 1
         html << "<span style='color:green'>"
       else
         html << "<span style='color:red'>"
-      end     
+      end
       html << vote.vote
       html << "</span>"
       html.join("")
@@ -55,7 +55,7 @@
 <% end %>
 
 <%= will_filter_actions_bar_tag(@votes, [
-  ['Delete Selected Votes', 'deleteSelectedVotes()'] 
+  ['Delete Selected Votes', 'deleteSelectedVotes()']
 ]) %>
 
 <script>

@@ -19,8 +19,8 @@
             <%=link_to(@translator.name, @translator.link) %>
             (<%=@translator.user.id%>)
           <% else %>
-            Unknown  
-          <% end %>  
+            Unknown
+          <% end %>
         </td>
     </tr>
     <tr>
@@ -29,10 +29,10 @@
         </th>
         <td>
             <%= @translator.access_key %>
-            (<%= link_to('generate', {:action => :generate_access_key, :translator_id => @translator.id}, {:confirm => "Are you sure you want to generate translator access key?"}) %>)
+            (<%= link_to('generate', {:action => :generate_access_key, :translator_id => @translator.id}, {:method => :post, :confirm => "Are you sure you want to generate translator access key?"}) %>)
             <span style="color: #888">Used to access restricted components when user is logged out.</span>
         </td>
-    </tr> 
+    </tr>
     <tr>
         <th>
             Site Administrator
@@ -46,21 +46,21 @@
             Translator Level
         </th>
         <td>
-            <span id="translator_level_container"> 
+            <span id="translator_level_container">
               <span id='translator_title'><%= @translator.title %> (<%= @translator.level %>)</span>
               &nbsp;&nbsp;
               <%= link_to_function('change', "Tr8n.Effects.hide('translator_level_container'); Tr8n.Effects.show('translator_level_options_container');") unless @translator.admin? %>
             </span>
-            
+
             <span id="translator_level_options_container" style='display:none'>
             	<% form_tag do %>
 	              <%= select_tag('translator_level', options_for_select(Tr8n::Translator.level_options, @translator.level.to_s)) %>
 	              <%= link_to_function('save', 'updateTranslatorLevel()')%> | <%= link_to_function('cancel', "Tr8n.Effects.show('translator_level_container'); Tr8n.Effects.hide('translator_level_options_container');")%>
 							<% end %>
             </span>
-            
+
         </td>
-    </tr> 
+    </tr>
     <tr>
         <th>
             Blocked
@@ -76,7 +76,7 @@
         <td>
             <%= (@translator.rank ? (@translator.rank * 100).to_i / 100.0 : 0) %>
         </td>
-		</tr>	
+		</tr>
     <tr>
         <th>
             Last Ip
@@ -84,7 +84,7 @@
         <td>
             <%= @translator.last_ip %>
         </td>
-    </tr> 
+    </tr>
     <tr>
         <th>
             Country Code
@@ -92,7 +92,7 @@
         <td>
             <%= @translator.country_code %>
         </td>
-    </tr> 
+    </tr>
     <tr>
         <th>
             Inline Translations Enabled
@@ -125,7 +125,7 @@
         <td>
             <%=@translator.created_at %>
         </td>
-    </tr>    
+    </tr>
     <tr>
         <th>
             Updated At
@@ -136,26 +136,26 @@
     </tr>
     <tr>
         <th>
-            
+
         </th>
         <td>
           <% if @translator.blocked? %>
             <%=link_to_function("Unblock", "performTranslatorAction('unblock')") %>
           <% else %>
             <%=link_to_function("Block", "performTranslatorAction('block')") %>
-          <% end %>  
+          <% end %>
 
           | <%=link_to("Delete", {:action => :delete, :translator_id => @translator.id}, :confirm => "Are you sure you want to do that?")%>
-					
+
         </td>
-    </tr>    
+    </tr>
 </table>
 
 <script>
   function performTranslatorAction(action) {
     var reason = prompt("Please provide a reason why you want to " + action + " this translator:");
     location = "/tr8n/admin/translator/" + action + "?translator_id=<%=@translator.id%>&reason=" + reason;
-  }  
+  }
 </script>
 
 

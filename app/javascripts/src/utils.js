@@ -28,7 +28,7 @@ Tr8n.Utils = {
     var embeds = document.getElementsByTagName('embed');
     for(i = 0; i < embeds.length; i++) {
         embeds[i].style.visibility = 'hidden';
-    } 
+    }
   },
 
   showFlash: function() {
@@ -36,7 +36,7 @@ Tr8n.Utils = {
     var embeds = document.getElementsByTagName('embed');
     for(i = 0; i < embeds.length; i++) {
         embeds[i].style.visibility = 'visible';
-    } 
+    }
   },
 
   isOpera: function() {
@@ -158,9 +158,11 @@ Tr8n.Utils = {
   },
 
   update: function(element_id, url, options) {
+    options.method = 'post';
     options.onSuccess = function(response) {
         Tr8n.element(element_id).innerHTML = response.responseText;
     };
+
     Tr8n.Utils.ajax(url, options);
   },
 

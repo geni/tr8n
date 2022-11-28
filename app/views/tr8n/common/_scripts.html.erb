@@ -18,6 +18,8 @@
      Tr8n.url_cache_version = "<%= Tr8n::Config.url_cache_version -%>";
      Tr8n.allow_invalid_tokens = "<%= Tr8n::Config.rules_engine['allow_invalid_tokens'] -%>";
      Tr8n.allow_unused_tokens = "<%= Tr8n::Config.rules_engine['allow_unused_tokens'] -%>";
+     Tr8n.csrfParam = "<%= request_forgery_protection_token -%>";
+     Tr8n.csrfToken = "<%= form_authenticity_token -%>";
   </script>
 
   <% if Tr8n::Config.enable_effects? %>

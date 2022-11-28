@@ -37,22 +37,34 @@ class Tr8n::Admin::ForumController < Tr8n::Admin::BaseController
   end
 
   def delete_topic
-    topic = Tr8n::LanguageForumTopic.find_by_id(params[:topic_id]) if params[:topic_id]
-    topic.destroy if topic
+    if request.post?
+      verify_authenticity_token
+
+      topic = Tr8n::LanguageForumTopic.find_by_id(params[:topic_id]) if params[:topic_id]
+      topic.destroy if topic
+    end
 
     redirect_to_source
-  end  
+  end
 
   def delete_message
-    message = Tr8n::LanguageForumMessage.find_by_id(params[:msg_id]) if params[:msg_id]
-    message.destroy if message
+    if request.post?
+      verify_authenticity_token
+
+      message = Tr8n::LanguageForumMessage.find_by_id(params[:msg_id]) if params[:msg_id]
+      message.destroy if message
+    end
 
     redirect_to_source
-  end  
-    
+  end
+
   def delete_report
-    report = Tr8n::LanguageForumAbuseReport.find_by_id(params[:report_id]) if params[:report_id]
-    report.destroy if report
+    if request.post?
+      verify_authenticity_token
+
+      report = Tr8n::LanguageForumAbuseReport.find_by_id(params[:report_id]) if params[:report_id]
+      report.destroy if report
+    end
 
     redirect_to_source
   end

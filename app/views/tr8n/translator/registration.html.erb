@@ -11,6 +11,6 @@
 </div>
 
 <div style="text-align:center; padding:15px;">
-  <%= link_to(trl('Agree', 'Client application action label'), {:action => :registration, :agree => :yes}, :class=>'button super blue xlarge') %>
+  <%= link_to(trl('Agree', 'Client application action label'), {:action => :registration, :agree => :yes}, {:method => :post, :class=>'button super blue xlarge'}) %>
   <%=tr("or")%> <%=link_to(tr("Cancel"), Tr8n::Config.default_url)%>
 </div>

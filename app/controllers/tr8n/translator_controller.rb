@@ -23,7 +23,7 @@
 
 class Tr8n::TranslatorController < Tr8n::BaseController
   unloadable
-  
+
   def index
     @translator = Tr8n::Translator.find_by_id(params[:id]) if params[:id]
     @translator ||= Tr8n::Config.current_translator
@@ -31,7 +31,9 @@ class Tr8n::TranslatorController < Tr8n::BaseController
   end
 
   def registration
-    if params[:agree] == "yes"
+    if request.post? && params[:agree] == "yes"
+      verify_authenticity_token
+
       Tr8n::Config.current_translator # this will register a translator
       trfn("Thank you! You have been register as a translator")
       return redirect_to("/tr8n/phrases")
@@ -42,6 +44,8 @@ class Tr8n::TranslatorController < Tr8n::BaseController
     @fallback_language = (tr8n_current_translator.fallback_language || tr8n_default_language)
 
     if request.post?
+      verify_authenticity_token
+
       tr8n_current_translator.update_attributes(params[:translator])
       tr8n_current_translator.reload
 
@@ -51,38 +55,52 @@ class Tr8n::TranslatorController < Tr8n::BaseController
   end
 
   def generate_access_key
-    Tr8n::Config.current_translator.generate_access_key!
-    trfn("New access key has be generated")
-    redirect_to_source
-  end
-  
-  def follow
-    if params[:translation_key_id]
-      object = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
-      trfn("You are now following this translation key") if object
-    elsif params[:translator_id]
-      object = Tr8n::Translator.find_by_id(params[:translator_id])
-      trfn("You are now following {translator}", nil, :translator => object ) if object      
+    if request.post?
+      verify_authenticity_token
+
+      Tr8n::Config.current_translator.generate_access_key!
+      trfn("New access key has be generated")
     end
 
-    if object
-      tr8n_current_translator.follow(object) 
+    redirect_to_source
+  end
+
+  def follow
+    if request.post?
+      verify_authenticity_token
+
+      if params[:translation_key_id]
+        object = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
+        trfn("You are now following this translation key") if object
+      elsif params[:translator_id]
+        object = Tr8n::Translator.find_by_id(params[:translator_id])
+        trfn("You are now following {translator}", nil, :translator => object ) if object
+      end
+
+      if object
+        tr8n_current_translator.follow(object)
+      end
     end
 
     redirect_to_source
   end
 
   def unfollow
-    if params[:translation_key_id]
-      object = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
-    elsif params[:translator_id]
-      object = Tr8n::Translator.find_by_id(params[:translator_id])
+    if request.post?
+      verify_authenticity_token
+
+      if params[:translation_key_id]
+        object = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
+      elsif params[:translator_id]
+        object = Tr8n::Translator.find_by_id(params[:translator_id])
+      end
+
+      tr8n_current_translator.unfollow(object) if object
     end
 
-    tr8n_current_translator.unfollow(object) if object
     redirect_to_source
   end
-  
+
   def lb_report
     if params[:translation_key_id]
       @reported_object = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
@@ -95,19 +113,21 @@ class Tr8n::TranslatorController < Tr8n::BaseController
     end
     render :layout => false
   end
-  
+
   def submit_report
     if request.post?
+      verify_authenticity_token
+
       reported_object = params[:object_type].constantize.find(params[:object_id])
       Tr8n::TranslatorReport.submit(Tr8n::Config.current_translator, reported_object, params[:reason], params[:comment])
       trfn("Thank you for submitting your report.")
     end
-    
+
     redirect_to_source
   end
-  
+
   def assignments
-    @components = Tr8n::Component.find(:all, 
+    @components = Tr8n::Component.find(:all,
           :conditions => ["ct.translator_id = ?", Tr8n::Config.current_translator.id],
           :joins => [
             "join tr8n_component_translators as ct on tr8n_components.id = ct.component_id",
@@ -127,9 +147,9 @@ class Tr8n::TranslatorController < Tr8n::BaseController
   end
 
   def following
-    @translators = Tr8n::TranslatorFollowing.find(:all, 
+    @translators = Tr8n::TranslatorFollowing.find(:all,
                    :conditions => ["translator_id = ? and object_type = ?", tr8n_current_translator.id, "Tr8n::Translator"]).collect{|f| f.object}
-    @translation_keys = Tr8n::TranslatorFollowing.find(:all, 
+    @translation_keys = Tr8n::TranslatorFollowing.find(:all,
                    :conditions => ["translator_id = ? and object_type = ?", tr8n_current_translator.id, "Tr8n::TranslationKey"]).collect{|f| f.object}
   end
 
