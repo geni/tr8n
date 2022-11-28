@@ -167,9 +167,9 @@ class Tr8n::TranslationsController < Tr8n::BaseController
     
     if request.post?
       mode = :view
-      unless params[:label].strip.blank?
+      unless params[:label]&.strip.blank?
         @translation.label = params[:label]
-        
+
         unless @translation.can_be_edited_by?(tr8n_current_translator)
           tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to update translation that is not his")
           @translation.label = "You are not authorized to edit this translation as you were not it's creator"
