@@ -77,7 +77,7 @@ class Tr8n::ForumController < Tr8n::BaseController
 
     if message.translator != tr8n_current_translator
       trfe("You cannot delete messages you didn't post.")
-      redirect_to(:action => :topic, :topic_id => message.language_forum_topic.id)
+      return redirect_to(:action => :topic, :topic_id => message.language_forum_topic.id)
     end
     
     message.destroy
