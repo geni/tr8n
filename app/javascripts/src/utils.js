@@ -123,16 +123,11 @@ Tr8n.Utils = {
     options = options || {};
     options.method = options.method || 'get';
 
-    if (options.method != 'get' && Tr8n.csrfParam) {
-      options.parameters = options.parameters || {};
-
-      if (typeof obj == 'string')
-        options.parameters = options.parameters + '&' + Tr8n.csrfParam + '=' + Tr8n.csrfToken;
-      else
-        options.parameters[Tr8n.csrfParam] = Tr8n.csrfToken;
-    }
-
     options.parameters = Tr8n.Utils.toQueryParams(options.parameters);
+
+    if (options.method != 'get' && Tr8n.csrfParam) {
+      options.parameters = options.parameters + '&' + Tr8n.csrfParam + '=' + Tr8n.csrfToken;
+    }
 
     var self=this;
     if (options.method == 'get' && options.parameters != '') {
@@ -162,7 +157,6 @@ Tr8n.Utils = {
   },
 
   update: function(element_id, url, options) {
-    options.method = 'post';
     options.onSuccess = function(response) {
         Tr8n.element(element_id).innerHTML = response.responseText;
     };

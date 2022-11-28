@@ -44,7 +44,7 @@
 	    
 	    Tr8n.Effects.hide('tr8n_votes_for_' + translation_id);
 	    Tr8n.Effects.show('tr8n_spinner_for_' + translation_id);
-	    location = "/tr8n/translations/delete?translation_id=" + translation_id + "&section_key=" + section_key;
+	    location = "/tr8n/translations/delete?translation_id=" + translation_id + "&section_key=" + section_key + '&' + Tr8n.csrfParam + '=' + Tr8n.csrfToken;
 	  }
 	  
 	  function updateTranslationRow(translation_id, mode) {
