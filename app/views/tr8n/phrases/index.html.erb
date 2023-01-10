@@ -5,7 +5,7 @@
   <div class="section_box" style="margin-bottom:10px; background-color:#EFF8FF; margin-top:0px;">
 	  <% form_tag({:action => :index}, {:method => :get, :id => "translations_search_form"}) do %>
 	      <%=hidden_field_tag(:section_key, @section_key) %>
-	      <%=hidden_field_tag(:source, params[:source]) %>
+	      <%=hidden_field_tag(:source, h(params[:source])) %>
 			  <div style="<%=tr8n_style_attribute_tag('float', 'right')%>">
 	        <button type="submit" class="translator_btn translator_small_btn" onClick="Tr8n.Effects.submit('translations_search_form'); return false;">
 	            <span><%=tra("Search", "Search button label")%></span>
