@@ -126,7 +126,7 @@ Tr8n.Utils = {
     options.parameters = Tr8n.Utils.toQueryParams(options.parameters);
 
     if (options.method != 'get' && Tr8n.csrfParam) {
-      options.parameters = options.parameters + '&' + Tr8n.csrfParam + '=' + Tr8n.csrfToken;
+      options.parameters = options.parameters + '&' + Tr8n.csrfParam + '=' + escape(Tr8n.csrfToken);
     }
 
     var self=this;
