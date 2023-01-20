@@ -2441,7 +2441,7 @@ Tr8n.Utils = {
     options.parameters = Tr8n.Utils.toQueryParams(options.parameters);
 
     if (options.method != 'get' && Tr8n.csrfParam) {
-      options.parameters = options.parameters + '&' + Tr8n.csrfParam + '=' + escape(Tr8n.csrfToken);
+      options.parameters = options.parameters + '&' + Tr8n.csrfParam + '=' + encodeURIComponent(Tr8n.csrfToken);
     }
 
     var self=this;
@@ -2609,6 +2609,7 @@ Tr8n.Utils = {
     if (tr8nLightbox)
       tr8nLightbox.show('/tr8n/help/lb_shortcuts', {width:400, height:520});
   }
+
 }
 
 
