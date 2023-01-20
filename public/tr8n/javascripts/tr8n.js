@@ -2609,7 +2609,6 @@ Tr8n.Utils = {
     if (tr8nLightbox)
       tr8nLightbox.show('/tr8n/help/lb_shortcuts', {width:400, height:520});
   }
-
 }
 
 
