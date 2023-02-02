@@ -15,9 +15,9 @@
 	            <th style="width:120px;padding:3px;vertical-align:middle;font-weight:bold;"><%=tra("Name:")%></th>
 	            <td style="padding:3px;">
 	              <% if Tr8n::Config.site_user_info_disabled? %>
-	                <%=f.text_field(:name)%>
+	                <%=f.text_field(:name)&.escape_html%>
 	              <% else %>
-	                <%=tr8n_current_translator.name%>
+	                <%=tr8n_current_translator.name&.escape_html%>
 	              <% end %>
 	            </td>
 	          </tr>

@@ -67,7 +67,7 @@ class Tr8n::ForumController < Tr8n::BaseController
       end
 
       topic.destroy if topic
-      trfn("The topic {topic} has been removed", 'Tr8n Forum', :topic => "\"#{topic.topic}\"")
+      trfn("The topic {topic} has been removed", 'Tr8n Forum', :topic => "\"#{topic.topic.escape_html}\"")
     end
 
     redirect_to(:action => :index)
