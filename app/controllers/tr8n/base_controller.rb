@@ -89,6 +89,17 @@ class Tr8n::BaseController < ApplicationController
   end
   helper_method :tr8n_current_user_is_guest?
   
+  def vote_value(direction)
+    case direction
+    when "up"
+      1
+    when "report"
+      -1000
+    else
+      -1
+    end
+  end
+
 private
 
   def redirect_to_source

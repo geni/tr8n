@@ -136,7 +136,7 @@ Tr8n.Translator.prototype = {
   reportTranslation: function(key, translation_id) {
     var msg = "Reporting this translation will remove it from this list and the translator will be put on a watch list. \n\nAre you sure you want to report this translation?";
     if (!confirm(msg)) return;
-    this.voteOnTranslation(key, translation_id, -1000);
+    this.voteOnTranslation(key, translation_id, 'report');
   },
 
   voteOnTranslation: function(key, translation_id, vote) {
