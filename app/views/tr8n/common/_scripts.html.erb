@@ -33,7 +33,7 @@
 
   <% if Tr8n::Config.enable_google_suggestions? and Tr8n::Config.current_user_is_translator? %>
     <script type="text/javascript">
-			Tr8n.google_api_key = "<%=Tr8n::Config.google_api_key %>";
+			Tr8n.google_api_key = "<%=Tr8n::Config.google_api_key.html_safe %>";
 		</script>
   <% end %>
 
@@ -41,7 +41,7 @@
     <script type="text/javascript">
        <% Tr8n::Config.default_shortcuts.each do |key, data| %>
 				  shortcut.add("<%=key%>", function() {
-				    <%=data["script"]%>
+				    <%= data["script"].html_safe %>
 				  });
 			 <% end %>
     </script>
