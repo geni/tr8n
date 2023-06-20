@@ -92,7 +92,7 @@ class Tr8n::LanguageCase < ActiveRecord::Base
     transformed_words = []
     words.each do |word|
       # check special cases
-      lcvm = Tr8n::LanguageCaseValueMap.by_language_and_keyword(language, word)
+      lcvm = Tr8n::LanguageCaseValueMap.by_language_and_keyword(language, word) unless options[:ignore_language_case_exceptions]
 
       if lcvm
         # first see if there is an exception for the value
