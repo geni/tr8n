@@ -40,6 +40,8 @@ class Tr8n::TranslationsController < Tr8n::BaseController
       return redirect_to(@source_url)
     end
 
+    verify_authenticity_token
+
     if params[:lock] == "true"
       if tr8n_current_translator.manager?
         if @translation_key.locked?
@@ -104,6 +106,8 @@ class Tr8n::TranslationsController < Tr8n::BaseController
       return redirect_to(source_url)
     end
 
+    verify_authenticity_token
+
     new_translations = translation_key.generate_rule_permutations(tr8n_current_language, tr8n_current_translator, params[:dependencies])
     if params[:dependencies].blank?
       trfe("You did not specified any context rules for this phrase.")
@@ -119,7 +123,13 @@ class Tr8n::TranslationsController < Tr8n::BaseController
   # ajax based method - collects votes for a translation
   def vote
     translation = Tr8n::Translation.find(params[:translation_id])
-    translation.vote!(tr8n_current_translator, vote_value(params[:vote]))
+
+    if request.post?
+      verify_authenticity_token
+
+      translation.vote!(tr8n_current_translator, vote_value(params[:vote]))
+    end
+
     translation_key = translation.translation_key
 
     # this is called from page translations page
@@ -166,6 +176,8 @@ class Tr8n::TranslationsController < Tr8n::BaseController
     mode = params[:mode] || :view
     
     if request.post?
+      verify_authenticity_token
+
       mode = :view
       unless params[:label]&.strip.blank?
         @translation.label = params[:label]
@@ -203,13 +215,17 @@ class Tr8n::TranslationsController < Tr8n::BaseController
     translation = Tr8n::Translation.find(params[:translation_id])
     translator = translation.translator
 
-    unless translation.can_be_deleted_by?(tr8n_current_translator)
-      tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to delete translation that is not his")
-      trfe("You are not authorized to delete this translation as you were not it's creator")
-    else
-      translation.destroy_with_log!(tr8n_current_translator)
-      translator.update_rank!
-      trfn("Your translation has been removed.")
+    if request.post?
+      verify_authenticity_token
+
+      unless translation.can_be_deleted_by?(tr8n_current_translator)
+        tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to delete translation that is not his")
+        trfe("You are not authorized to delete this translation as you were not it's creator")
+      else
+        translation.destroy_with_log!(tr8n_current_translator)
+        translator.update_rank!
+        trfn("Your translation has been removed.")
+      end
     end
     
     redirect_to(:controller => "/tr8n/phrases", :action => :view, :translation_key_id => translation.translation_key.id, :section_key => @section_key)
