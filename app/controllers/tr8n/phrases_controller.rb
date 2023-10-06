@@ -258,10 +258,14 @@ class Tr8n::PhrasesController < Tr8n::BaseController
   end
 
   def delete_comment
-    comment = Tr8n::TranslationKeyComment.find_by_id(params[:comment_id]) unless params[:comment_id].blank?
-    comment.destroy if comment
+    if request.post?
+      verify_authenticity_token
 
-    trfn("Your comment has been removed.")
+      comment = Tr8n::TranslationKeyComment.find_by_id(params[:comment_id]) unless params[:comment_id].blank?
+      comment.destroy if comment
+
+      trfn("Your comment has been removed.")
+    end
 
     redirect_to_source
   end

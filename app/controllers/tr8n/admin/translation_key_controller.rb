@@ -108,12 +108,16 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
   end
   
   def update_lock
-    lock = Tr8n::TranslationKeyLock.find(params[:lock_id])
+    if request.post?
+      verify_authenticity_token
 
-    if params[:locked] == "true"
-      lock.lock!
-    else
-      lock.unlock!
+      lock = Tr8n::TranslationKeyLock.find(params[:lock_id])
+
+      if params[:locked] == "true"
+        lock.lock!
+      else
+        lock.unlock!
+      end
     end
 
     redirect_to_source
@@ -166,13 +170,18 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
   end
   
   def delete_comment
-    params[:comments] = [params[:comment_id]] if params[:comment_id]
-    if params[:comments]
-      params[:comments].each do |comment_id|
-        comment = Tr8n::TranslationKeyComment.find_by_id(comment_id)
-        comment.destroy if comment
-      end  
+    if request.post?
+      verify_authenticity_token
+
+      params[:comments] = [params[:comment_id]] if params[:comment_id]
+      if params[:comments]
+        params[:comments].each do |comment_id|
+          comment = Tr8n::TranslationKeyComment.find_by_id(comment_id)
+          comment.destroy if comment
+        end  
+      end
     end
+
     redirect_to_source
   end
   
@@ -181,13 +190,18 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
   end
   
   def delete_lock
-    params[:locks] = [params[:lock_id]] if params[:lock_id]
-    if params[:locks]
-      params[:locks].each do |lock_id|
-        lock = Tr8n::TranslationKeyLock.find_by_id(lock_id)
-        lock.destroy if lock
-      end  
+    if request.post?
+      verify_authenticity_token
+
+      params[:locks] = [params[:lock_id]] if params[:lock_id]
+      if params[:locks]
+        params[:locks].each do |lock_id|
+          lock = Tr8n::TranslationKeyLock.find_by_id(lock_id)
+          lock.destroy if lock
+        end  
+      end
     end
+
     redirect_to_source
   end
   
