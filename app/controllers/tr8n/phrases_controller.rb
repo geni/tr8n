@@ -242,13 +242,17 @@ class Tr8n::PhrasesController < Tr8n::BaseController
   end
 
   def submit_comment
-    @translation_key = Tr8n::TranslationKey.find(params[:translation_key_id])
-    Tr8n::TranslationKeyComment.create(:language => tr8n_current_language,
-                                       :translator => tr8n_current_translator,
-                                       :translation_key => @translation_key,
-                                       :message => params[:message])
+    if request.post?
+      verify_authenticity_token
 
-    trfn("Your comment has been added.")
+      @translation_key = Tr8n::TranslationKey.find(params[:translation_key_id])
+      Tr8n::TranslationKeyComment.create(:language => tr8n_current_language,
+                                         :translator => tr8n_current_translator,
+                                         :translation_key => @translation_key,
+                                         :message => params[:message])
+
+      trfn("Your comment has been added.")
+    end
 
     redirect_to_source
   end
