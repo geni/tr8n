@@ -11,13 +11,13 @@ if (window && !window.InflectionJS)
 
 InflectionJS =
 {
-    
+
     uncountable_words: [
         'equipment', 'information', 'rice', 'money', 'species', 'series',
         'fish', 'sheep', 'moose', 'deer', 'news'
     ],
 
-    
+
     plural_rules: [
         [new RegExp('(m)an$', 'gi'),                 '$1en'],
         [new RegExp('(pe)rson$', 'gi'),              '$1ople'],
@@ -41,7 +41,7 @@ InflectionJS =
         [new RegExp('$', 'gi'),                      's']
     ],
 
-    
+
     singular_rules: [
         [new RegExp('(m)en$', 'gi'),                                                       '$1an'],
         [new RegExp('(pe)ople$', 'gi'),                                                    '$1rson'],
@@ -71,21 +71,21 @@ InflectionJS =
         [new RegExp('s$', 'gi'),                                                           '']
     ],
 
-    
+
     non_titlecased_words: [
         'and', 'or', 'nor', 'a', 'an', 'the', 'so', 'but', 'to', 'of', 'at',
         'by', 'from', 'into', 'on', 'onto', 'off', 'out', 'in', 'over',
         'with', 'for'
     ],
 
-    
+
     id_suffix: new RegExp('(_ids|_id)$', 'g'),
     underbar: new RegExp('_', 'g'),
     space_or_underbar: new RegExp('[\ _]', 'g'),
     uppercase: new RegExp('([A-Z])', 'g'),
     underbar_prefix: new RegExp('^_'),
-    
-    
+
+
     apply_rules: function(str, rules, skip, override)
     {
         if (override)
@@ -187,11 +187,11 @@ if (!String.prototype.singularize)
 
 
 var MD5 = function (string) {
- 
+
   function RotateLeft(lValue, iShiftBits) {
     return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
   }
- 
+
   function AddUnsigned(lX,lY) {
     var lX4,lY4,lX8,lY8,lResult;
     lX8 = (lX & 0x80000000);
@@ -212,32 +212,32 @@ var MD5 = function (string) {
       return (lResult ^ lX8 ^ lY8);
     }
   }
- 
+
   function F(x,y,z) { return (x & y) | ((~x) & z); }
   function G(x,y,z) { return (x & z) | (y & (~z)); }
   function H(x,y,z) { return (x ^ y ^ z); }
   function I(x,y,z) { return (y ^ (x | (~z))); }
- 
+
   function FF(a,b,c,d,x,s,ac) {
     a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
     return AddUnsigned(RotateLeft(a, s), b);
   };
- 
+
   function GG(a,b,c,d,x,s,ac) {
     a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
     return AddUnsigned(RotateLeft(a, s), b);
   };
- 
+
   function HH(a,b,c,d,x,s,ac) {
     a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
     return AddUnsigned(RotateLeft(a, s), b);
   };
- 
+
   function II(a,b,c,d,x,s,ac) {
     a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
     return AddUnsigned(RotateLeft(a, s), b);
   };
- 
+
   function ConvertToWordArray(string) {
     var lWordCount;
     var lMessageLength = string.length;
@@ -260,7 +260,7 @@ var MD5 = function (string) {
     lWordArray[lNumberOfWords-1] = lMessageLength>>>29;
     return lWordArray;
   };
- 
+
   function WordToHex(lValue) {
     var WordToHexValue="",WordToHexValue_temp="",lByte,lCount;
     for (lCount = 0;lCount<=3;lCount++) {
@@ -270,15 +270,15 @@ var MD5 = function (string) {
     }
     return WordToHexValue;
   };
- 
+
   function Utf8Encode(string) {
     string = string.replace(/\r\n/g,"\n");
     var utftext = "";
- 
+
     for (var n = 0; n < string.length; n++) {
- 
+
       var c = string.charCodeAt(n);
- 
+
       if (c < 128) {
         utftext += String.fromCharCode(c);
       }
@@ -291,25 +291,25 @@ var MD5 = function (string) {
         utftext += String.fromCharCode(((c >> 6) & 63) | 128);
         utftext += String.fromCharCode((c & 63) | 128);
       }
- 
+
     }
- 
+
     return utftext;
   };
- 
+
   var x=Array();
   var k,AA,BB,CC,DD,a,b,c,d;
   var S11=7, S12=12, S13=17, S14=22;
   var S21=5, S22=9 , S23=14, S24=20;
   var S31=4, S32=11, S33=16, S34=23;
   var S41=6, S42=10, S43=15, S44=21;
- 
+
   string = Utf8Encode(string);
- 
+
   x = ConvertToWordArray(string);
- 
+
   a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
- 
+
   for (k=0;k<x.length;k+=16) {
     AA=a; BB=b; CC=c; DD=d;
     a=FF(a,b,c,d,x[k+0], S11,0xD76AA478);
@@ -381,9 +381,9 @@ var MD5 = function (string) {
     c=AddUnsigned(c,CC);
     d=AddUnsigned(d,DD);
   }
- 
+
   var temp = WordToHex(a)+WordToHex(b)+WordToHex(c)+WordToHex(d);
- 
+
   return temp.toLowerCase();
 }
 shortcut = {
@@ -412,7 +412,7 @@ shortcut = {
     //The function to be called at keypress
     var func = function(e) {
       e = e || window.event;
-      
+
       if(opt['disable_in_input']) { //Don't enable shortcut keys in Input, Textarea fields
         var element;
         if(e.target) element=e.target;
@@ -421,7 +421,7 @@ shortcut = {
 
         if(element.tagName == 'INPUT' || element.tagName == 'TEXTAREA') return;
       }
-  
+
       //Find Which key is pressed
       var code;
       if (e.keyCode) code = e.keyCode;
@@ -430,14 +430,14 @@ shortcut = {
       if (!code) return;
 
       var character = String.fromCharCode(code).toLowerCase();
-      
+
       if(code == 188) character=","; //If the user presses , when the type is onkeydown
       if(code == 190) character="."; //If the user presses , when the type is onkeydown
 
       var keys = shortcut_combination.split("+");
       //Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
       var kp = 0;
-      
+
       //Work around for stupid Shift key bug created by using lowercase - as a result the shift+num combination was broken
       var shift_nums = {
         "`":"~",
@@ -469,7 +469,7 @@ shortcut = {
         'return':13,
         'enter':13,
         'backspace':8,
-  
+
         'scrolllock':145,
         'scroll_lock':145,
         'scroll':145,
@@ -479,28 +479,28 @@ shortcut = {
         'numlock':144,
         'num_lock':144,
         'num':144,
-        
+
         'pause':19,
         'break':19,
-        
+
         'insert':45,
         'home':36,
         'delete':46,
         'end':35,
-        
+
         'pageup':33,
         'page_up':33,
         'pu':33,
-  
+
         'pagedown':34,
         'page_down':34,
         'pd':34,
-  
+
         'left':37,
         'up':38,
         'right':39,
         'down':40,
-  
+
         'f1':112,
         'f2':113,
         'f3':114,
@@ -514,19 +514,19 @@ shortcut = {
         'f11':122,
         'f12':123
       }
-  
-      var modifiers = { 
+
+      var modifiers = {
         shift: { wanted:false, pressed:false},
         ctrl : { wanted:false, pressed:false},
         alt  : { wanted:false, pressed:false},
         meta : { wanted:false, pressed:false} //Meta is Mac specific
       };
-                        
+
       if(e.ctrlKey) modifiers.ctrl.pressed = true;
       if(e.shiftKey)  modifiers.shift.pressed = true;
       if(e.altKey)  modifiers.alt.pressed = true;
       if(e.metaKey)   modifiers.meta.pressed = true;
-                        
+
       for(var i=0; k=keys[i],i<keys.length; i++) {
         //Modifiers
         if(k == 'ctrl' || k == 'control') {
@@ -545,7 +545,7 @@ shortcut = {
           modifiers.meta.wanted = true;
         } else if(k.length > 1) { //If it is a special key
           if(special_keys[k] == code) kp++;
-          
+
         } else if(opt['keycode']) {
           if(opt['keycode'] == code) kp++;
 
@@ -553,25 +553,25 @@ shortcut = {
           if(character == k) kp++;
           else {
             if(shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
-              character = shift_nums[character]; 
+              character = shift_nums[character];
               if(character == k) kp++;
             }
           }
         }
       }
-      
-      if(kp == keys.length && 
+
+      if(kp == keys.length &&
             modifiers.ctrl.pressed == modifiers.ctrl.wanted &&
             modifiers.shift.pressed == modifiers.shift.wanted &&
             modifiers.alt.pressed == modifiers.alt.wanted &&
             modifiers.meta.pressed == modifiers.meta.wanted) {
         callback(e);
-  
+
         if(!opt['propagate']) { //Stop the event
           //e.cancelBubble is supported by IE - this will kill the bubbling process.
           e.cancelBubble = true;
           e.returnValue = false;
-  
+
           //e.stopPropagation works in Firefox.
           if (e.stopPropagation) {
             e.stopPropagation();
@@ -582,8 +582,8 @@ shortcut = {
       }
     }
     this.all_shortcuts[shortcut_combination] = {
-      'callback':func, 
-      'target':ele, 
+      'callback':func,
+      'target':ele,
       'event': opt['type']
     };
     //Attach the function with the event
@@ -642,7 +642,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   this.VKI_isOpera = RegExp("Opera").test(navigator.userAgent);
   this.VKI_isMoz = (!this.VKI_isWebKit && navigator.product == "Gecko");
 
-  
+
   this.VKI_i18n = {
     '00': "Display Number Pad",
     '01': "Display virtual keyboard interface",
@@ -659,7 +659,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   };
 
 
-  
+
   this.VKI_layout = {};
 
   // - Lay out each keyboard in rows of sub-arrays.  Each sub-array
@@ -1526,7 +1526,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
     ], 'lang': ["zh"] };
 
 
-  
+
   this.VKI_deadkey = {};
 
   // - Lay out each dead key set as an object of property/value
@@ -1609,13 +1609,13 @@ var VKI_default_layout = VKI_default_layout || "US International";
   };
 
 
-  
+
   this.VKI_symbol = {
     '\u00a0': "NB\nSP", '\u200b': "ZW\nSP", '\u200c': "ZW\nNJ", '\u200d': "ZW\nJ"
   };
 
 
-  
+
   this.VKI_numpad = [
     [["$"], ["\u00a3"], ["\u20ac"], ["\u00a5"]],
     [["7"], ["8"], ["9"], ["/"]],
@@ -1625,7 +1625,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   ];
 
 
-  
+
   VKI_attach = function(elem) {
     if (elem.getAttribute("VKI_attached")) return false;
     if (self.VKI_imageURI) {
@@ -1670,7 +1670,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   };
 
 
-  
+
   function VKI_buildKeyboardInputs() {
     var inputElems = [
       document.getElementsByTagName('input'),
@@ -1685,7 +1685,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   }
 
 
-  
+
   function VKI_mouseEvents(elem) {
     if (elem.nodeName == "TD") {
       if (!elem.click) elem.click = function() {
@@ -1719,7 +1719,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   }
 
 
-  
+
   this.VKI_keyboard = document.createElement('table');
   this.VKI_keyboard.id = "keyboardInputMaster";
   this.VKI_keyboard.dir = "ltr";
@@ -1915,7 +1915,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   }
 
 
-  
+
   function VKI_keyClick() {
     var done = false, character = "\xa0";
     if (this.firstChild.nodeName.toLowerCase() != "small") {
@@ -1947,7 +1947,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   }
 
 
-  
+
   this.VKI_buildKeys = function() {
     this.VKI_shift = this.VKI_shiftlock = this.VKI_altgr = this.VKI_altgrlock = this.VKI_dead = false;
     var container = this.VKI_keyboard.tBodies[0].getElementsByTagName('div')[0];
@@ -2066,7 +2066,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
     VKI_addListener(this.VKI_keyboard, 'mousedown', function() { return false; }, false);
 
 
-  
+
   this.VKI_modify = function(type) {
     switch (type) {
       case "Alt":
@@ -2130,7 +2130,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   };
 
 
-  
+
   this.VKI_insert = function(text) {
     this.VKI_target.focus();
     if (this.VKI_target.maxLength) this.VKI_target.maxlength = this.VKI_target.maxLength;
@@ -2158,7 +2158,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   };
 
 
-  
+
   this.VKI_show = function(elem) {
     if (!this.VKI_target) {
       this.VKI_target = elem;
@@ -2200,7 +2200,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   };
 
 
-  
+
   this.VKI_position = function(force) {
     if (self.VKI_target) {
       var kPos = VKI_findPos(self.VKI_keyboard), wDim = VKI_innerDimensions(), sDis = VKI_scrollDist();
@@ -2243,7 +2243,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   };
 
 
-  
+
   this.VKI_close = VKI_close = function() {
     if (this.VKI_target) {
       try {
@@ -2262,7 +2262,7 @@ var VKI_default_layout = VKI_default_layout || "US International";
   };
 
 
-  
+
   function VKI_addListener(elem, type, func, cap) {
     if (elem.addEventListener) {
       elem.addEventListener(type, function(e) { func.call(elem, e); }, cap);
@@ -2500,13 +2500,18 @@ Tr8n.Utils = {
   findElement: function (e,selector,el) {
     var event = e || window.event;
     var target = el || event.target || event.srcElement;
-    if(target == document.body) return null;
-    var condition = (selector.match(/^\./)) ? this.hasClassName(target,selector.replace(/^\./,'')) : (target.tagName.toLowerCase() == selector.toLowerCase());
-    if(condition) {
-      return target;
-    } else {
-      return this.findElement(e,selector,target.parentNode);
-    }
+
+    // This used to recurse. But it kept overflowing the stack.
+    // So I switched to a while loop.
+    while(target && target != document.body) {
+      if(target.matches(selector)) {
+        return target;
+      }
+
+      target = target.parentNode;
+    };
+
+    return null;
   },
 
   cumulativeOffset: function(element) {
@@ -3298,8 +3303,8 @@ Tr8n.Translator.prototype = {
 Tr8n.Proxy = function(options) {
   var self = this;
   this.options = options;
-  this.options['url'] = this.options['url'] || '/tr8n/api/v1/language/translate'; 
-  this.options['scheduler_interval'] = this.options['scheduler_interval'] || 20000; 
+  this.options['url'] = this.options['url'] || '/tr8n/api/v1/language/translate';
+  this.options['scheduler_interval'] = this.options['scheduler_interval'] || 20000;
   this.logger_enabled = false;
   this.missing_translations_locked = false;
   this.inline_translations_enabled = this.options['enable_inline_translations'];
@@ -3307,11 +3312,11 @@ Tr8n.Proxy = function(options) {
     'proxy': self,
     'element_id': options['logger_element_id'] || 'tr8n_debugger'
   });
-        
+
   this.language = new Tr8n.Proxy.Language({
     'proxy': self
   });
-  
+
   this.initTranslations();
   this.runScheduledTasks();
 }
@@ -3377,19 +3382,19 @@ Tr8n.Proxy.prototype = {
     if (rule_type == 'date')          return 'Tr8n.Proxy.DateRule';
     if (rule_type == 'list')          return 'Tr8n.Proxy.ListRule';
     if (rule_type == 'gender_list')   return 'Tr8n.Proxy.GenderListRule';
-    return null;    
+    return null;
   },
   getLanguageRuleForTokenSuffix: function(token_suffix) {
     if (!this.options['rules']) return null;
-    
+
     for (rule_type in this.options['rules']) {
       var suffixes = this.options['rules'][rule_type]['token_suffixes'];
       if (!suffixes) continue;
-      
+
       if (Tr8n.Utils.indexOf(suffixes, token_suffix) != -1 )
-         return this.getLanguageRuleForType(rule_type);     
+         return this.getLanguageRuleForType(rule_type);
     }
-    return null;    
+    return null;
   },
 
   registerTranslationKeys: function(translations) {
@@ -3412,12 +3417,12 @@ Tr8n.Proxy.prototype = {
         self.log(response.responseText);
         self.updateTranslations(eval("[" + response.responseText + "]")[0]['phrases']);
       }
-    }); 
+    });
   },
 
   initTranslations: function(forced) {
     if (!forced && this.translations) return;
-    
+
     this.translations = {};
 
     // Check for page variable to load translations from, if variable was provided
@@ -3437,7 +3442,7 @@ Tr8n.Proxy.prototype = {
     this.log("Updating page translations...");
     this.registerTranslationKeys(new_translations);
   },
-    
+
   registerMissingTranslationKey: function(translation_key, token_values, options) {
     this.missing_translation_keys = this.missing_translation_keys || {};
     if (!this.missing_translation_keys[translation_key.key]) {
@@ -3450,9 +3455,9 @@ Tr8n.Proxy.prototype = {
       this.log('Missing translations are being processed, postponding registration task.');
       return;
     }
-      
+
     this.missing_translation_keys = this.missing_translation_keys || {};
-    
+
     var phrases = "[";
     for (var key in this.missing_translation_keys) {
       var translation_key = this.missing_translation_keys[key].translation_key;
@@ -3464,12 +3469,12 @@ Tr8n.Proxy.prototype = {
       phrases = phrases + "}";
     }
     phrases = phrases + "]";
-    
+
     if (phrases == '[]') {
 //      this.log('No missing translation keys to submit...');
       return;
     }
-    
+
     var self = this;
     this.debug('Submitting missing translation keys: ' + phrases);
     Tr8n.Utils.ajax(this.options['url'], {
@@ -3480,7 +3485,7 @@ Tr8n.Proxy.prototype = {
         self.log(response.responseText);
         self.updateMissingTranslationKeys(eval("[" + response.responseText + "]")[0]['phrases']);
       }
-    }); 
+    });
   },
 
   updateMissingTranslationKeys: function(translations) {
@@ -3488,7 +3493,7 @@ Tr8n.Proxy.prototype = {
     this.log("Received " + translations.length + " registered phrases...");
     for (i = 0; i < translations.length; i++) {
        var translation_key_data = translations[i];
-       
+
        this.log("Registering new key " + translation_key_data.key);
        this.translations[translation_key_data.key] = translation_key_data;
        var missing_key_data = this.missing_translation_keys[translation_key_data.key];
@@ -3505,14 +3510,14 @@ Tr8n.Proxy.prototype = {
        }
     }
     this.missing_translations_locked = false;
-  },  
+  },
 
   runScheduledTasks: function() {
     var self = this;
-    
+
 //    this.log("Running scheduled tasks...");
     this.submitMissingTranslationKeys();
-    
+
     window.setTimeout(function() {
       self.runScheduledTasks();
     }, this.options['scheduler_interval']);
@@ -3750,9 +3755,9 @@ Tr8n.Proxy.TranslationKey.prototype = {
     // check for a single translation case - no context rules
     if (translations['label']!=null) {
       this.getLogger().debug('Found a single translation: ' + translations['label']);
-      return translations;    
+      return translations;
     }
-  
+
     translations = translations['labels'];
     if (!translations) {
       this.getLogger().error("Translations are in a weird form...");
@@ -3762,7 +3767,7 @@ Tr8n.Proxy.TranslationKey.prototype = {
     this.getLogger().debug('Found translations: ' + translations.length);
     for (var i=0; i<translations.length; i++) {
       this.getLogger().debug("Checking context rules for:" + translations[i]['label']);
-      
+
       if (!translations[i]['context']) {
         this.getLogger().debug("Translation has no context, using it by default");
         return translations[i];
@@ -3780,7 +3785,7 @@ Tr8n.Proxy.TranslationKey.prototype = {
         rule.options = options;
         valid_context = valid_context && rule.evaluate(token, token_values);
       }
-      
+
       if (valid_context) {
         this.getLogger().debug("Found valid translation: " + translations[i].label);
         return translations[i];
@@ -3788,53 +3793,53 @@ Tr8n.Proxy.TranslationKey.prototype = {
         this.getLogger().debug("The rules were not matched for: " + translations[i].label);
       }
     }
-    
+
     this.getLogger().debug('No acceptable ranslations found');
-    return null;        
+    return null;
   },
-  
+
   translate: function(language, token_values, options) {
     if (!this.label) {
       this.getLogger().error('Label must always be provided for the translate method');
       return '';
     }
-    
+
     var translations = this.getProxy().getTranslations();
     var translation_key = translations[this.key];
-        
+
     if (translation_key) {
-      this.getLogger().debug("Found translations, evaluating rules...");      
-      
+      this.getLogger().debug("Found translations, evaluating rules...");
+
       this.id = translation_key.id;
       this.original = translation_key.original;
       var translation = this.findFirstAcceptableTranslation(translation_key, token_values);
 
       if (translation) {
-        this.getLogger().debug("Found a valid match: " + translation.label);      
+        this.getLogger().debug("Found a valid match: " + translation.label);
         return this.substituteTokens(translation['label'], token_values, options);
       } else {
-        this.getLogger().debug("No valid match found, using default language");      
+        this.getLogger().debug("No valid match found, using default language");
         return this.substituteTokens(this.label, token_values, options);
       }
-      
+
     } else {
-      this.getLogger().debug("Translation not found, using default language");      
+      this.getLogger().debug("Translation not found, using default language");
     }
 
     this.getProxy().registerMissingTranslationKey(this, token_values, options);
     this.getLogger().debug('No translation found. Using default...');
-    return this.substituteTokens(this.label, token_values, options);    
+    return this.substituteTokens(this.label, token_values, options);
   },
-  
+
   generateKey: function() {
     this.key = this.label + ";;;";
     if (this.description) this.key = this.key + this.description;
-       
+
     this.getLogger().debug('Preparing label signature: ' + this.key);
     this.key = MD5(this.key);
     this.getLogger().debug('Label signature: ' + this.key);
   },
-  
+
   registerDataTokens: function(label) {
     this.data_tokens = [];
     this.data_tokens = this.data_tokens.concat(Tr8n.Proxy.DataToken.parse(label, {'key': this, 'proxy':this.getProxy()}));
@@ -3852,40 +3857,40 @@ Tr8n.Proxy.TranslationKey.prototype = {
     for (var i = 0; i < this.data_tokens.length; i++) {
       label = this.data_tokens[i].substitute(label, token_values || {});
     }
-    
+
     this.registerDecorationTokens(label);
     if (!this.decoration_tokens) return label;
     for (var i = 0; i < this.decoration_tokens.length; i++) {
       label = this.decoration_tokens[i].substitute(label, token_values || {});
     }
-    
+
     return this.decorateLabel(label, options);
   },
-  
+
   decorateLabel: function(label, options){
     options = options || {};
     if (options['skip_decorations'])
       return label;
-      
+
     html = [];
     html.push("<tr8n ");
-    
-    if (this.id) 
+
+    if (this.id)
       html.push(" translation_key_id='" + this.id + "' ");
-      
-    if (this.key) 
+
+    if (this.key)
       html.push(" id='" + this.key + "' ");
-  
+
     var klasses = ['tr8n_translatable'];
-    
+
     if (this.original)
       klasses.push('tr8n_not_translated');
-    else  
+    else
       klasses.push('tr8n_translated');
 
     if (this.getProxy().inline_translations_enabled && this.id)
       html.push(" class='" + klasses.join(' ') + "'");
-      
+
     html.push(">");
     html.push(label);
     html.push("</tr8n>");
@@ -4175,24 +4180,24 @@ Tr8n.Proxy.LanguageRule.prototype = {
   },
   getTokenValue: function(token_name, token_values) {
     var object = token_values[token_name];
-    if (object == null) { 
+    if (object == null) {
       this.getLogger().error("Invalid token value for token: " + token_name);
     }
-    
-    return object;    
+
+    return object;
   },
   getDefinitionDescription: function() {
     var result = [];
     for (var key in this.definition)
       result.push(key + ": '" + this.definition[key] + "'");
-    return "{" + result.join(", ") + "}";   
+    return "{" + result.join(", ") + "}";
   },
   sanitizeArrayValue: function(value) {
     var results = [];
     var arr = value.split(',');
     for (var index = 0; index < arr.length; index++) {
       results.push(Tr8n.Utils.trim(arr[index]));
-    }   
+    }
     return results;
   }
 }
@@ -4226,7 +4231,7 @@ Tr8n.Proxy.GenderRule.prototype = new Tr8n.Proxy.LanguageRule();
 //  {user | he, she, he/she}
 Tr8n.Proxy.GenderRule.transform = function(object, values) {
   if (values.length == 1) return values[0];
-  
+
   if (typeof object == 'string') {
     if (object == 'male') return values[0];
     if (object == 'female') return values[1];
@@ -4236,7 +4241,7 @@ Tr8n.Proxy.GenderRule.transform = function(object, values) {
   }
 
   if (values.length == 3) return values[2];
-  return values[0] + "/" + values[1]; 
+  return values[0] + "/" + values[1];
 }
 
 Tr8n.Proxy.GenderRule.prototype.evaluate = function(token_name, token_values) {
@@ -4245,17 +4250,17 @@ Tr8n.Proxy.GenderRule.prototype.evaluate = function(token_name, token_values) {
   if (!object) return false;
 
   var gender = "";
-  
+
   if (typeof object != 'object') {
     this.getLogger().error("Invalid token value for gender based token: " + token_name + ". Token value must be an object.");
     return false;
-  } 
+  }
 
   if (!object['subject']) {
     this.getLogger().error("Invalid token subject for gender based token: " + token_name + ". Token value must contain a subject. Subject can be a string or an object with a gender.");
     return false;
   }
-  
+
   if (typeof object['subject'] == 'string') {
     gender = object['subject'];
   } else if (typeof object['subject'] == 'object') {
@@ -4268,13 +4273,13 @@ Tr8n.Proxy.GenderRule.prototype.evaluate = function(token_name, token_values) {
     this.getLogger().error("Invalid token subject for gender based token: " + token_name + ". Subject does not have a gender.");
     return false;
   }
-  
+
   if (this.definition['operator'] == "is") {
      return (gender == this.definition['value']);
   } else if (this.definition['operator'] == "is_not") {
      return (gender != this.definition['value']);
   }
-  
+
   return false;
 }
 
@@ -4295,34 +4300,34 @@ Tr8n.Proxy.NumericRule.transform = function(count, values) {
   if (values.length == 2) {
     return values[1];
   }
-  return values[0].pluralize();  
+  return values[0].pluralize();
 }
 
 Tr8n.Proxy.NumericRule.prototype.evaluate = function(token_name, token_values){
   //  "count":{"value1":"2,3,4","operator":"and","type":"number","multipart":true,"part2":"does_not_end_in","value2":"12,13,14","part1":"ends_in"}
-  
+
   var object = this.getTokenValue(token_name, token_values);
   if (object == null) return false;
 
   var token_value = null;
   if (typeof object == 'string' || typeof object == 'number') {
     token_value = "" + object;
-  } else if (typeof object == 'object' && object['subject']) { 
+  } else if (typeof object == 'object' && object['subject']) {
     token_value = "" + object['subject'];
   } else {
     this.getLogger().error("Invalid token value for numeric token: " + token_name);
     return false;
   }
-  
+
   this.getLogger().debug("Rule value: '" + token_value + "' for definition: " + this.getDefinitionDescription());
-  
+
   var result1 = this.evaluatePartialRule(token_value, this.definition['part1'], this.sanitizeArrayValue(this.definition['value1']));
   if (this.definition['multipart'] == 'false' || this.definition['multipart'] == false || this.definition['multipart'] == null) return result1;
   this.getLogger().debug("Part 1: " + result1 + " Processing part 2...");
 
   var result2 = this.evaluatePartialRule(token_value, this.definition['part2'], this.sanitizeArrayValue(this.definition['value2']));
   this.getLogger().debug("Part 2: " + result2 + " Completing evaluation...");
-  
+
   if (this.definition['operator'] == "or") return (result1 || result2);
   return (result1 && result2);
 }
@@ -4330,11 +4335,11 @@ Tr8n.Proxy.NumericRule.prototype.evaluate = function(token_name, token_values){
 
 Tr8n.Proxy.NumericRule.prototype.evaluatePartialRule = function(token_value, name, values) {
   if (name == 'is') {
-    if (Tr8n.Utils.indexOf(values, token_value)!=-1) return true; 
+    if (Tr8n.Utils.indexOf(values, token_value)!=-1) return true;
     return false;
   }
   if (name == 'is_not') {
-    if (Tr8n.Utils.indexOf(values, token_value)==-1) return true; 
+    if (Tr8n.Utils.indexOf(values, token_value)==-1) return true;
     return false;
   }
   if (name == 'ends_in') {
@@ -4403,10 +4408,10 @@ Tr8n.Tml.Label = function(node, proxy) {
       var token = new Tr8n.Tml.Token(childNode, this.tokens);
       this.label = Tr8n.Utils.trim(this.label) + " " + token.toTokenString();
     }
-    
+
   }
 
-  this.description = this.node.attributes['desc'] || this.node.attributes['description']; 
+  this.description = this.node.attributes['desc'] || this.node.attributes['description'];
   this.description = this.description ? this.description.value : null;
 
   this.label = this.label.replace(/\n/g, '');
@@ -4426,7 +4431,7 @@ Tr8n.Tml = Tr8n.Tml || {};
 
 Tr8n.Tml.Token = function(node, tokens) {
   this.node = node;
-  
+
   this.type = this.node.attributes['type'];
   this.type = this.type ? this.type.value : 'data';
 
@@ -4447,8 +4452,8 @@ Tr8n.Tml.Token = function(node, tokens) {
 
     if (childNode.nodeType == 3) {
       // text should just be added to the label
-      // <tml:label>You have <tml:token type="data" name="count" context="number">2</tml:token> messages.</tml:label>    
-      
+      // <tml:label>You have <tml:token type="data" name="count" context="number">2</tml:token> messages.</tml:label>
+
       if (node.attributes['context'] && node.attributes['context'].nodeValue == 'gender') {
         tokens[this.name] = {subject: node.attributes['value'].nodeValue, value: Tr8n.Utils.trim(childNode.nodeValue)};
       } else {
@@ -4457,12 +4462,12 @@ Tr8n.Tml.Token = function(node, tokens) {
 
     } else {
       // the first element inside the token must be a decoration span, bold, etc...
-      // <tml:label>Hello 
+      // <tml:label>Hello
       //   <tml:token type="decoration" name="span">
       //     <span style='color:brown;font-weight:bold;'>
       //       World
       //     </span>
-      //   </tml:token> 
+      //   </tml:token>
       // </tml:label>
 
       var html_tag = childNode.nodeName.toLowerCase();
@@ -4487,7 +4492,7 @@ Tr8n.Tml.Token = function(node, tokens) {
         } else if (grandChildNode.nodeName == "TML:TOKEN") {
           var token = new Tr8n.Tml.Token(grandChildNode, tokens);
           this.content = Tr8n.Utils.trim(this.content) + " " + token.toTokenString();
-        }    
+        }
       }
     }
   }
