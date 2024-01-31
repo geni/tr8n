@@ -185,13 +185,16 @@ Tr8n.Utils = {
   findElement: function (e,selector,el) {
     var event = e || window.event;
     var target = el || event.target || event.srcElement;
-    if(target == document.body) return null;
-    var condition = (selector.match(/^\./)) ? this.hasClassName(target,selector.replace(/^\./,'')) : (target.tagName.toLowerCase() == selector.toLowerCase());
-    if(condition) {
-      return target;
-    } else {
-      return this.findElement(e,selector,target.parentNode);
-    }
+
+    // This used to recurse. But it kept overflowing the stack.
+    // So I switched to a while loop.
+    while(target && target != document.body) {
+      if(target.matches(selector)) {
+        return target;
+      }
+
+      target = target.parentNode;
+    };
   },
 
   cumulativeOffset: function(element) {
