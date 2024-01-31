@@ -188,7 +188,7 @@ Tr8n.Utils = {
 
     // This used to recurse. But it kept overflowing the stack.
     // So I switched to a while loop.
-    while(target && target != document.body) {
+    while(target && target != document) {
       if(target.matches(selector)) {
         return target;
       }
