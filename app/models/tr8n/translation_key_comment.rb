@@ -39,4 +39,7 @@ class Tr8n::TranslationKeyComment < ActiveRecord::Base
     Tr8n::Notification.distribute(self)    
   end
   
+  def can_be_deleted_by?(deleter)
+    translator == deleter
+  end
 end

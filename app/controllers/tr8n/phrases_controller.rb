@@ -184,8 +184,8 @@ class Tr8n::PhrasesController < Tr8n::BaseController
         @translation.label = sanitize_label(params[:label])
 
         unless @translation.can_be_edited_by?(tr8n_current_translator)
-          tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to update translation that is not his")
-          @translation.label = "You are not authorized to edit this translation as you were not it's creator"
+          tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to update translation that is not theirs")
+          @translation.label = "You are not authorized to edit this translation"
           mode = :edit
         else
           if @translation.clean?
@@ -208,8 +208,8 @@ class Tr8n::PhrasesController < Tr8n::BaseController
     translator = translation.translator
 
     unless translation.can_be_edited_by?(tr8n_current_translator)
-      tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to delete translation that is not his")
-      trfe("You are not authorized to delete this translation as you were not it's creator")
+      tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to delete translation that is not theirs")
+      trfe("You are not authorized to delete this translation")
     else
       translation.destroy_with_log!(tr8n_current_translator)
       translator.update_rank!
@@ -262,9 +262,16 @@ class Tr8n::PhrasesController < Tr8n::BaseController
       verify_authenticity_token
 
       comment = Tr8n::TranslationKeyComment.find_by_id(params[:comment_id]) unless params[:comment_id].blank?
-      comment.destroy if comment
 
-      trfn("Your comment has been removed.")
+      if comment
+        unless comment&.can_be_deleted_by?(tr8n_current_translator)
+          tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to delete comment that is not theirs")
+          trfe("You are not authorized to delete this comment")
+        else
+          comment.destroy
+          trfn("Your comment has been removed.")
+        end
+      end
     end
 
     redirect_to_source
