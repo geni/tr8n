@@ -465,8 +465,39 @@ module Tr8n::HelperMethods
     values = [metric.not_translated_count, metric.locked_key_count, metric.translated_key_count - metric.locked_key_count]
     names = [trl("Not Translated"), trl("Approved"), trl("Pending Approval")]
     colors = ['FF0000', '00FF00', 'FFFF00']
-    chart_url = URI.encode "https://chart.googleapis.com/chart?cht=p3&chs=350x80&chd=t:#{values.join(',')}&chl=#{names.join('|')}&chco=#{colors.join('|')}"
-    image_tag(chart_url)
+
+    @chart_id ||= 0
+    @chart_id += 1
+
+    html = []
+    html << "<div id='chart#{@chart_id}'></div>"
+    html << "<script type='text/javascript'>"
+    html << "google.charts.load('current', {'packages':['corechart']});"
+    html << "google.charts.setOnLoadCallback(drawChart);"
+
+    html << "function drawChart() {"
+    html << "var data = new google.visualization.DataTable();"
+    html << "data.addColumn('string', 'Name');"
+    html << "data.addColumn('number', 'Value');"
+    html << "data.addColumn({type: 'string', role: 'style'});"
+
+    values.each_with_index do |value, index|
+      html << "data.addRow(['#{names[index]}', #{value}, '#{colors[index]}']);"
+    end
+
+    html << "var options = {"
+    html << "title: 'Chart',"
+    html << "is3D: true,"
+    html << "width: 350,"
+    html << "height: 80"
+    html << "};"
+
+    html << "var chart#{@chart_id} = new google.visualization.PieChart(document.getElementById('chart#{@chart_id}'));"
+    html << "chart#{@chart_id}.draw(data, options);"
+    html << "}"
+    html << "</script>"
+
+    html.join.html_safe
   end
 
   def tr8n_when_string_tag(time, opts = {})

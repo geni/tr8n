@@ -1,7 +1,8 @@
+<%= tr8n_google_charts_js_tag %>
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
 
   <%= render :partial => "/tr8n/common/header" %>
-  
+
   <div class="section_title">
     <%= render :partial => "/tr8n/translator/sections" %>
     <%=tra("Your Assignments") %>
@@ -24,14 +25,14 @@
       <div style="<%=tr8n_style_attribute_tag('float', 'right')%>; font-size:12px; font-weight:normal; padding-top:5px;">
         <%=link_to(tra("view all phrases"), :controller => "/tr8n/phrases", :action => :index, :component_id => comp.id)%>
       </div>
-  
+
       <%=tr8n_toggler_tag("comp_content_#{comp.id}")%>
-      
+
       <span dir="ltr">
         <a name="<%="comp-#{comp.id}"%>" style="text-decoration:none;color:black;"><%=comp.title%></a>
       </span>
     </div>
-    
+
     <div id="comp_content_<%=comp.id%>" class="section_box colored">
       <div class="section_box" style="background-color:#FDFFF0; margin-bottom:10px; margin-top:0px;">
         <% if comp.languages.any? %>
@@ -39,13 +40,13 @@
           <% else %>
             <%=tr("This assignment contains [bold: {count||section}], which {count|needs, need} to be translated into all available languages.", nil, :count => comp.sources.size) %>
           <% end %>
-      </div>      
+      </div>
       <% comp.sources.each do |source| %>
-        <% 
+        <%
           background = "#FDFFCF"
-          if source.total_metric.completeness == 100 
+          if source.total_metric.completeness == 100
             background = "lightgreen"
-          elsif source.total_metric.completeness == 0 
+          elsif source.total_metric.completeness == 0
             background = "#FFB5B5"
           end
         %>
@@ -54,7 +55,7 @@
             <div style="<%=tr8n_style_attribute_tag('float', 'right')%>; font-size:12px; font-weight:normal;">
               <% unless source.url.blank? %>
                 <%= link_to("view page", source.url, :target => "_new")%>
-              <% end %>  
+              <% end %>
             </div>
             <strong><%=source.title%></strong>
           </div>
@@ -63,7 +64,7 @@
           </div>
         </div>
       <% end %>
-    </div>    
+    </div>
   <% end %>
 
   <%= render :partial => "/tr8n/common/footer" %>
