@@ -34,6 +34,11 @@ module Tr8n::HelperMethods
     render(:partial => '/tr8n/common/scripts', :locals => {:opts => opts})
   end
 
+  def tr8n_google_charts_js_tag
+    javascript_include_tag('https://www.gstatic.com/charts/loader.js')
+  end
+
+
   def tr8n_default_client_source
     "#{params[:controller]}/#{params[:action]}/JS"
   end
