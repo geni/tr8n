@@ -14,6 +14,7 @@ log/*
 Thumbs.db
 .tmp*
 tmp/
+.vscode/*
 local/tr8n_server/db/*.sqlite3
 local/tr8n_server/log/*.log
 local/tr8n_server/tmp/

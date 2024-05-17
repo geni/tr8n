@@ -52,8 +52,49 @@ module Tr8n::Admin::BaseHelper
    end
    html
   end
-  
+
   def language_metric_chart(field = :user_count, limit = 20)
+    labels = []
+    counts = []
+    Tr8n::TotalLanguageMetric.find(:all, :conditions => ["language_id <> ?", Tr8n::Config.default_language.id], :order => "#{field} desc", :limit => limit).each do |metric|
+      labels << metric.language.english_name
+      counts << (metric.send(field) || 0)
+    end
+
+    max_count = counts.max
+    max_count = 100 if max_count < 100
+    counts = counts.collect{|c| c/(max_count * 1.0) * 100}
+
+    html = []
+    html << "<div id='chart'></div>"
+    html << "<script type='text/javascript'>"
+    html << "google.charts.load('current', {'packages':['corechart']});"
+    html << "google.charts.setOnLoadCallback(drawChart);"
+
+    html << "function drawChart() {"
+    html << "var data = new google.visualization.DataTable();"
+    html << "data.addColumn('string', 'Language');"
+    html << "data.addColumn('number', 'Count');"
+
+    labels.each_with_index do |label, index|
+      html << "data.addRow(['#{label}', #{counts[index]}]);"
+    end
+
+    html << "var options = {"
+    html << "title: 'Language Metrics',"
+    html << "width: 1000,"
+    html << "height: 300"
+    html << "};"
+
+    html << "var chart = new google.visualization.BarChart(document.getElementById('chart'));"
+    html << "chart.draw(data, options);"
+    html << "}"
+    html << "</script>"
+
+    html.join
+  end
+
+  def language_metric_chart_OLD(field = :user_count, limit = 20)
     labels = []
     label_positions = []
     counts = []
