@@ -65,8 +65,11 @@ module Tr8n::Admin::BaseHelper
     max_count = 100 if max_count < 100
     counts = counts.collect{|c| c/(max_count * 1.0) * 100}
 
+    @chart_id ||= 0
+    @chart_id += 1
+
     html = []
-    html << "<div id='chart'></div>"
+    html << "<div id='chart#{chart_id}'></div>"
     html << "<script type='text/javascript'>"
     html << "google.charts.load('current', {'packages':['corechart']});"
     html << "google.charts.setOnLoadCallback(drawChart);"
@@ -86,8 +89,8 @@ module Tr8n::Admin::BaseHelper
     html << "height: 300"
     html << "};"
 
-    html << "var chart = new google.visualization.BarChart(document.getElementById('chart'));"
-    html << "chart.draw(data, options);"
+    html << "var chart#{chart_id} = new google.visualization.BarChart(document.getElementById('chart#{chart_id}'));"
+    html << "chart#{chart_id}.draw(data, options);"
     html << "}"
     html << "</script>"
 
