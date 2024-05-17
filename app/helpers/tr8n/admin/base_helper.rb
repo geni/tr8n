@@ -69,7 +69,7 @@ module Tr8n::Admin::BaseHelper
     @chart_id += 1
 
     html = []
-    html << "<div id='chart#{chart_id}'></div>"
+    html << "<div id='chart#{@chart_id}'></div>"
     html << "<script type='text/javascript'>"
     html << "google.charts.load('current', {'packages':['corechart']});"
     html << "google.charts.setOnLoadCallback(drawChart);"
@@ -89,8 +89,8 @@ module Tr8n::Admin::BaseHelper
     html << "height: 300"
     html << "};"
 
-    html << "var chart#{chart_id} = new google.visualization.BarChart(document.getElementById('chart#{chart_id}'));"
-    html << "chart#{chart_id}.draw(data, options);"
+    html << "var chart#{@chart_id} = new google.visualization.BarChart(document.getElementById('chart#{@chart_id}'));"
+    html << "chart#{@chart_id}.draw(data, options);"
     html << "}"
     html << "</script>"
 
