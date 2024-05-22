@@ -461,10 +461,9 @@ module Tr8n::HelperMethods
     html << "var data = new google.visualization.DataTable();"
     html << "data.addColumn('string', 'Name');"
     html << "data.addColumn('number', 'Value');"
-    html << "data.addColumn({type: 'string', role: 'style'});"
 
     values.each_with_index do |value, index|
-      html << "data.addRow(['#{names[index]}', #{value}, '#{colors[index]}']);"
+      html << "data.addRow(['#{names[index]}', #{value}]);"
     end
 
     html << "var options = {"
@@ -472,6 +471,7 @@ module Tr8n::HelperMethods
     html << "is3D: true,"
     html << "width: #{width},"
     html << "height: #{height},"
+    html << "colors: [#{ colors.map{|color| "'##{color}'"}.join(',') }],"
     html << "};"
 
     html << "var chart#{@chart_id} = new google.visualization.PieChart(document.getElementById('chart#{@chart_id}'));"
