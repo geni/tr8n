@@ -3,24 +3,24 @@
 	<%= tr8n_splash_screen_tag %>
 
   <% if Tr8n::Config.enable_software_keyboard? %>
-    <script>
-      VKI_default_layout = "<%=Tr8n::KeyboardMapping.current_1_49%>";
-    </script>
+    <%= javascript_tag %{
+      VKI_default_layout = "#{ Tr8n::KeyboardMapping.current_1_49 }";
+    } %>
     <%=stylesheet_link_tag( url_with_cache_version("/tr8n/stylesheets/keyboard_1_49.css") ) -%>
   <% end %>
 
   <%=stylesheet_link_tag( url_with_cache_version("/tr8n/stylesheets/tr8n.css") ) -%>
   <%=javascript_include_tag( url_with_cache_version("/tr8n/javascripts/tr8n-compiled.js"), :charset => "UTF-8") -%>
 
-  <script type="text/javascript">
+  <%= javascript_tag %{
      initializeTr8n();
-     Tr8n.source = "<%=Tr8n::Config.current_source ? h(Tr8n::Config.current_source.source) : "" %>";
-     Tr8n.url_cache_version = "<%= Tr8n::Config.url_cache_version -%>";
-     Tr8n.allow_invalid_tokens = "<%= Tr8n::Config.rules_engine['allow_invalid_tokens'] -%>";
-     Tr8n.allow_unused_tokens = "<%= Tr8n::Config.rules_engine['allow_unused_tokens'] -%>";
-     Tr8n.csrfParam = "<%= request_forgery_protection_token -%>";
-     Tr8n.csrfToken = "<%= form_authenticity_token -%>";
-  </script>
+     Tr8n.source = "#{ Tr8n::Config.current_source ? h(Tr8n::Config.current_source.source) : "" }";
+     Tr8n.url_cache_version = "#{ Tr8n::Config.url_cache_version }";
+     Tr8n.allow_invalid_tokens = "#{ Tr8n::Config.rules_engine['allow_invalid_tokens'] }";
+     Tr8n.allow_unused_tokens = "#{ Tr8n::Config.rules_engine['allow_unused_tokens'] }";
+     Tr8n.csrfParam = "#{ request_forgery_protection_token }";
+     Tr8n.csrfToken = "#{ form_authenticity_token }";
+  } %>
 
   <% if Tr8n::Config.enable_effects? %>
     <%=javascript_include_tag( url_with_cache_version(Tr8n::Config.effects_library_path) ) -%>
@@ -32,19 +32,19 @@
   <% end %>
 
   <% if Tr8n::Config.enable_google_suggestions? and Tr8n::Config.current_user_is_translator? %>
-    <script type="text/javascript">
-			Tr8n.google_api_key = "<%=Tr8n::Config.google_api_key.html_safe %>";
-		</script>
+    <%= javascript_tag %{
+			Tr8n.google_api_key = "#{ Tr8n::Config.google_api_key.html_safe }";
+    } %>
   <% end %>
 
   <% if Tr8n::Config.enable_keyboard_shortcuts? %>
-    <script type="text/javascript">
-       <% Tr8n::Config.default_shortcuts.each do |key, data| %>
-				  shortcut.add("<%=key%>", function() {
-				    <%= data["script"].html_safe %>
-				  });
-			 <% end %>
-    </script>
+    <%= javascript_tag(Tr8n::Config.default_shortcuts.collect do |key, data|
+			  %{
+          shortcut.add("#{key}", function() {
+            #{ data["script"].html_safe }
+          });
+        }
+	  end) %>
   <% end %>
 
 <% end %>

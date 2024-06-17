@@ -62,7 +62,6 @@ module Tr8n::HelperMethods
 
     else  # translations are embedded right into the page
 
-      html << "<script>"
       sources = Tr8n::TranslationSource.find(:all, :conditions => ["source in (?)", opts[:sources]])
       source_ids = sources.collect{|source| source.id}
 
@@ -79,8 +78,7 @@ module Tr8n::HelperMethods
         translations << trn
       end
 
-      html << "#{client_sdk_var_name}.updateTranslations(#{translations.to_json});"
-      html << "</script>"
+      html << javascript_tag("#{client_sdk_var_name}.updateTranslations(#{translations.to_json});")
     end
 
     html.join('').html_safe
@@ -102,27 +100,19 @@ module Tr8n::HelperMethods
 
     client_var_name = opts[:client_var_name] || :tr8nProxy
 
-    html = []
-    html << "<script>"
-    html << "  var #{client_var_name} = new Tr8n.Proxy(#{opts.to_json});"
-    html << "  function reloadTranslations() { "
-    html << "    #{client_var_name}.initTranslations(true); "
-    html << "  } "
-    html << "  function tr(label, description, tokens, options) { "
-    html << "    return #{client_var_name}.tr(label, description, tokens, options); "
-    html << "  } "
-    html << "  function trl(label, description, tokens, options) { "
-    html << "    return #{client_var_name}.trl(label, description, tokens, options); "
-    html << "  } "
-
-    if Tr8n::Config.enable_tml?
-      html << "  Tr8n.Utils.addEvent(window, 'load', function() { "
-      html << "    #{client_var_name}.initTml(); "
-      html << "  }) "
-    end
-
-    html << "</script>"
-    html.join("\n").html_safe
+    javascript_tag %{
+      var #{client_var_name} = new Tr8n.Proxy(#{opts.to_json});
+      function reloadTranslations() {
+        #{client_var_name}.initTranslations(true);
+      }
+      function tr(label, description, tokens, options) {
+        return #{client_var_name}.tr(label, description, tokens, options);
+      }
+      function trl(label, description, tokens, options) {
+        return #{client_var_name}.trl(label, description, tokens, options);
+      }
+      #{ "Tr8n.Utils.addEvent(window, 'load', function() { #{client_var_name}.initTml(); }" if Tr8n::Config.enable_tml? }
+    }
   end
 
   def tr8n_options_for_select(options, selected = nil, description = nil, lang = Tr8n::Config.current_language)
@@ -453,31 +443,29 @@ module Tr8n::HelperMethods
 
     html = []
     html << "<div id='chart#{@chart_id}'></div>"
-    html << "<script type='text/javascript'>"
-    html << "google.charts.load('current', {'packages':['corechart']});"
-    html << "google.charts.setOnLoadCallback(drawChart);"
+    html << javascript_tag(%{
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
-    html << "function drawChart() {"
-    html << "var data = new google.visualization.DataTable();"
-    html << "data.addColumn('string', 'Name');"
-    html << "data.addColumn('number', 'Value');"
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+        data.addColumn('number', 'Value');
 
-    values.each_with_index do |value, index|
-      html << "data.addRow(['#{names[index]}', #{value}]);"
-    end
+        #{ values.each_with_index.map {|value, index| "data.addRow(['#{names[index]}', #{value}]);" }.join("\n") }
 
-    html << "var options = {"
-    html << "title: 'Chart',"
-    html << "is3D: true,"
-    html << "width: #{width},"
-    html << "height: #{height},"
-    html << "colors: [#{ colors.map{|color| "'##{color}'"}.join(',') }],"
-    html << "};"
+        var options = {
+          title: 'Chart',
+          is3D: true,
+          width: #{width},
+          height: #{height},
+          colors: [#{ colors.map{|color| "'##{color}'"}.join(',') }],
+        };
 
-    html << "var chart#{@chart_id} = new google.visualization.PieChart(document.getElementById('chart#{@chart_id}'));"
-    html << "chart#{@chart_id}.draw(data, options);"
-    html << "}"
-    html << "</script>"
+        var chart#{@chart_id} = new google.visualization.PieChart(document.getElementById('chart#{@chart_id}'));
+        chart#{@chart_id}.draw(data, options);
+      }
+    })
 
     html.join.html_safe
   end
