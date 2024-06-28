@@ -64,15 +64,31 @@
 			        <% more_link_style = 'display:none' if multipart %>
 			        <% less_link_style = 'display:none' unless multipart %>
 
-			        <span id="add_condition_link">
-							  <%=link_to_function(tra('+ Add condition'), "Tr8n.Effects.show('rule_#{rule_key}_second_part'); Tr8n.Effects.hide('add_condition_link'); Tr8n.element('edit_rule_multipart').value='true';", :style => more_link_style)%>
+							<%= javascript_tag %{
+							  addCondition = function(ruleKey) {
+								  Tr8n.Effects.show('rule_' + ruleKey + '_second_part');
+									Tr8n.Effects.hide('add_condition_link');
+									Tr8n.element('edit_rule_multipart').value='true';
+									return false;
+								}
+
+								removeCondition = function(ruleKey) {
+								  Tr8n.Effects.hide('rule_' + ruleKey + '_second_part');
+									Tr8n.Effects.show('add_condition_link');
+									Tr8n.element('edit_rule_multipart').value='false';
+									return false;
+								}
+							} %>
+
+							<span id="add_condition_link">
+							  <%=link_to_function(tra('+ Add condition'), "addCondition('#{rule_key}'", :style => more_link_style)%>
 						  </span>
 
 						  <% second_part_style = 'display:none' unless multipart %>
 						  <div id="rule_<%=rule_key%>_second_part" style="padding-top:3px;<%= second_part_style %>">
 						    <%=select_tag("#{rule_prefix}[definition][part2]", tr8n_options_for_select(@rule.class.condition_options, @rule.definition[:part2]), :style => "width:150px")%>
 						    <%=text_field_tag("#{rule_prefix}[definition][value2]", @rule.humanize_values(@rule.definition[:value2]), :style => "width:150px")%>
-			          <%=link_to_function('- Remove condition', "Tr8n.Effects.hide('rule_#{rule_key}_second_part'); Tr8n.Effects.show('add_condition_link'); Tr8n.element('edit_rule_multipart').value='false';")%>
+			          <%=link_to_function('- Remove condition', "removeCondition('#{rule_key}')")%>
 						  </div>
 						</td>
 					</tr>

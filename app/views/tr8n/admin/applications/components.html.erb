@@ -6,15 +6,15 @@
 
 <% form_tag("", :id => "comps_form") do %>
   <%= will_filter_table_tag(@comps, :columns => [
-    [:checkbox, 'comps'],     
-    [:id, lambda{|comp| link_to(comp.id, {:action => :component, :comp_id => comp.id})}], 
+    [:checkbox, 'comps'],
+    [:id, lambda{|comp| link_to(comp.id, {:action => :component, :comp_id => comp.id})}],
     :key,
-    [:name, lambda{|comp| link_to_unless(comp.name.blank?, comp.name, {:action => :component, :comp_id => comp.id})}], 
+    [:name, lambda{|comp| link_to_unless(comp.name.blank?, comp.name, {:action => :component, :comp_id => comp.id})}],
     :state,
-    [:sources, lambda{ |comp| 
+    [:sources, lambda{ |comp|
       link_to(comp.sources.size, {:action => :component, :comp_id => comp.id, :mode => :sources})
     }, 'padding:5px;text-align:right;white-space:nowrap;'],
-    [:translators, lambda{ |comp| 
+    [:translators, lambda{ |comp|
       link_to(comp.translators.size, {:action => :component, :comp_id => comp.id, :mode => :translators})
     }, 'padding:5px;text-align:right;white-space:nowrap;'],
     [:application_id, lambda{|comp| comp.application ? comp.application.name : ""}],
@@ -33,11 +33,11 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<script>
+<%= javascript_tag {
   function deleteSelectedSources() {
     if (!confirm('Are you sure you want to delete all selected components?'))
        return;
     Tr8n.element('comps_form').action = "/tr8n/admin/applications/delete_component";
     Tr8n.element('comps_form').submit();
   }
-</script> 
+} %>

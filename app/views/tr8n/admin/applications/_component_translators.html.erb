@@ -1,7 +1,7 @@
 <% form_tag("", :id => "translators_form") do %>
 <%= hidden_field_tag(:type, "translator") %>
 <%= will_filter_table_tag(@results, :columns => [
-    [:checkbox, 'component_objects'],     
+    [:checkbox, 'component_objects'],
     [:id, lambda{|ctran|
       ctran.translator&.id
     }],
@@ -12,7 +12,7 @@
       ctran.translator&.country_code
     }],
     [:admin, lambda{|ctran|
-      ctran.translator&.admin?  
+      ctran.translator&.admin?
     }, 'text-align:right'],
     [:level, lambda{|ctran|
       if ctran.translator&.admin?
@@ -21,7 +21,7 @@
         "<span style='color:brown'>#{ctran.translator&.title}</span>"
       else
         ctran.translator&.title
-      end     
+      end
     }, 'text-align:right'],
     [:blocked, lambda{|ctran|
       html = []
@@ -29,14 +29,14 @@
         html << "<span style='color:red'>"
       else
         html << "<span style='color:green'>"
-      end     
+      end
       html << ctran.translator&.blocked?
       html << "</span>"
       html.join("")
     }, 'text-align:right'],
     [:rank, lambda{|ctran|
       ctran.translator&.rank ? (ctran.translator&.rank * 100).to_i / 100.0 : 0
-    }, 'text-align:right'], 
+    }, 'text-align:right'],
     [:translation_count, lambda{|ctran|
       link_to(ctran.translator&.total_metric&.total_translations || 0, "/tr8n/admin/translation?wf_c0=translator_id&wf_o0=is&wf_v0_0=#{ctran.translator&.id}")
     }, 'text-align:right;width:150px;'],
@@ -44,11 +44,11 @@
       html = []
       html << (ctran.translator&.total_metric&.total_votes || 0)
       html << " (<span style='color:green'>"
-      html << (ctran.translator&.total_metric&.positive_votes || 0) 
+      html << (ctran.translator&.total_metric&.positive_votes || 0)
       html << "</span>/<span style='color:red'>"
       html << (ctran.translator&.total_metric&.negative_votes || 0)
       html << "</span>)"
-      html.join("")     
+      html.join("")
     }, 'text-align:right;width:100px;'],
     [:actions, lambda{|ctran|
       html = []
@@ -63,11 +63,11 @@
   ['Remove From Component', 'removeFromComponent()']
 ]) %>
 
-<script>
+<%= javascript_tag {
   function removeFromComponent() {
     if (!confirm('Are you sure you want to remove all selected translators from this component?'))
        return;
     Tr8n.element('translators_form').action = "/tr8n/admin/applications/remove_objects_from_component";
     Tr8n.element('translators_form').submit();
   }
-</script>   
+} %>

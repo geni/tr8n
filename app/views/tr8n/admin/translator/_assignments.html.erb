@@ -1,12 +1,12 @@
 <% form_tag("", :id => "translators_form") do %>
 <%= hidden_field_tag(:type, "translator") %>
 <%= will_filter_table_tag(@results, :columns => [
-    [:checkbox, 'component_objects'],     
+    [:checkbox, 'component_objects'],
     [:id, lambda{|ctran|
       ctran.component.id
     }],
     [:component, lambda{|ctran|
-       link_to(ctran.component.name, :controller => "/tr8n/admin/applications", :action => :component, :comp_id => ctran.component.id) 
+       link_to(ctran.component.name, :controller => "/tr8n/admin/applications", :action => :component, :comp_id => ctran.component.id)
     }],
     [:actions, lambda{|ctran|
       html = []
@@ -21,11 +21,11 @@
   ['Remove Selected Translators', 'removeAllSelected()']
 ]) %>
 
-<script>
+<%= javascript_tag {
   function removeAllSelected() {
     if (!confirm('Are you sure you want to remove all selected translators from this component?'))
        return;
     Tr8n.element('translators_form').action = "/tr8n/admin/applications/remove_objects_from_component";
     Tr8n.element('translators_form').submit();
   }
-</script>   
+} %>

@@ -7,14 +7,14 @@
        html << "<div style='font-size:10px;color:grey'>"
        html << translation.translation_key.description
        html << "</div>"
-       html.join("") 
+       html.join("")
     }],
     [:language_id, lambda{|translation|
       if translation.language
         link_to(translation.language.english_name, :controller => "/tr8n/admin/language", :action => :view, :lang_id => translation.language.id)
       else
-         "Deleted Language"    
-      end  
+         "Deleted Language"
+      end
     }],
     [:label, lambda{|translation|
       html = []
@@ -24,9 +24,9 @@
         html << "Context: #{translation.context}"
         html << "</div>"
       end
-      html.join("") 
+      html.join("")
     }],
-    [:rank, lambda{|translation| 
+    [:rank, lambda{|translation|
       html = []
       if translation.rank >= Tr8n::Config.translation_threshold
         html << "<span style='color:green'>"
@@ -34,7 +34,7 @@
         html << "<span style='color:yellow'>"
       else
         html << "<span style='color:red'>"
-      end     
+      end
       html << translation.rank
       html << "</span>"
       html.join("")
@@ -48,15 +48,15 @@
   ]) %>
 
 <%= will_filter_actions_bar_tag(@translations, [
-['Delete Selected Translations', 'deleteSelectedTranslations()'] 
+['Delete Selected Translations', 'deleteSelectedTranslations()']
 ]) %>
 
 
-<script>
+<%= javascript_tag {
   function deleteSelectedTranslations() {
     if (!confirm('Are you sure you want to run this opperation?'))
        return;
     Tr8n.element('translations_form').action = "/tr8n/admin/translation/delete";
     Tr8n.element('translations_form').submit();
   }
-</script>
+} %>

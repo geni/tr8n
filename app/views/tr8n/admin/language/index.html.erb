@@ -75,7 +75,7 @@
 	['Add To Component', 'addSelectedLanguagesToComponent()'],
 ]) %>
 
-<script>
+<%= javascript_tag {
 	function calculateCompleteness() {
 		if (!confirm('Are you sure you want to run this opperation?'))
 		   return;
@@ -118,6 +118,6 @@
     }
     tr8nLightbox.show('/tr8n/admin/applications/lb_add_to_component?languages=' + languages, {height:400});
   }
-</script>
+} %>
 
 <%= render :partial => "/tr8n/admin/common/footer" %>

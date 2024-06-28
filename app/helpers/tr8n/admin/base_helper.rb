@@ -70,29 +70,27 @@ module Tr8n::Admin::BaseHelper
 
     html = []
     html << "<div id='chart#{@chart_id}'></div>"
-    html << "<script type='text/javascript'>"
-    html << "google.charts.load('current', {'packages':['corechart']});"
-    html << "google.charts.setOnLoadCallback(drawChart);"
+    html << javascript_tag %{
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
-    html << "function drawChart() {"
-    html << "var data = new google.visualization.DataTable();"
-    html << "data.addColumn('string', 'Language');"
-    html << "data.addColumn('number', 'Count');"
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Language');
+        data.addColumn('number', 'Count');
 
-    labels.each_with_index do |label, index|
-      html << "data.addRow(['#{label}', #{counts[index]}]);"
-    end
+        #{labels.each_with_index.collect {|label, index| "data.addRow(['#{label}', #{counts[index]}]);" }
 
-    html << "var options = {"
-    html << "title: 'Language Metrics',"
-    html << "width: 1000,"
-    html << "height: 300"
-    html << "};"
+        var options = {
+          title: 'Language Metrics',
+          width: 1000,
+          height: 300
+        };
 
-    html << "var chart#{@chart_id} = new google.visualization.BarChart(document.getElementById('chart#{@chart_id}'));"
-    html << "chart#{@chart_id}.draw(data, options);"
-    html << "}"
-    html << "</script>"
+        var chart#{@chart_id} = new google.visualization.BarChart(document.getElementById('chart#{@chart_id}'));
+        chart#{@chart_id}.draw(data, options);
+      }
+    }
 
     html.join.html_safe
   end

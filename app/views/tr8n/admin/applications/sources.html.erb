@@ -6,13 +6,13 @@
 
 <% form_tag("", :id => "sources_form") do %>
   <%= will_filter_table_tag(@sources, :columns => [
-    [:checkbox, 'sources'],     
-    [:id, lambda{|source| 
+    [:checkbox, 'sources'],
+    [:id, lambda{|source|
       link_to(source.id, :action => :source, :source_id => source.id)
-    }], 
-    [:source, lambda{|source| 
+    }],
+    [:source, lambda{|source|
       link_to(source.source, :action => :source, :source_id => source.id)
-    }], 
+    }],
     :name, :description,
     [:keys, lambda{|source|
       link_to(source.total_metric.key_count, "/tr8n/admin/applications/source?mode=translation_keys&source_id=#{source.id}")
@@ -34,7 +34,7 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<script>
+<%= javascript_tag {
   function getSelectedSources() {
     var i=0;
     var checkbox = Tr8n.element('wf_check_' + i);
@@ -45,7 +45,7 @@
       }
       checkbox = Tr8n.element('wf_check_' + (++i));
     }
-    return sources; 
+    return sources;
   }
 
   function deleteSelectedSources() {
@@ -64,4 +64,4 @@
     tr8nLightbox.show('/tr8n/admin/applications/lb_add_to_component?sources=' + sources, {height:400});
   }
 
-</script>	
+} %>

@@ -30,14 +30,14 @@
 				    </a>
 				    <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
 
-				    <script type="text/javascript">
+				    <%= javascript_tag {
               <% sanitized_label = @translation_key.tokenless_label.gsub('"', '\"') %>
               window.setTimeout(function() {
               	if (tr8nTranslator) {
             			tr8nTranslator.suggestTranslation("<%=@translation_key.id %>", "<%=sanitized_label %>", "<%=@translation_key.suggestion_tokens.join(',')%>", "<%=@translation_key.language.google_key%>", "<%=tr8n_current_language.google_key%>");
             		}
               }, 1000);
-				    </script>
+						} %>
 
 				    <div style="color:grey; font-size:12px; padding-top:10px;">
 				       <%=tra("Click on the suggested translation to insert it into the label")%>
@@ -80,7 +80,7 @@
 						</div>
 
 	          <div id="tr8n_dictionary_shower" style="display:none; font-size:12px; font-weight:normal;">
-	              <%=link_to_function(tra("show dictionary definitions {raquo}"), "Tr8n.Effects.hide('tr8n_dictionary_shower'); Tr8n.Effects.show('tr8n_dictionary_hider'); Tr8n.Effects.appear('tr8n_dictionary'); Tr8n.Effects.scrollTo('buttons_container');") %>
+	              <%=link_to_function(tra("show dictionary definitions {raquo}"), "tr8nToggleEffect('tr8n_dictionary_shower', 'tr8n_dictionary_hider', 'appear', 'tr8n_dictionary', 'buttons_container');") %>
 	          </div>
 
 	  			  <%=tr8n_spinner_tag("tr8n_dictionary_spinner", "Downloading words definitions...") %>
@@ -104,7 +104,7 @@
 	<% end %>
 </div>
 
-<script>
+<%= javascript_tag %{
 	function submitTranslation() {
 		if (Tr8n.value("tr8n_translation_label_<%=@translation_key.id%>") == "") {
 			 alert("<%=trla('Translation must be provided.')%>");
@@ -126,4 +126,4 @@
       }
     });
 	}
-</script>
+} %>

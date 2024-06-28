@@ -3,7 +3,7 @@
   <%=hidden_field_tag(:source_id, params[:source_id]) %>
   <%=hidden_field_tag(:app_id, params[:app_id]) %>
   <%=hidden_field_tag(:mode, params[:mode]) %>
-  
+
   <div style="border:1px solid #ccc;padding:10px;background:#eee;margin-top:10px;margin-bottom:10px;">
     <%= text_field_tag(:q, params[:q], :style => "width:88%", :placeholder => "Search for specific translations") %>
     <%= link_to_function("<span>#{tra("Search")}</span>", "Tr8n.Effects.submit('translations_form');", :class => "tr8n_grey_button tr8n_pcb") %>
@@ -28,8 +28,8 @@
       if translation.language
         link_to(translation.language.english_name, :controller => "/tr8n/admin/language", :action => :view, :lang_id => translation.language.id)
       else
-         "Deleted Language"    
-      end  
+         "Deleted Language"
+      end
     }],
     [:label, lambda{|translation|
       html = []
@@ -39,7 +39,7 @@
         html << "Context: #{translation.context}"
         html << "</div>"
       end
-      html.join("") 
+      html.join("")
     }],
     [:translation_key_id, lambda{|translation|
        html = []
@@ -47,16 +47,16 @@
        html << "<div style='font-size:10px;color:grey'>"
        html << translation.translation_key.description
        html << "</div>"
-       html.join("") 
-    }],    
+       html.join("")
+    }],
     [:translator_id, lambda{|translation|
       if translation.translator
         link_to(translation.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => translation.translator.id)
       else
-        "Unknown" 
-      end  
+        "Unknown"
+      end
     }],
-    [:rank, lambda{|translation| 
+    [:rank, lambda{|translation|
       html = []
       if translation.rank >= Tr8n::Config.translation_threshold
         html << "<span style='color:green'>"
@@ -64,7 +64,7 @@
         html << "<span style='color:yellow'>"
       else
         html << "<span style='color:red'>"
-      end     
+      end
       html << translation.rank
       html << "</span>"
       html.join("")
@@ -80,14 +80,14 @@
 <% end %>
 
 <%= will_filter_actions_bar_tag(@translations, [
-['Delete Selected Translations', 'deleteSelectedTranslations()'] 
+['Delete Selected Translations', 'deleteSelectedTranslations()']
 ]) %>
 
-<script>
+<%= javascript_tag {
   function deleteSelectedTranslations() {
     if (!confirm('Are you sure you want to run this opperation?'))
        return;
     Tr8n.element('translations_form').action = "/tr8n/admin/translation/delete";
     Tr8n.element('translations_form').submit();
   }
-</script>
+} %>

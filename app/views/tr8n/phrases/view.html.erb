@@ -5,7 +5,7 @@
   <%= render :partial => "header" %>
   <%= render :partial => "toolbar" %>
 
-  <script>
+  <%= javascript_tag {
     function addEvent(elm, evType, fn, useCapture) {
       useCapture = useCapture || false;
       if (elm.addEventListener) {
@@ -42,7 +42,7 @@
       Tr8n.Effects.show('tranlsations_module');
       Tr8n.Effects.show('comments_module');
     }
-  </script>
+  } %>
 
   <%= render :partial => "translations_module" %>
   <%= render :partial => "translation_module" %>
@@ -50,11 +50,11 @@
   <%= render :partial => "comments_module" %>
 
   <% if @show_add_dialog and @translation_key.can_be_translated? %>
-    <script>
+    <%= javascript_tag {
       addEvent(window, "load", function(event) {
         addTranslation();
       });
-    </script>
+    } %>
   <% end %>
 
   <%= render :partial => "/tr8n/common/footer" %>

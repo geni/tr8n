@@ -2,12 +2,12 @@
 <%= render :partial => "tabs" %>
 <%= tr8n_will_filter(@keys) %>
 
-<!-- 
+<!--
 <%=link_to_function("Import Translation Keys", "tr8nLightbox.show('/tr8n/admin/translation_key/lb_import', {height:280})") %>
- | 
---> 
+ |
+-->
 <%=link_to_function("Reset Verification Flags", "resetVerificationFlags()")%>
- | 
+ |
 <%=link_to_function("Update Translation Counts", 'updateTranslationCounts()')%>
 <br>
 
@@ -15,14 +15,14 @@
 	<%= will_filter_table_tag(@keys, :columns => [
 	  [:checkbox, :keys],
 	  [:label, lambda{|key|
-	    html = link_to(key.label, :action => :view, :key_id => key.id) 
+	    html = link_to(key.label, :action => :view, :key_id => key.id)
 	    html << '<div style="color:grey; font-size:10px;">'
-	    html << key.description.to_s  
-	    html << '</div>'  
+	    html << key.description.to_s
+	    html << '</div>'
 	  }],
     :locale,
     [:admin, lambda{|key| key.admin}, 'padding:5px;text-align:right;'],
-    [:level, lambda{|key| key.level}, 'padding:5px;text-align:right;'], 
+    [:level, lambda{|key| key.level}, 'padding:5px;text-align:right;'],
 	  [:translation_count, lambda{|key| link_to(key.translation_count || 0, "/tr8n/admin/translation/index?wf_c0=translation_key_id&wf_o0=is&wf_v0_0=#{key.id}")}, 'padding:5px;text-align:right;'],
 	  [:created_at, lambda{|key| key.created_at}, 'padding:5px;text-align:right;'],
 	  [:verified_at, lambda{|key| key.verified_at}, 'padding:5px;text-align:right;'],
@@ -43,7 +43,7 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<script>
+<%= javascript_tag {
   function getSelectedKeyIds() {
     var i=0;
     var checkbox = Tr8n.element('wf_check_' + i);
@@ -54,7 +54,7 @@
       }
       checkbox = Tr8n.element('wf_check_' + (++i));
     }
-    return keys; 
+    return keys;
   }
 
 	function mergeSelectedKeys() {
@@ -76,13 +76,13 @@
   function resetVerificationFlags() {
     if (!confirm('Are you sure you want to run this opperation?'))
        return;
-    location = '/tr8n/admin/translation_key/reset_verification_flags' 
+    location = '/tr8n/admin/translation_key/reset_verification_flags'
   }
-	
+
   function updateTranslationCounts() {
     if (!confirm('Are you sure you want to run this opperation?'))
        return;
-    location = '/tr8n/admin/translation_key/update_translation_counts' 
+    location = '/tr8n/admin/translation_key/update_translation_counts'
   }
 
   function addSelectedKeysToSource() {
@@ -94,4 +94,4 @@
     tr8nLightbox.show('/tr8n/admin/translation_key/lb_add_to_source?keys=' + keys, {height:350});
   }
 
-</script>
+} %>

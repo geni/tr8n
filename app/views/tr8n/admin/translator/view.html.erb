@@ -49,13 +49,13 @@
             <span id="translator_level_container">
               <span id='translator_title'><%= @translator.title %> (<%= @translator.level %>)</span>
               &nbsp;&nbsp;
-              <%= link_to_function('change', "Tr8n.Effects.hide('translator_level_container'); Tr8n.Effects.show('translator_level_options_container');") unless @translator.admin? %>
+              <%= link_to_function('change', "tr8nToggleEffect('translator_level_container', 'translator_level_options_container')") unless @translator.admin? %>
             </span>
 
             <span id="translator_level_options_container" style='display:none'>
             	<% form_tag do %>
 	              <%= select_tag('translator_level', options_for_select(Tr8n::Translator.level_options, @translator.level.to_s)) %>
-	              <%= link_to_function('save', 'updateTranslatorLevel()')%> | <%= link_to_function('cancel', "Tr8n.Effects.show('translator_level_container'); Tr8n.Effects.hide('translator_level_options_container');")%>
+	              <%= link_to_function('save', 'updateTranslatorLevel()')%> | <%= link_to_function('cancel', "tr8nToggleEffect('translator_level_options_container', 'translator_level_container')")%>
 							<% end %>
             </span>
 
@@ -151,12 +151,12 @@
     </tr>
 </table>
 
-<script>
+<%= javascript_tag {
   function performTranslatorAction(action) {
     var reason = prompt("Please provide a reason why you want to " + action + " this translator:");
     location = "/tr8n/admin/translator/" + action + "?translator_id=<%=@translator.id%>&reason=" + reason;
   }
-</script>
+} %>
 
 
 <%=  tr8n_sections_tag(:modes => [
@@ -178,10 +178,10 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<script>
+<%= javascript_tag {
 	function updateTranslatorLevel() {
 		var reason = prompt("Please provide the reason for promoting/demoting this translator:");
 		if (reason) reason = "";
 		location = "/tr8n/admin/translator/update_level?translator_id=<%=@translator.id%>&new_level=" + Tr8n.value('translator_level') + "&reason=" + reason;
 	}
-</script>
+} %>

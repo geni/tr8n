@@ -1,20 +1,20 @@
 <% form_tag("", :id => "comments_form") do %>
   <%= will_filter_table_tag(@results, :columns => [
-    [:checkbox, :comments],    
+    [:checkbox, :comments],
     [:language_id, lambda{|comment|
       if comment.language
         link_to(comment.language.english_name, :controller => "/tr8n/admin/language", :action => :view, :lang_id => comment.language.id)
       else
-         "Deleted Language"    
-      end  
-    }], 
+         "Deleted Language"
+      end
+    }],
     [:translator_id, lambda{|comment|
       if comment.translator
-        link_to(comment.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => comment.translator.id) 
+        link_to(comment.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => comment.translator.id)
       else
-         "Deleted Translator"    
-      end  
-    }], 
+         "Deleted Translator"
+      end
+    }],
     [:message, lambda{|comment|
       comment.toHTML
     }], :created_at,
@@ -25,14 +25,14 @@
 <% end %>
 
 <%= will_filter_actions_bar_tag(@results, [
-  ['Delete Selected Comments', 'deleteSelectedComments()'] 
+  ['Delete Selected Comments', 'deleteSelectedComments()']
 ]) %>
 
-<script>
+<%= javascript_tag {
   function deleteSelectedComments() {
     if (!confirm('Are you sure you want to run this opperation?'))
        return;
     Tr8n.element('comments_form').action = "/tr8n/admin/translation_key/delete_comment";
     Tr8n.element('comments_form').submit();
   }
-</script>
+} %>

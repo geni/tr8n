@@ -20,6 +20,14 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ****************************************************************************/
+window.tr8nToggleEffect = function(hideId, showId, extraEffect, extraId, scrollTo) {
+  if (hideId) Tr8n.Effects.hide(hideId);
+  if (showId) Tr8n.Effects.show(showId);
+
+  if (extraEffect && extraId) Tr8n.Effects[extraEffect](extraId);
+  if (scrollTo) Tr8n.Effects.scrollTo(scrollTo)
+  return false;
+}
 
 Tr8n.Effects = {
   toggle: function(element_id) {

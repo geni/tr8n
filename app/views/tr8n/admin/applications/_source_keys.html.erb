@@ -10,13 +10,13 @@
   <%= will_filter_table_tag(@results, :columns => [
     [:checkbox, :keys],
     [:id, lambda{|key|
-      link_to(key.id, :controller => "/tr8n/admin/translation_key", :action => :view, :key_id => key.id) 
+      link_to(key.id, :controller => "/tr8n/admin/translation_key", :action => :view, :key_id => key.id)
     }],
     [:label, lambda{|key|
       html = key.label
       html << '<div style="color:grey; font-size:10px; padding-top:3px;">'
-      html << key.description.to_s  
-      html << '</div>'  
+      html << key.description.to_s
+      html << '</div>'
     }],
     [:translation_count, lambda{|key| link_to(key.translation_count || 0, :controller => "/tr8n/admin/translation_key", :action => :view, :key_id => key.id, :mode => :translations)}, 'padding:5px;text-align:right;'],
     [:created_at, lambda{|key| key.created_at}, 'padding:5px;text-align:right;'],
@@ -36,7 +36,7 @@
   ['Add To Another Source', 'addSelectedKeysToSource()'],
 ]) %>
 
-<script>
+<%= javascript_tag {
   function getSelectedKeyIds() {
     var i=0;
     var checkbox = Tr8n.element('wf_check_' + i);
@@ -47,7 +47,7 @@
       }
       checkbox = Tr8n.element('wf_check_' + (++i));
     }
-    return keys; 
+    return keys;
   }
 
   function removeSelectedKeysFromSource() {
@@ -71,7 +71,7 @@
        return;
     Tr8n.element('keys_form').action = "/tr8n/admin/translation_key/delete";
     Tr8n.element('keys_form').submit();
-  }  
+  }
 
   function addSelectedKeysToSource() {
     var keys = getSelectedKeyIds();
@@ -82,4 +82,4 @@
     tr8nLightbox.show('/tr8n/admin/translation_key/lb_add_to_source?keys=' + keys, {height:350});
   }
 
-</script>
+} %>

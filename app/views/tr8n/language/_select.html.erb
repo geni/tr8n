@@ -1,3 +1,11 @@
+<%= javascript_tag %{
+  removeLanguage = function(languageId, userLanguageId) {
+    tr8nLanguageSelector.removeLanguage(languageId);
+    Tr8n.Effects.hide('lang_' + userLanguageId);
+    return false;
+  }
+} %>
+
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
 <div class="inner">
     <div class="hd" style="background-color:white;font-size:12px;">
@@ -26,7 +34,7 @@
                             <% else %>
                               <%= "#{language.completeness || 0}%" if Tr8n::Config.enable_language_stats? %>
                               <% unless user_language.manager? %>
-                                <%=link_to_function(image_tag( url_with_cache_version("/tr8n/images/close.gif"), :style=>"width:5px; padding-#{tr8n_current_language.align(:right)}:3px; padding-left:3px;"), "tr8nLanguageSelector.removeLanguage('#{language.id}');Tr8n.Effects.hide('lang_#{user_language.id}');") %>
+                                <%=link_to_function(image_tag( url_with_cache_version("/tr8n/images/close.gif"), :style=>"width:5px; padding-#{tr8n_current_language.align(:right)}:3px; padding-left:3px;"), "removeLanguage('#{language.id}', '#{user_language.id}')") %>
                                 <% end %>
                             <% end %>
                           </span>
