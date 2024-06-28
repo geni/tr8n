@@ -348,7 +348,7 @@ class Tr8n::Token
     result << "<span id=\"tr8n_other_link_#{uniq_id}\">" << " " << list_options[:andor].translate("List elements joiner", {}, options) << " "
 
     link_txt = (list_options[:more_label] ? list_options[:more_label] : "{num|| other}".translate("List elements joiner", {:num => remaining_ary.size}, options))
-    result << link_to_function(link_txt, "tr8nToggleEffect('tr8n_other_link_#{uniq_id}','tr8n_other_elements_#{uniq_id}')"
+    result << link_to_function(link_txt, "tr8nToggleEffect('tr8n_other_link_#{uniq_id}','tr8n_other_elements_#{uniq_id}')")
     result << "</span>"
     result << "<span id=\"tr8n_other_elements_#{uniq_id}\" style='display:none'>" << list_options[:separator]
     result << "#{remaining_ary[0..-2].join(list_options[:separator])} #{list_options[:andor].translate("List elements joiner", {}, options)} #{remaining_ary.last}"
