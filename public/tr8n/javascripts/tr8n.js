@@ -2624,6 +2624,18 @@ window.tr8nToggleEffect = function(hideId, showId, extraEffect, extraId, scrollT
   return false;
 }
 
+window.tr8nToggleHandler = function(event) {
+  var toggleIds = event.target.getAttribute("data-tr8n-toggler").split(",");
+  tr8nToggleEffect(toggleIds[0], toggleIds[1], toggleIds[2], toggleIds[3], toggleIds[4]);
+  return false;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('a[data-tr8n-toggler]').forEach(function(aTag) {
+    aTag.addEventListener('click', tr8nToggleHandler);
+  });
+});
+
 Tr8n.Effects = {
   toggle: function(element_id) {
     if (Tr8n.element(element_id).style.display == "none")

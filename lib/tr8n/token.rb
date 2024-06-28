@@ -348,6 +348,7 @@ class Tr8n::Token
     result << "<span id=\"tr8n_other_link_#{uniq_id}\">" << " " << list_options[:andor].translate("List elements joiner", {}, options) << " "
 
     link_txt = (list_options[:more_label] ? list_options[:more_label] : "{num|| other}".translate("List elements joiner", {:num => remaining_ary.size}, options))
+    result << "<a href='#' data-tr8n-toggler='tr8n_other_link_#{uniq_id},tr8n_other_elements_#{uniq_id}'>#{link_txt}</a>"
     result << link_to_function(link_txt, "tr8nToggleEffect('tr8n_other_link_#{uniq_id}','tr8n_other_elements_#{uniq_id}')")
     result << "</span>"
     result << "<span id=\"tr8n_other_elements_#{uniq_id}\" style='display:none'>" << list_options[:separator]
@@ -355,7 +356,7 @@ class Tr8n::Token
 
     if list_options[:minimizable]
       link_txt = (list_options[:less_label] ? list_options[:less_label] : "{laquo} less".translate("List elements joiner", {}, options))
-      result << link_to_function(link_txt, "tr8nToggleEffect('tr8n_other_link_#{uniq_id}','tr8n_other_elements_#{uniq_id}')", :style => "font-size:smaller;white-space:nowrap;")
+      result << "<a href='#' data-tr8n-toggler='tr8n_other_elements_#{uniq_id},tr8n_other_link_#{uniq_id}' style='font-size:smaller;white-space:nowrap;'>#{link_txt}</a>"
       result << "</a>"
     end
 
