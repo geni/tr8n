@@ -30,7 +30,7 @@
 				    </a>
 				    <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
 
-				    <%= javascript_tag {
+				    <%= javascript_tag %{
               <% sanitized_label = @translation_key.tokenless_label.gsub('"', '\"') %>
               window.setTimeout(function() {
               	if (tr8nTranslator) {

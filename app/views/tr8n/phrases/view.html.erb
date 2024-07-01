@@ -5,7 +5,7 @@
   <%= render :partial => "header" %>
   <%= render :partial => "toolbar" %>
 
-  <%= javascript_tag {
+  <%= javascript_tag %{
     function addEvent(elm, evType, fn, useCapture) {
       useCapture = useCapture || false;
       if (elm.addEventListener) {
@@ -50,7 +50,7 @@
   <%= render :partial => "comments_module" %>
 
   <% if @show_add_dialog and @translation_key.can_be_translated? %>
-    <%= javascript_tag {
+    <%= javascript_tag %{
       addEvent(window, "load", function(event) {
         addTranslation();
       });

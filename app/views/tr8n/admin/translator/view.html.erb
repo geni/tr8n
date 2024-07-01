@@ -151,7 +151,7 @@
     </tr>
 </table>
 
-<%= javascript_tag {
+<%= javascript_tag %{
   function performTranslatorAction(action) {
     var reason = prompt("Please provide a reason why you want to " + action + " this translator:");
     location = "/tr8n/admin/translator/" + action + "?translator_id=<%=@translator.id%>&reason=" + reason;
@@ -178,7 +178,7 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<%= javascript_tag {
+<%= javascript_tag %{
 	function updateTranslatorLevel() {
 		var reason = prompt("Please provide the reason for promoting/demoting this translator:");
 		if (reason) reason = "";
