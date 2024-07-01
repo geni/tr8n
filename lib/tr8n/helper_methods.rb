@@ -100,7 +100,7 @@ module Tr8n::HelperMethods
 
     client_var_name = opts[:client_var_name] || :tr8nProxy
 
-    javascript_tag %{
+    javascript_tag(%Q|
       var #{client_var_name} = new Tr8n.Proxy(#{opts.to_json});
       function reloadTranslations() {
         #{client_var_name}.initTranslations(true);
@@ -112,7 +112,7 @@ module Tr8n::HelperMethods
         return #{client_var_name}.trl(label, description, tokens, options);
       }
       #{ "Tr8n.Utils.addEvent(window, 'load', function() { #{client_var_name}.initTml(); }" if Tr8n::Config.enable_tml? }
-    }
+    |)
   end
 
   def tr8n_options_for_select(options, selected = nil, description = nil, lang = Tr8n::Config.current_language)
@@ -443,7 +443,8 @@ module Tr8n::HelperMethods
 
     html = []
     html << "<div id='chart#{@chart_id}'></div>"
-    html << javascript_tag(%{
+    addRows = labels.each_with_index.collect {|label, index| "data.addRow(['#{label}', #{counts[index]}]);" }.join("\n")
+    html << javascript_tag(%Q|
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
 
@@ -452,7 +453,7 @@ module Tr8n::HelperMethods
         data.addColumn('string', 'Name');
         data.addColumn('number', 'Value');
 
-        #{ values.each_with_index.map {|value, index| "data.addRow(['#{names[index]}', #{value}]);" }.join("\n") }
+        #{addRows}
 
         var options = {
           title: 'Chart',
@@ -465,7 +466,7 @@ module Tr8n::HelperMethods
         var chart#{@chart_id} = new google.visualization.PieChart(document.getElementById('chart#{@chart_id}'));
         chart#{@chart_id}.draw(data, options);
       }
-    })
+    |)
 
     html.join.html_safe
   end

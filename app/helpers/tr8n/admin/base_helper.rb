@@ -70,7 +70,7 @@ module Tr8n::Admin::BaseHelper
 
     html = []
     html << "<div id='chart#{@chart_id}'></div>"
-    html << javascript_tag %{
+    html << javascript_tag(%Q|
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
 
@@ -90,7 +90,7 @@ module Tr8n::Admin::BaseHelper
         var chart#{@chart_id} = new google.visualization.BarChart(document.getElementById('chart#{@chart_id}'));
         chart#{@chart_id}.draw(data, options);
       }
-    }
+    |)
 
     html.join.html_safe
   end
