@@ -443,7 +443,7 @@ module Tr8n::HelperMethods
 
     html = []
     html << "<div id='chart#{@chart_id}'></div>"
-    addRows = labels.each_with_index.collect {|label, index| "data.addRow(['#{label}', #{counts[index]}]);" }.join("\n")
+    addRows = values.each_with_index.collect {|value, index| "data.addRow(['#{names[index]}', #{value}]);" }.join("\n")
     html << javascript_tag(%Q|
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
