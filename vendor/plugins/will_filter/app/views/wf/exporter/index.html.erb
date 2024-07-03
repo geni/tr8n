@@ -9,7 +9,7 @@
 	<table style="width:100%" cellpadding="0px" cellspacing="0px;">
 	    <tr>
 	        <td>
-	            <input type="checkbox" id="wf_fld_all" onClick="wfExporter.selectAllFields(this);" style="width:20px;">
+	            <input type="checkbox" id="wf_fld_all" data-wf-exporter-action='selectAllFields' style="width:20px;">
 	        </td>
 	        <td>
 	            <b>Name</b>
@@ -25,7 +25,7 @@
 	    </tr><% @wf_filter.model_class.columns.each_with_index do |col, index| %>
 	    <tr>
 	        <td>
-	            <input type="checkbox" id="wf_fld_chk_<%=index%>" onClick="wfExporter.selectField(this);" style="width:20px;"><input type="hidden" id="wf_fld_name_<%=index%>" value="<%=col.name%>">
+	            <input type="checkbox" id="wf_fld_chk_<%=index%>" data-wf-exporter-action='selectAllFields' style="width:20px;"><input type="hidden" id="wf_fld_name_<%=index%>" value="<%=col.name%>">
 	        </td>
 	        <td>
 	            <%=col.name %>
@@ -45,3 +45,17 @@
 	    <%=link_to_function("<span>Cancel</span>", "wfExporter.hide()", :class => "wf_grey_button wf_pcb") %>
 	</div>
 </div>
+
+<%= javascript_tag(nonce: true) do %>
+	document.addEventListener('DOMContentLoaded', function() {
+		var elements = document.querySelectorAll('[data-wf-exporter-action]');
+		elements.forEach(function(element) {
+			element.addEventListener('click', function() {
+				var action = this.getAttribute('data-wf-exporter-action');
+				if(wfExporter[action] && typeof wfExporter[action] === 'function') {
+					wfExporter[action](this);
+				}
+			});
+		});
+	});
+<% end %>

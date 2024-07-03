@@ -49,7 +49,7 @@
   <% end %>
 </div>
 
-<%= javascript_tag %{
+<%= javascript_tag nonce: true do
   function updateLanguageRules(language_id) {
     performLanguageRulesOperation(Tr8n.Utils.serializeForm('grammar_form'));
   }
@@ -80,4 +80,4 @@
       method: 'post'
     });
   }
-} %>
+end %>

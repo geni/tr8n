@@ -1,4 +1,4 @@
-<%= javascript_tag %{
+<%= javascript_tag nonce: true do
   addCondition = function(ruleKey) {
     Tr8n.Effects.show('rule_' + ruleKey + '_second_part');
     Tr8n.Effects.hide('extension_link' + ruleKey);
@@ -12,7 +12,7 @@
     Tr8n.element('rule_' + ruleKey + '_multipart').value='false';
     return false;
   }
-} %>
+end %>
 
 <%=select_tag("rules[#{rule.class.dependency}][#{index}][definition][part1]", options_for_select(rule.class.rule_options, rule.definition[:part1]), :style => "width:120px", :onChange=>"updateLanguageRules()")%>
 <%=text_field_tag("rules[#{rule.class.dependency}][#{index}][definition][value1]", rule.humanize_values(rule.definition[:value1]), :style => "width:200px")%>

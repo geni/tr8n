@@ -88,11 +88,15 @@ Tr8n.Proxy.Logger.prototype = {
     for (var i=0; i<this.object_keys.length; i++) {
       this.showObject(this.object_keys[i], true);
     }
+
+    return false;
   },
   collapseAllNodes: function() {
     for (var i=0; i<this.object_keys.length; i++) {
       this.showObject(this.object_keys[i], false);
     }
+
+    return false;
   },
   logObject: function(data) {
     this.object_keys = [];

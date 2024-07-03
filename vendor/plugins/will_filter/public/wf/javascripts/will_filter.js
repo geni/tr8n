@@ -243,9 +243,11 @@ Wf.Calendar.prototype = {
   },
   selectDate: function(fld_id, trigger){
     this.show(fld_id, trigger, false);
+    return false;
   },
   selectDateTime: function(fld_id, trigger){
     this.show(fld_id, trigger, true);
+    return false;
   },
 	changeMode: function(mode) {
     var form_hash = Wf.Utils.serializeForm('wf_calendar_form');

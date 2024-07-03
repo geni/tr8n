@@ -93,9 +93,9 @@
                     </a>
                     <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
 
-                    <%= javascript_tag %{
+                    <% javascript_tag(nonce: true) do %>
                        tr8nTranslator.suggestTranslation("<%=@translation_key.id %>", "<%=@translation_key.suggestion_label %>", "<%=@translation_key.suggestion_tokens.join(',')%>", "<%=@translation_key.language.google_key%>", "<%=tr8n_current_language.google_key%>");
-                    } %>
+                    <% end %>
                </div>
             </div>
             <% end %>
@@ -133,15 +133,15 @@
 </div>
 
 <% if Tr8n::Config.enable_software_keyboard? %>
-  <%= javascript_tag %{
+  <%= javascript_tag nonce: true do
     VKI_attach(document.getElementById('tr8n_translator_translation_label'));
-  } %>
+  end %>
 <% end %>
 
-<%= javascript_tag %{
+<%= javascript_tag nonce: true do
   Tr8n.Utils.addEvent(document.getElementById('tr8n_translator_translation_label'), "keyup", tr8nTranslator.validateTranslationTokens);
   Tr8n.Utils.addEvent(document.getElementById('tr8n_translator_translation_label'), "blur", tr8nTranslator.validateTranslationTokens);
   tr8nTranslator.validateTranslationTokens();
 
   Tr8n.element("tr8n_translator_translation_label").focus();
-} %>
+end %>
