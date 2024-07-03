@@ -151,12 +151,13 @@
     </tr>
 </table>
 
-<%= javascript_tag nonce: true do
+<%= javascript_tag %{
   function performTranslatorAction(action) {
     var reason = prompt("Please provide a reason why you want to " + action + " this translator:");
     location = "/tr8n/admin/translator/" + action + "?translator_id=<%=@translator.id%>&reason=" + reason;
   }
-end %>
+} %>
+
 
 <%=  tr8n_sections_tag(:modes => [
             ["Activity",    {:mode => :activity}],
@@ -177,10 +178,10 @@ end %>
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<%= javascript_tag nonce: true do
+<%= javascript_tag %{
 	function updateTranslatorLevel() {
 		var reason = prompt("Please provide the reason for promoting/demoting this translator:");
 		if (reason) reason = "";
 		location = "/tr8n/admin/translator/update_level?translator_id=<%=@translator.id%>&new_level=" + Tr8n.value('translator_level') + "&reason=" + reason;
 	}
-end %>
+} %>

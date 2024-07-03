@@ -34,7 +34,7 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<%= javascript_tag nonce: true do
+<%= javascript_tag %{
   function getSelectedSources() {
     var i=0;
     var checkbox = Tr8n.element('wf_check_' + i);
@@ -64,4 +64,4 @@
     tr8nLightbox.show('/tr8n/admin/applications/lb_add_to_component?sources=' + sources, {height:400});
   }
 
-end %>
+} %>

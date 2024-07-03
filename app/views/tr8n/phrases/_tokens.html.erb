@@ -57,7 +57,7 @@
     </div>
   <% end %>
 
-  <%= javascript_tag nonce: true do
+  <%= javascript_tag %{
     tr8nSetHasRules = function(value) {
       if (value) {
         Tr8n.element('has_rules').value='true';
@@ -71,7 +71,7 @@
 
       return false;
     }
-  end %>
+  } %>
 
   <% if @translation_key.permutatable? %>
     <div id="rules_trigger" style="font-size:12px; font-weight:normal;">

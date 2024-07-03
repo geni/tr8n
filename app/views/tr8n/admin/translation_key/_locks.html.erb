@@ -33,11 +33,11 @@
   ['Delete Selected Locks', 'deleteSelectedLocks()']
 ]) %>
 
-<%= javascript_tag nonce: true do
+<%= javascript_tag %{
   function deleteSelectedLocks() {
     if (!confirm('Are you sure you want to run this operation?'))
        return;
     Tr8n.element('locks_form').action = "/tr8n/admin/translation_key/delete_lock";
     Tr8n.element('locks_form').submit();
   }
-end %>
+} %>

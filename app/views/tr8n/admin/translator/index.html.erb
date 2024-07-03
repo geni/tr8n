@@ -70,7 +70,7 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<%= javascript_tag nonce: true do
+<%= javascript_tag %{
   function deleteSelectedTranslators() {
     if (!confirm('Are you sure you want to run this opperation?'))
        return;
@@ -99,4 +99,4 @@
     }
     tr8nLightbox.show('/tr8n/admin/applications/lb_add_to_component?translators=' + translators, {height:400});
   }
-end %>
+} %>

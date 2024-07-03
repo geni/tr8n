@@ -33,11 +33,11 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<%= javascript_tag nonce: true do
+<%= javascript_tag %{
   function deleteSelectedSources() {
     if (!confirm('Are you sure you want to delete all selected components?'))
        return;
     Tr8n.element('comps_form').action = "/tr8n/admin/applications/delete_component";
     Tr8n.element('comps_form').submit();
   }
-end %>
+} %>

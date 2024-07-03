@@ -1,10 +1,10 @@
-<%= javascript_tag nonce: true do
+<%= javascript_tag %{
   removeLanguage = function(languageId, userLanguageId) {
     tr8nLanguageSelector.removeLanguage(languageId);
     Tr8n.Effects.hide('lang_' + userLanguageId);
     return false;
   }
-end %>
+} %>
 
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
 <div class="inner">

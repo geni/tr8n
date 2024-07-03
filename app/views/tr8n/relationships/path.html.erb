@@ -61,7 +61,7 @@
 <% end %>
 
 
-<%= javascript_tag nonce: true do
+<%= javascript_tag %{
 	function etpsKeyUp(event) {
 	   if (event.keyCode == 13) {
 		 	  evaluateRelationshipPath();
@@ -75,4 +75,4 @@
 			parameters: {etps:Tr8n.value("etps")}
     });
 	}
-end %>
+} %>

@@ -63,7 +63,7 @@
 <div id="tr8n_debugger" class="section_box colored" style="font-size:10px; border:1px solid black; height:350px; overflow:auto; padding: 2px;">
 </div>
 
-<%= javascript_tag nonce: true do
+<%= javascript_tag %{
   tr8nProxy.enableLogger();
 
   function clearResults() {
@@ -124,6 +124,6 @@
     tr8nProxy.log("Enabling logger... ");
     tr8nProxy.log('Test took: ' + (t1 - t0) + ' mls');
   }
-end %>
+} %>
 
 <%= render :partial => "/tr8n/admin/common/footer" %>

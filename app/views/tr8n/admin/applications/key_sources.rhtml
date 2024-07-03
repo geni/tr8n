@@ -40,11 +40,11 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<%= javascript_tag nonce: true do
+<%= javascript_tag %{
   function deleteSelectedKeySources() {
     if (!confirm('Are you sure you want to delete all selected key sources?'))
        return;
     Tr8n.element('key_sources_form').action = "/tr8n/admin/applications/delete_key_source";
     Tr8n.element('key_sources_form').submit();
   }
-end %>
+} %>

@@ -95,7 +95,7 @@
 	</div>
 	<%= render :partial => "/tr8n/common/footer" %>
 
-  <%= javascript_tag nonce: true do
+  <%= javascript_tag %{
     function toggleFilterOptions() {
       if (Tr8n.element("phrase_type").value == "with") {
         Tr8n.Effects.show("extended_filter_options");
@@ -103,6 +103,6 @@
         Tr8n.Effects.hide("extended_filter_options");
       }
     }
-	end %>
+  } %>
 
 <% end %>
