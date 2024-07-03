@@ -50,11 +50,11 @@
 ['Delete Selected Translations', 'deleteSelectedTranslations()']
 ]) %>
 
-<%= javascript_tag %{
+<%= javascript_tag nonce: true do
   function deleteSelectedTranslations() {
     if (!confirm('Are you sure you want to run this opperation?'))
        return;
     Tr8n.element('translations_form').action = "/tr8n/admin/translation/delete";
     Tr8n.element('translations_form').submit();
   }
-} %>
+end %>

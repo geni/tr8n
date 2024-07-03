@@ -75,7 +75,7 @@
 
 </div>
 
-<%= javascript_tag %{
+<%= javascript_tag nonce: true do
   function updateLanguageCases(language_id) {
     performLanguageCasesOperation(Tr8n.Utils.serializeForm('language_cases_form'));
   }
@@ -193,4 +193,4 @@
       method: 'post'
     });
   }
-} %>
+end %>

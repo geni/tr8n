@@ -31,13 +31,13 @@
 				    <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
 
             <% sanitized_label = @translation_key.tokenless_label.gsub('"', '\"') %>
-				    <%= javascript_tag %{
+				    <%= javascript_tag nonce: true do
               window.setTimeout(function() {
               	if (tr8nTranslator) {
-            			tr8nTranslator.suggestTranslation("#{@translation_key.id}", "#{sanitized_label}", "#{@translation_key.suggestion_tokens.join(',')}", "#{@translation_key.language.google_key}", "#{tr8n_current_language.google_key}");
+            			tr8nTranslator.suggestTranslation("<%= @translation_key.id -%>", "<%= sanitized_label -%>", "<%= @translation_key.suggestion_tokens.join(',') -%>", "<%= @translation_key.language.google_key -%>", "<%= tr8n_current_language.google_key -%>");
             		}
               }, 1000);
-						} %>
+					  end %>
 
 				    <div style="color:grey; font-size:12px; padding-top:10px;">
 				       <%=tra("Click on the suggested translation to insert it into the label")%>
@@ -104,10 +104,10 @@
 	<% end %>
 </div>
 
-<%= javascript_tag %{
+<%= javascript_tag nonce: true do
 	function submitTranslation() {
-		if (Tr8n.value("tr8n_translation_label_#{@translation_key.id}") == "") {
-			alert("#{trla('Translation must be provided.')}");
+		if (Tr8n.value("tr8n_translation_label_<%= @translation_key.id -%>") == "") {
+			alert("<%= trla('Translation must be provided.') -%>");
 			return;
 	  }
     Tr8n.Effects.submit('translation_form');
@@ -117,7 +117,7 @@
 		Tr8n.Effects.hide('tr8n_dictionary_opener');
 		Tr8n.Effects.show('tr8n_dictionary_spinner');
     Tr8n.Utils.update('tr8n_dictionary', '/tr8n/phrases/dictionary', {
-      parameters: {translation_key_id:"#{@translation_key.id}"},
+      parameters: {translation_key_id:"<%= @translation_key.id -%>"},
       onComplete: function(response) {
         Tr8n.Effects.hide('tr8n_dictionary_spinner');
 				Tr8n.Effects.appear('tr8n_dictionary');
@@ -126,4 +126,4 @@
       }
     });
 	}
-} %>
+end %>
