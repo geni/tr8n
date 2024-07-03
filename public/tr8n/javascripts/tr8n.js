@@ -2616,28 +2616,6 @@ Tr8n.Utils = {
 
 }
 
-window.tr8nToggleEffect = function(hideId, showId, extraEffect, extraId, scrollTo) {
-  if (hideId) Tr8n.Effects.hide(hideId);
-  if (showId) Tr8n.Effects.show(showId);
-
-  if (extraEffect && extraId) Tr8n.Effects[extraEffect](extraId);
-  if (scrollTo) Tr8n.Effects.scrollTo(scrollTo)
-  return false;
-}
-
-window.tr8nToggleHandler = function(event) {
-  var toggleIds = event.target.getAttribute("data-tr8n-toggler").split(",");
-  tr8nToggleEffect(toggleIds[0], toggleIds[1], toggleIds[2], toggleIds[3], toggleIds[4]);
-  event.stopPropagation();
-  return false;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('a[data-tr8n-toggler]').forEach(function(aTag) {
-    aTag.addEventListener('click', tr8nToggleHandler);
-  });
-});
-
 Tr8n.Effects = {
   toggle: function(element_id) {
     if (Tr8n.element(element_id).style.display == "none")
@@ -2682,6 +2660,58 @@ Tr8n.Effects = {
     window.scrollTo(selectedPosX,selectedPosY);
   }
 }
+
+window.tr8nToggleEffect = function(hideId, showId, extraEffect, extraId, scrollTo) {
+  if (hideId) Tr8n.Effects.hide(hideId);
+  if (showId) Tr8n.Effects.show(showId);
+
+  if (extraEffect && extraId) Tr8n.Effects[extraEffect](extraId);
+  if (scrollTo) Tr8n.Effects.scrollTo(scrollTo)
+  return false;
+}
+
+window.tr8nToggleHandler = function(event) {
+  var toggleIds = event.target.getAttribute("data-tr8n-toggler").split(",");
+  tr8nToggleEffect(toggleIds[0], toggleIds[1], toggleIds[2], toggleIds[3], toggleIds[4]);
+  event.stopPropagation();
+  return false;
+}
+
+window.tr8nBindTogglers = function(container) {
+  if (!container) container = document;
+
+  container.querySelectorAll('a[data-tr8n-toggler]').forEach(function(aTag) {
+    var value = aTag.getAttribute('data-tr8n-toggler');
+    aTag.setAttribute('data-tr8n-toggler-bound', value);
+    aTag.removeAttribute('data-tr8n-toggler');
+
+    aTag.addEventListener('click', tr8nToggleHandler);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  tr8nBindTogglers(document);
+
+  Tr8n.Effects.tr8nDomObserver = new MutationObserver(function(mutations) {
+    var targets = mutations.reduce(function(set, mutation) {
+      if (mutation.addedNodes.length > 0) {
+        mutation.addedNodes.forEach(function(node) {
+          if (node.nodeType == 1) set.add(node);
+        });
+      }
+
+      return set;
+    }, new Set());
+
+    targets.forEach(function(target) {
+      tr8nBindTogglers(target);
+    });
+
+  });
+
+  Tr8n.Effects.tr8nDomObserver.observe(document.documentElement || document.body, {childList: true, subtree:true});
+});
+
 
 Tr8n.LanguageCaseManager = function(options) {
   var self = this;
@@ -2977,7 +3007,6 @@ Tr8n.Lightbox.prototype = {
     });
   }
 }
-
 
 Tr8n.Translator = function(options) {
   var self = this;
