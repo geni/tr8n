@@ -2336,6 +2336,7 @@ var Tr8n = Tr8n || {
   }
 };
 
+
 Tr8n.Utils = {
 
   hideFlash: function() {
@@ -2627,6 +2628,7 @@ window.tr8nToggleEffect = function(hideId, showId, extraEffect, extraId, scrollT
 window.tr8nToggleHandler = function(event) {
   var toggleIds = event.target.getAttribute("data-tr8n-toggler").split(",");
   tr8nToggleEffect(toggleIds[0], toggleIds[1], toggleIds[2], toggleIds[3], toggleIds[4]);
+  event.stopPropagation();
   return false;
 }
 
