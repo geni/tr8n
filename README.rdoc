@@ -47,6 +47,9 @@ If you are making changes to the javascript files, run the following commands:
 This will auto-compile the javascript changes you make
 into public/javascripts/tr8n.js and public/javascripts/tr8n-compiled.js.
 
+Make sure you bump the version number in the VERSION file before you commit
+the updated tr8n-compiled.js.
+
 = Installation Instructions
 
 Tr8n is mostly self-contained. The only two plugins it depends on are will_paginate created by Mislav Marohnić for results pagination 
