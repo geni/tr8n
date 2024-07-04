@@ -7,7 +7,7 @@
 	      <%=hidden_field_tag(:section_key, @section_key) %>
 	      <%=hidden_field_tag(:source, h(params[:source])) %>
 			  <div style="<%=tr8n_style_attribute_tag('float', 'right')%>">
-					<%= link_to_function("<span><%=tra('Search', 'Search button label')-%></span>", "Tr8n.Effects.submit('translations_search_form')", :class => "button translator_btn translator_small_btn") %>
+					<%= link_to_function("<span>#{tra('Search', 'Search button label')}</span>", "Tr8n.Effects.submit('translations_search_form')", :class => "button translator_btn translator_small_btn") %>
 			  </div>
 
 	    	<%=text_field_tag(:search, params[:search], {:style => "width:90%;font-size:12px;height:20px"})%><br>
