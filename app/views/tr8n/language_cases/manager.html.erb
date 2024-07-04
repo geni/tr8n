@@ -49,9 +49,7 @@
 				</div>
 
 			  <div id="tr8n_language_cases_buttons" style="text-align:center;padding:10px;">
-			      <button type="submit" class="translator_btn translator_submit_btn" onClick="tr8nLanguageCaseManager.submitCaseMap(); return false;">
-			          <span><%=trla("Save")%></span>
-			      </button>
+				  <%= link_to_function("<span><%=trla('Save')%></span>", "tr8nLanguageCaseManager.submitCaseMap()", :class => "button translator_btn translator_submit_btn") %>
 			  </div>
 			<% end %>
 		</div>

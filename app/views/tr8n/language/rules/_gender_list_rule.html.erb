@@ -1,4 +1,4 @@
-<%= javascript_tag nonce: true do
+<% javascript_tag(nonce: true) do %>
   addCondition = function(ruleKey) {
     Tr8n.Effects.show('rule_' + ruleKey + '_second_part');
     Tr8n.Effects.hide('extension_link' + ruleKey);
@@ -12,7 +12,7 @@
     Tr8n.element('rule_' + ruleKey + '_multipart').value='false';
     return false;
   }
-end %>
+<% end %>
 
 <%=select_tag("rules[#{rule.class.dependency}][#{index}][definition][part1]", options_for_select(rule.class.part1_options, rule.definition[:part1]), :style => "width:120px", :onChange=>"updateLanguageRules()")%>
 <%=select_tag("rules[#{rule.class.dependency}][#{index}][definition][value1]", options_for_select(rule.class.value1_options, rule.definition[:value1]), :style => "width:140px", :onChange=>"updateLanguageRules()")%>

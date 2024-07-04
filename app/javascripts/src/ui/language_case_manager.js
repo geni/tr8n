@@ -145,11 +145,13 @@ Tr8n.LanguageCaseManager.prototype = {
     Tr8n.Effects.hide('tr8n_language_case_exception_container');
     Tr8n.Effects.show('tr8n_language_case_report_spinner');
     Tr8n.Effects.submit('tr8n_language_case_form');
+    return false;
   },
 
   submitCaseMap: function() {
     Tr8n.Effects.hide('tr8n_language_case_exception_container');
     Tr8n.Effects.show('tr8n_language_case_submit_spinner');
     Tr8n.Effects.submit('tr8n_language_case_form');
+    return false;
   }
 }

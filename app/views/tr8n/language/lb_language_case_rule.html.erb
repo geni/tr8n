@@ -64,7 +64,7 @@
 			        <% more_link_style = 'display:none' if multipart %>
 			        <% less_link_style = 'display:none' unless multipart %>
 
-							<%= javascript_tag nonce: true do
+							<% javascript_tag(nonce: true) do %>
 							  addCondition = function(ruleKey) {
 								  Tr8n.Effects.show('rule_' + ruleKey + '_second_part');
 									Tr8n.Effects.hide('add_condition_link');
@@ -78,7 +78,7 @@
 									Tr8n.element('edit_rule_multipart').value='false';
 									return false;
 								}
-							end %>
+							<% end %>
 
 							<span id="add_condition_link">
 							  <%=link_to_function(tra('+ Add condition'), "addCondition('#{rule_key}'", :style => more_link_style)%>
@@ -107,10 +107,16 @@
 	</div>
 
 	<div class="ft">
-	    <button type="button" class="translator_btn translator_submit_btn" onClick="tr8nLightbox.hide(); updateLanguageCaseRule(); return false;">
-	        <span><%=tra(@new_rule ? "Add Rule" : "Update Rule")%></span>
-	    </button>
+     <%= link_to_function("<span><%=tra(@new_rule ? 'Add Rule' : 'Update Rule')-%></span>", "hideLightboxAndUpdateLanguageCaseRule()", :class => "button translator_btn translator_submit_btn") %>
      <%=tra("or")%>
      <%=link_to_function(tra("Cancel"), "tr8nLightbox.hide()") %>
 	</div>
 </div>
+
+<%= javascript_tag(nonce: true) do %>
+	function hideLightboxAndUpdateLanguageCaseRule() {
+	  tr8nLightbox.hide();
+		updateLanguageCaseRule();
+		return false;
+	}
+<% end %>

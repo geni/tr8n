@@ -82,9 +82,7 @@
 	            <tr>
 	              <th style="padding:3px;vertical-align:middle;font-weight:bold;"></th>
 	              <td style="padding-top:15px;padding-bottom:15px;">
-	                 <button type="submit" class="translator_btn translator_submit_btn" onClick="Tr8n.submit('basic_info_form'); return false;">
-	                    <span><%=tra("Save")%></span>
-	                  </button>
+									<%= link_to_function("<span><%=tra('Save')%></span>", "Tr8n.submit('basic_info_form')", :class => "button translator_btn translator_submit_btn") %>
 	              </td>
 	            </tr>
 	          <% end %>
@@ -111,9 +109,7 @@
         <tr>
           <th style="padding:3px;vertical-align:middle;font-weight:bold;"></th>
           <td style="padding-top:15px;padding-bottom:15px;">
-             <button type="submit" class="translator_btn translator_submit_btn" onClick="Tr8n.submit('manager_info_form'); return false;">
-                <span><%=tra("Save")%></span>
-              </button>
+						<%= link_to_function("<span><%=tra('Save')%></span>", "Tr8n.submit('manager_info_form')", :class => "button translator_btn translator_submit_btn") %>
           </td>
         </tr>
       </table>

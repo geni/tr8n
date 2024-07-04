@@ -31,11 +31,11 @@
   ['Remove Selected Sources', 'removeAllSelected()']
 ]) %>
 
-<%= javascript_tag nonce: true do
+<% javascript_tag(nonce: true) do %>
   function removeAllSelected() {
     if (!confirm('Are you sure you want to remove all selected sources from this component?'))
        return;
     Tr8n.element('sources_form').action = "/tr8n/admin/applications/remove_objects_from_component";
     Tr8n.element('sources_form').submit();
   }
-end %>
+<% end %>

@@ -48,6 +48,7 @@ Tr8n.Effects = {
   },
   submit: function(element_id) {
     Tr8n.element(element_id).submit();
+    return false;
   },
   focus: function(element_id) {
     Tr8n.element(element_id).focus();

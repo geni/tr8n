@@ -1,10 +1,27 @@
-<%= javascript_tag nonce: true do
+<% javascript_tag(nonce: true) do %>
   removeLanguage = function(languageId, userLanguageId) {
     tr8nLanguageSelector.removeLanguage(languageId);
     Tr8n.Effects.hide('lang_' + userLanguageId);
     return false;
   }
-end %>
+
+  selectLocale = function(locale) {
+    Tr8n.element('language_selector_locale').value = locale;
+    Tr8n.element('language_selector_form').submit();
+    return false;
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var elements = document.querySelectorAll('[data-select-locale]');
+    elements.forEach(function(element) {
+        element.addEventListener('click', function(event) {
+          selectLocale(event.target.getAttribute('data-select-locale');
+          event.preventDefault();
+          return false;
+        });
+    });
+});
+<% end %>
 
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
 <div class="inner">
@@ -38,7 +55,7 @@ end %>
                                 <% end %>
                             <% end %>
                           </span>
-                          <div onClick="Tr8n.element('language_selector_locale').value='<%=language.locale%>'; Tr8n.element('language_selector_form').submit();">
+                          <div data-select-locale='<%=language.locale%>'>
                               <%= tr8n_language_flag_tag(language) %>
                               <span dir="ltr">
                               <% if language == tr8n_current_language %>
@@ -63,7 +80,7 @@ end %>
             <div id="tr8n_languages_list" style="max-height: <%=languages_height%>; overflow: auto; border:solid 1px #e8e8e8; padding:5px; background-color:white;">
                 <ul class="language_list">
                     <% @all_languages.each do |language| %>
-                      <li onClick="Tr8n.element('language_selector_locale').value='<%=language.locale%>'; Tr8n.element('language_selector_form').submit();">
+                      <li data-select-locale='<%=language.locale%>'>
                         <span style="font-size:8px; float:<%=tr8n_current_language.align(:right)%>; color:#ccc;"><%= "#{language.default? ? '100' : (language.completeness || 0)}%" if Tr8n::Config.enable_language_stats? %>
                         </span>
                         <%= tr8n_language_flag_tag(language) %>

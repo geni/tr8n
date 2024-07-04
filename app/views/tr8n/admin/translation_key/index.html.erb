@@ -43,7 +43,7 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<%= javascript_tag nonce: true do
+<% javascript_tag(nonce: true) do %>
   function getSelectedKeyIds() {
     var i=0;
     var checkbox = Tr8n.element('wf_check_' + i);
@@ -93,4 +93,4 @@
     }
     tr8nLightbox.show('/tr8n/admin/translation_key/lb_add_to_source?keys=' + keys, {height:350});
   }
-end %>
+<% end %>

@@ -269,6 +269,7 @@ Tr8n.Translator.prototype = {
     Tr8n.Effects.hide('tr8n_translator_buttons_container');
     Tr8n.Effects.show('tr8n_translator_spinner');
     Tr8n.Effects.submit('tr8n_translator_form');
+    return false;
   },
 
   submitLock: function() {
@@ -276,11 +277,13 @@ Tr8n.Translator.prototype = {
     Tr8n.Effects.hide('tr8n_translator_footer_container');
     Tr8n.Effects.show('tr8n_translator_spinner');
     Tr8n.Effects.submit('tr8n_translator_form');
+    return false;
   },
 
   submitViewingUserDependency: function() {
     Tr8n.element('tr8n_translator_translation_has_dependencies').value = "true";
     this.submitTranslation();
+    return false;
   },
 
   submitDependencies: function() {
@@ -289,6 +292,7 @@ Tr8n.Translator.prototype = {
     Tr8n.Effects.show('tr8n_translator_spinner');
     Tr8n.element('tr8n_translator_form').action = '/tr8n/translations/permutate';
     Tr8n.Effects.submit('tr8n_translator_form');
+    return false;
   },
 
   translate: function(label, callback, opts) {

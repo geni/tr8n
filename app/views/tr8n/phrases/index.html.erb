@@ -7,9 +7,7 @@
 	      <%=hidden_field_tag(:section_key, @section_key) %>
 	      <%=hidden_field_tag(:source, h(params[:source])) %>
 			  <div style="<%=tr8n_style_attribute_tag('float', 'right')%>">
-	        <button type="submit" class="translator_btn translator_small_btn" onClick="Tr8n.Effects.submit('translations_search_form'); return false;">
-	            <span><%=tra("Search", "Search button label")%></span>
-	        </button>
+					<%= link_to_function("<span><%=tra('Search', 'Search button label')-%></span>", "Tr8n.Effects.submit('translations_search_form')", :class => "button translator_btn translator_small_btn") %>
 			  </div>
 
 	    	<%=text_field_tag(:search, params[:search], {:style => "width:90%;font-size:12px;height:20px"})%><br>
@@ -79,7 +77,7 @@
 	</div>
 	<%= render :partial => "/tr8n/common/footer" %>
 
-	<%= javascript_tag nonce: true do
+	<% javascript_tag(nonce: true) do %>
 	  function toggleFilterOptions() {
 	    if (Tr8n.element("phrase_type").value == "with") {
 	      Tr8n.Effects.show("extended_filter_options");
@@ -87,5 +85,5 @@
 	      Tr8n.Effects.hide("extended_filter_options");
 	    }
 	  }
-	end %>
+	<% end %>
 <% end %>

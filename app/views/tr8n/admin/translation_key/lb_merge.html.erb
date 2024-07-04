@@ -19,7 +19,7 @@
         <td style="padding:5px;width:20px;">
           <%= index+1 %>)
         </td>
-				<td style="cursor:pointer; padding:5px;" onClick="Tr8n.element('master_key_label').value=Tr8n.element('key_label_<%=index%>').innerHTML;Tr8n.element('master_key_description').value=Tr8n.element('key_description_<%=index%>').innerHTML;">
+				<td style="cursor:pointer; padding:5px;" data-select-index='<%= index -%>'>
 					<div id="key_label_<%=index%>"><%=key.label%></div>
 					<div id="key_description_<%=index%>" style="color:#888; font-size:9px;"><%=key.description%></div>
 				</td>
@@ -56,3 +56,20 @@
         <%= render :partial => "/tr8n/admin/common/lightbox_buttons" %>
     </div>
 </div>
+
+<% javascript_tag(nonce: true) do %>
+  document.addEventListener('DOMContentLoaded', function() {
+    var elements = document.querySelectorAll('[data-select-index]');
+    elements.forEach(function(element) {
+        element.addEventListener('click', function(event) {
+          var idx = event.target.getAttribute('data-select-index');
+          if (idx) {
+            Tr8n.element('master_key_label').value=Tr8n.element('key_label_' +  idx).innerHTML;
+            Tr8n.element('master_key_description').value=Tr8n.element('key_description_' + idx).innerHTML;
+          }
+
+          return false;
+        });
+    });
+  });
+<% end %>

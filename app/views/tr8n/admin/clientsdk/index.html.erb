@@ -31,16 +31,15 @@
       <td rowspan="3" style="width:15%; padding:2px; vertical-align:top;">
 			   <center>
 			   <div style="width:150px; text-align:center; padding-top:15px;">
-           <%= link_to_function("Translate", "translateExample()", :style => "width:100%;") %>
-           <button style="width:100%;" onClick=";return false;">Translate</button>
-           <button style="width:100%;" onClick="translateExample({skip_decorations:true});return false;">Translate Label</button>
-           <button style="width:100%;" onClick="searchPhrase();return false;">View Translation Key</button>
+           <%= link_to_function("Translate", "translateExample()", :class => 'button', :style => "width:100%;") %>
+           <%= link_to_function("Translate Label", "translateExample({'skip_decorations':true})", :class => 'button', :style => "width:100%;") %>
+           <%= link_to_function("View Translation Key", "searchPhrase()", :class => 'button', :style => "width:100%;") %>
            <br><br>
-           <button style="width:100%;" onClick="clearResults();return false;">Clear Results</button>
-           <button style="width:100%;" onClick="tr8nLightbox.show('/tr8n/admin/clientsdk/lb_samples', {height:500});return false;">View Examples</button>
-           <button style="width:100%;" onClick="reloadTranslations();return false;">Reload Translations</button>
-           <button style="width:100%;" onClick="tr8nProxy.logSettings();return false;">Print Settings</button>
-           <button style="width:100%;" onClick="tr8nProxy.logTranslations();return false;">Print Translation Cache</button>
+           <%= link_to_function("Clear Results", "clearResults()", :class => 'button', :style => "width:100%;") %>
+           <%= link_to_function("View Examples", "showExamples()", :class => 'button', :style => "width:100%;") %>
+           <%= link_to_function("Reload Translations", "reloadTranslations()", :class => 'button', :style => "width:100%;") %>
+           <%= link_to_function("Print Settings", "tr8nProxy.logSettings()", :class => 'button', :style => "width:100%;") %>
+           <%= link_to_function("Print Translation Cache", "tr8nProxy.logTranslations()", :class => 'button', :style => "width:100%;") %>
 				 </div>
 				 </center>
       </td>
@@ -64,12 +63,13 @@
 <div id="tr8n_debugger" class="section_box colored" style="font-size:10px; border:1px solid black; height:350px; overflow:auto; padding: 2px;">
 </div>
 
-<%= javascript_tag nonce: true do
+<% javascript_tag(nonce: true) do %>
   tr8nProxy.enableLogger();
 
   function clearResults() {
     Tr8n.element('result').value = '';
     tr8nProxy.logger.clear();
+    return false;
 	}
 
 	function useExample(index) {
@@ -88,15 +88,24 @@
     }
 
     Tr8n.element('result').value = tr(Tr8n.value('label'), '', tokens, opts);
+
+    return false;
   }
 
   function searchPhrase() {
     url = "/tr8n/phrases/index?search=" + encodeURI(Tr8n.value('label'));
     window.open(url,'translation_key');
+    return false;
+  }
+
+  function showExamples() {
+    tr8nLightbox.show('/tr8n/admin/clientsdk/lb_samples', {height:500});
+    return false;
   }
 
   function reloadTranslations() {
     tr8nProxy.reloadTranslationCache();
+    return false;
   }
 
   function speedTest() {
@@ -125,6 +134,6 @@
     tr8nProxy.log("Enabling logger... ");
     tr8nProxy.log('Test took: ' + (t1 - t0) + ' mls');
   }
-end %>
+<% end %>
 
 <%= render :partial => "/tr8n/admin/common/footer" %>

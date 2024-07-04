@@ -21,9 +21,7 @@
     <% end %>
   
 	   <div style="text-align:center; padding-top:30px; padding-bottom:10px;">
-	        <button type="submit" class="translator_btn translator_small_btn" onClick="Tr8n.Effects.submit('relationship_key_form'); return false;">
-	            <span><%=tra("Submit")%></span>
-	        </button>
+          <%= link_to_function("<span><%=tra('Submit')-%></span>", "Tr8n.Effects.submit('relationship_key_form')", :class => "button translator_btn translator_small_btn") %>
           <%=trla("or")%> <%= link_to(trla("Cancel"), :action => :index) %>
 	   </div>
 		 

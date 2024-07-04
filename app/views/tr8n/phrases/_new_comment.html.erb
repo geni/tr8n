@@ -22,9 +22,7 @@
     </table>
     
     <div style="padding-top:20px; padding-bottom:10px;text-align:center">
-        <button type="submit" class="translator_btn translator_submit_btn" onClick="Tr8n.Effects.submit('translation_key_comments_form'); return false;">
-            <span><%=tra("Submit Comment")%></span>
-        </button>
+      <%= link_to_function("<span><%= tra('Submit Comment') %></span>", "Tr8n.Effects.submit('translation_key_comments_form')", :class => "button translator_btn translator_submit_btn") %>
     </div>
   <% end %>
   

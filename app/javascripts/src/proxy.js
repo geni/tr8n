@@ -49,11 +49,13 @@ Tr8n.Proxy.prototype = {
   logSettings: function() {
     this.logger.clear();
     this.logger.logObject(this.options);
+    return false;
   },
   logTranslations: function() {
     this.logger.clear();
     this.translations = this.translations || {};
     this.logger.logObject(this.translations);
+    return false;
   },
   logMissingTranslations: function() {
     this.logger.clear();

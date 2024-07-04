@@ -22,10 +22,9 @@
 	              selected = (current_date == calendar.selected_date.to_date and current_date!=Date.today) ? "selected" : ""
 							  selected = "" # for now 
               
-	              set_date = calendar.show_time? ? "" : "wfCalendar.setDate();" 
 						%>
 						  <center>
-							<div id="wf_calendar_cell_<%=current_date.year%>_<%=current_date.month%>_<%=current_date.day%>" class="wf_calendar_date_cell <%=today%> <%=selected%>" onClick="wfCalendar.selectDateValue(this, '<%=current_date%>'); <%=set_date%>">
+							<div id="wf_calendar_cell_<%=current_date.year%>_<%=current_date.month%>_<%=current_date.day%>" class="wf_calendar_date_cell <%=today%> <%=selected%>" data-wf-calendar-select-date=1>
                  <%=current_date.day %>
 							</div>
 							</center>
@@ -37,3 +36,17 @@
     <% end %>   
   </tr>
 </table>
+
+<%= javascript_tag(nonce: true) do %>
+	document.addEventListener('DOMContentLoaded', function() {
+		var elements = document.querySelectorAll('[data-wf-calendar-select-date]');
+		elements.forEach(function(element) {
+			element.addEventListener('click', function(event) {
+				wfCalendar.selectDateValue(event.target, '<%=current_date%>');
+				<% if !calendar.show_time? %>
+					wfCalendar.setDate();
+				<% end %>
+			});
+		});
+	});
+<% end %>

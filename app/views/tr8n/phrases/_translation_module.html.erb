@@ -25,19 +25,17 @@
 				    </div>
 
 				    <%=image_tag( url_with_cache_version("/tr8n/images/left_quote.png"), :style=>"text-align:bottom;padding-bottom:5px;") %>
-				    <a onclick="Tr8n.element('tr8n_translation_label_<%=@translation_key.id%>').value=Tr8n.element('tr8n_translation_suggestion_<%=@translation_key.id%>').innerHTML; return false;" href="#">
-				       <span id="tr8n_translation_suggestion_<%=@translation_key.id%>" style="font-size:12px;"></span>
-				    </a>
+						<%= link_to_function("<span id='tr8n_translation_suggestion_link_<%=@translation_key.id%>' style='font-size:12px;'></span>", "acceptSuggestion('<%=@translation_key.id%>')") %>
 				    <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
 
             <% sanitized_label = @translation_key.tokenless_label.gsub('"', '\"') %>
-				    <%= javascript_tag nonce: true do
+				    <% javascript_tag(nonce: true) do %>
               window.setTimeout(function() {
               	if (tr8nTranslator) {
             			tr8nTranslator.suggestTranslation("<%= @translation_key.id -%>", "<%= sanitized_label -%>", "<%= @translation_key.suggestion_tokens.join(',') -%>", "<%= @translation_key.language.google_key -%>", "<%= tr8n_current_language.google_key -%>");
             		}
               }, 1000);
-					  end %>
+					  <% end %>
 
 				    <div style="color:grey; font-size:12px; padding-top:10px;">
 				       <%=tra("Click on the suggested translation to insert it into the label")%>
@@ -95,22 +93,26 @@
       <% end %>
 
 		  <div id="buttons_container" style="padding-top:5px;padding-bottom:5px;text-align:center">
-		      <button type="submit" class="translator_btn translator_submit_btn" onClick="submitTranslation(); return false;">
-		          <span><%=tra("Translate")%></span>
-		      </button>
+			    <%= link_to_function("<span><%=tra('Translate')-%></span>", "submitTranslation()", :class => "button translator_btn translator_submit_btn") %>
 		      <%=tra("or")%> <%= link_to_function(tra("Cancel"), "viewTranslations()") %>
 		  </div>
 
 	<% end %>
 </div>
 
-<%= javascript_tag nonce: true do
+<% javascript_tag(nonce: true) do %>
+	function acceptSuggestion(translation_key_id) {
+		Tr8n.element("tr8n_translation_label_" + translation_key_id).value = Tr8n.element("tr8n_translation_suggestion_link_" + translation_key_id).innerHTML;
+		return false;
+	}
+
 	function submitTranslation() {
 		if (Tr8n.value("tr8n_translation_label_<%= @translation_key.id -%>") == "") {
 			alert("<%= trla('Translation must be provided.') -%>");
 			return;
 	  }
     Tr8n.Effects.submit('translation_form');
+		return false;
 	}
 
 	function downloadDictionaryDefinitions() {
@@ -126,4 +128,4 @@
       }
     });
 	}
-end %>
+<% end %>

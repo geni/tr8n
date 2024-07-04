@@ -3,16 +3,16 @@
 	<%= tr8n_splash_screen_tag %>
 
   <% if Tr8n::Config.enable_software_keyboard? %>
-    <%= javascript_tag nonce: true do
+    <% javascript_tag(nonce: true) do %>
       VKI_default_layout = "<%= Tr8n::KeyboardMapping.current_1_49 -%>";
-    end %>
+    <% end %>
     <%=stylesheet_link_tag( url_with_cache_version("/tr8n/stylesheets/keyboard_1_49.css") ) -%>
   <% end %>
 
   <%=stylesheet_link_tag( url_with_cache_version("/tr8n/stylesheets/tr8n.css") ) -%>
   <%=javascript_include_tag( url_with_cache_version("/tr8n/javascripts/tr8n-compiled.js"), :charset => "UTF-8") -%>
 
-  <%= javascript_tag nonce: true do
+  <% javascript_tag(nonce: true) do %>
      initializeTr8n();
      Tr8n.source = "<%= Tr8n::Config.current_source ? h(Tr8n::Config.current_source.source) : "" -%>";
      Tr8n.url_cache_version = "<%= Tr8n::Config.url_cache_version -%>";
@@ -20,7 +20,7 @@
      Tr8n.allow_unused_tokens = "<%=  Tr8n::Config.rules_engine['allow_unused_tokens'] -%>";
      Tr8n.csrfParam = "<%=  request_forgery_protection_token -%>";
      Tr8n.csrfToken = "<%=  form_authenticity_token -%>";
-  end %>
+  <% end %>
 
   <% if Tr8n::Config.enable_effects? %>
     <%=javascript_include_tag( url_with_cache_version(Tr8n::Config.effects_library_path) ) -%>
@@ -32,19 +32,19 @@
   <% end %>
 
   <% if Tr8n::Config.enable_google_suggestions? and Tr8n::Config.current_user_is_translator? %>
-    <%= javascript_tag nonce: true do
+    <% javascript_tag(nonce: true) do %>
 			Tr8n.google_api_key = "<%= Tr8n::Config.google_api_key.html_safe -%>";
-    end %>
+    <% end %>
   <% end %>
 
   <% if Tr8n::Config.enable_keyboard_shortcuts? %>
-    <%= javascript_tag nonce: true do
-      <% (Tr8n::Config.default_shortcuts.collect do |key, data| %>
+    <% javascript_tag(nonce: true) do %>
+      <% Tr8n::Config.default_shortcuts.each do |key, data| %>
         shortcut.add("<%= key -%>", function() {
           <%= data["script"].html_safe %>
         });
       <% end %>
-	  end %>
+	  <% end %>
   <% end %>
 
 <% end %>

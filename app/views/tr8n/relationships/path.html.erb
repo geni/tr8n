@@ -7,9 +7,7 @@
 			<div style="margin-bottom:10px;">
 	      <div style="font-size:12px;padding-bottom:5px;"><%=tra("Relationship path in TPS notation:")%></div>
 	      <%=text_field_tag(:etps, params[:etps], {:id => :relationship_key, :style => "width:90%;font-size:24px", :id => "etps", :onKeyUp => "etpsKeyUp(event)"})%> &nbsp;
-	      <button type="button" class="translator_btn translator_small_btn" onClick="evaluateRelationshipPath(); return false;">
-	          <span><%=tra("Evaluate")%></span>
-	      </button>
+        <%= link_to_function("<span><%=tra('Evaluate')%></span>", "evaluateRelationshipPath()", :class => "button translator_btn translator_small_btn") %>
 			</div>
 
       <div style="margin-bottom:10px;">
@@ -61,9 +59,9 @@
 <% end %>
 
 
-<%= javascript_tag nonce: true do
+<% javascript_tag(nonce: true) do %>
 	function etpsKeyUp(event) {
-	   if (event.keyCode == 13) {
+	   if (event.key == 'Enter') {
 		 	  evaluateRelationshipPath();
 				return false;
 		 }
@@ -74,5 +72,6 @@
     Tr8n.Utils.update('translation', "/tr8n/relationships/eval_path", {
 			parameters: {etps:Tr8n.value("etps")}
     });
+    return false;
 	}
-end %>
+<% end %>
