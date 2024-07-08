@@ -1,15 +1,15 @@
 <div class="section_title">
   <% if tr8n_current_language.default? %>
     <%=tra("Start a New Discussion Topic For All Translators")%>
-	<% else %>
-	   <%=tra("Start a New Discussion Topic For {language} Language", nil, :language => tr8n_current_language.native_name)%>
-	<% end %>
+  <% else %>
+     <%=tra("Start a New Discussion Topic For {language} Language", nil, :language => tr8n_current_language.native_name)%>
+  <% end %>
 </div>
 
 <div class="section_box colored">
   <% form_tag({:action => :topic}, {:method => :post, :id => "forum_topic_form"}) do %>
     <%=hidden_field_tag(:language_id, params[:language_id])%>
-    
+
     <table style="width:99%">
       <tr>
         <td style="width:80px; <%=tr8n_style_attribute_tag('text-align', 'right')%>; padding-right:10px; font-weight:bold;">
@@ -34,14 +34,13 @@
         </td>
       </tr>
     </table>
-    
+
     <div style="padding-top:20px; padding-bottom:10px;text-align:center">
-        <%= link_to_function("<span><%=tra('Start a New Discussion')%></span>", "Tr8n.Effects.submit('forum_topic_form')", :class => "button translator_btn translator_submit_btn") %>
+        <span><%= link_to_function(tra('Start a New Discussion'), "Tr8n.Effects.submit('forum_topic_form')", :class => "button translator_btn translator_submit_btn") %></span>
         <% if include_cancel_button %>
-        or 
+        or
         <%=link_to(tra("Cancel"), :action => :index)%>
-        <% end %>  
+        <% end %>
     </div>
   <% end %>
 </div>
-  

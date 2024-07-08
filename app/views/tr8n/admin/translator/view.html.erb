@@ -53,10 +53,10 @@
             </span>
 
             <span id="translator_level_options_container" style='display:none'>
-            	<% form_tag do %>
-	              <%= select_tag('translator_level', options_for_select(Tr8n::Translator.level_options, @translator.level.to_s)) %>
-	              <%= link_to_function('save', 'updateTranslatorLevel()')%> | <%= link_to_function('cancel', "tr8nToggleEffect('translator_level_options_container', 'translator_level_container')")%>
-							<% end %>
+              <% form_tag do %>
+                <%= select_tag('translator_level', options_for_select(Tr8n::Translator.level_options, @translator.level.to_s)) %>
+                <%= link_to_function('save', 'updateTranslatorLevel()')%> | <%= link_to_function('cancel', "tr8nToggleEffect('translator_level_options_container', 'translator_level_container')")%>
+              <% end %>
             </span>
 
         </td>
@@ -69,14 +69,14 @@
             <%=@translator.blocked? %>
         </td>
     </tr>
-		<tr>
+    <tr>
         <th>
             Rank
         </th>
         <td>
             <%= (@translator.rank ? (@translator.rank * 100).to_i / 100.0 : 0) %>
         </td>
-		</tr>
+    </tr>
     <tr>
         <th>
             Last Ip
@@ -178,9 +178,9 @@
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
 <% javascript_tag(nonce: true) do %>
-	function updateTranslatorLevel() {
-		var reason = prompt("Please provide the reason for promoting/demoting this translator:");
-		if (reason) reason = "";
-		location = "/tr8n/admin/translator/update_level?translator_id=<%=@translator.id%>&new_level=" + Tr8n.value('translator_level') + "&reason=" + reason;
-	}
+  function updateTranslatorLevel() {
+    var reason = prompt("Please provide the reason for promoting/demoting this translator:");
+    if (reason) reason = "";
+    location = "/tr8n/admin/translator/update_level?translator_id=<%=@translator.id%>&new_level=" + Tr8n.value('translator_level') + "&reason=" + reason;
+  }
 <% end %>

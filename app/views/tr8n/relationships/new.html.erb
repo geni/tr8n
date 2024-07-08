@@ -1,32 +1,32 @@
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
 
   <%= render :partial => "/tr8n/common/header" %>
-	
+
   <div class="section_box" style="margin-bottom:10px; background-color:#EFF8FF; margin-top:0px;">
-	  <div style="float:right;"><%=tr8n_help_icon_tag("relationship_keys")%></div> 
-	  <div style="font-size:20px;font-weight:bold;"><%=tra("Add New Relationship Key")%></div>
+    <div style="float:right;"><%=tr8n_help_icon_tag("relationship_keys")%></div>
+    <div style="font-size:20px;font-weight:bold;"><%=tra("Add New Relationship Key")%></div>
   </div>
-		
+
   <div class="section_box">
-  
+
     <% form_tag({:action => :new}, {:method => :post, :id => "relationship_key_form"}) do %>
       <div style="font-size:12px;padding-bottom:5px;"><%=tra("Relationship Key")%> <span style="color:grey"> - use our guide to define the relationship key</span></div>
       <%=text_field_tag(:key, params[:key], {:id => :relationship_key, :style => "width:99%;font-size:24px", :onKeyUp => ""})%><br>
-			
+
       <div style="font-size:12px;padding-bottom:5px;padding-top:5px;"><%=tra("Description")%> <span style="color:grey"> - optional, but recommended</span></div>
       <%=text_field_tag(:description, params[:description], {:style => "width:99%;font-size:24px"})%><br>
-			
+
       <div style="font-size:12px;padding-bottom:5px;padding-top:5px;"><%=tra("{language} Translation", nil, :language => tr8n_current_language.native_name)%></div>
       <%=text_field_tag(:translation, params[:translation], {:style => "width:99%;font-size:24px"})%><br>
     <% end %>
-  
-	   <div style="text-align:center; padding-top:30px; padding-bottom:10px;">
-          <%= link_to_function("<span><%=tra('Submit')-%></span>", "Tr8n.Effects.submit('relationship_key_form')", :class => "button translator_btn translator_small_btn") %>
+
+     <div style="text-align:center; padding-top:30px; padding-bottom:10px;">
+          <span><%= link_to_function(tra('Submit'), "Tr8n.Effects.submit('relationship_key_form')", :class => "button translator_btn translator_small_btn") %></span>
           <%=trla("or")%> <%= link_to(trla("Cancel"), :action => :index) %>
-	   </div>
-		 
+     </div>
+
   </div>
 
   <%= render :partial => "/tr8n/common/footer" %>
-	
+
 <% end %>
