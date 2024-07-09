@@ -93,7 +93,7 @@
       <% end %>
 
       <div id="buttons_container" style="padding-top:5px;padding-bottom:5px;text-align:center">
-          <span><%= link_to_function(tra('Translate'), "submitTranslation()", :class => "button translator_btn translator_submit_btn") %></span>
+          <%= link_to_function("<span>#{tra('Translate')}</span>", "submitTranslation()", :class => "button translator_btn translator_submit_btn") %>
           <%=tra("or")%> <%= link_to_function(tra("Cancel"), "viewTranslations()") %>
       </div>
 

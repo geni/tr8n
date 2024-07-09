@@ -22,7 +22,7 @@
 
 
   <div id="buttons_container" style="padding-top:15px;padding-bottom:5px;text-align:center">
-       <span><%= link_to_function(tra('Generate'), "Tr8n.Effects.submit('permutation_form')", :class => "button translator_btn translator_submit_btn") %></span>
+       <%= link_to_function("<span>#{tra('Generate')}</span>", "Tr8n.Effects.submit('permutation_form')", :class => "button translator_btn translator_submit_btn") %>
        <%=tra("or") %> <%= link_to_function(tra("Cancel"), "viewTranslations()") %>
   </div>
 </div>

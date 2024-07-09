@@ -49,7 +49,7 @@
         </div>
 
         <div id="tr8n_language_cases_buttons" style="text-align:center;padding:10px;">
-          <span><%= link_to_function(trla('Save'), "tr8nLanguageCaseManager.submitCaseMap()", :class => "button translator_btn translator_submit_btn") %></span>
+          <%= link_to_function("<span>#{trla('Save')}</span>", "tr8nLanguageCaseManager.submitCaseMap()", :class => "button translator_btn translator_submit_btn") %>
         </div>
       <% end %>
     </div>

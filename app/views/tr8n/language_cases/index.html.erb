@@ -9,7 +9,7 @@
   <div style="background:#EFF8FF; border: 1px dotted #ccc; padding:10px;">
     <% form_tag({:action => :index}, {:method => :get, :id => "case_search_form"}) do %>
         <div style="float:right">
-          <span><%= link_to_function(tra('Search', 'Search button label'), "Tr8n.Effects.submit('case_search_form')", :class => "button translator_btn translator_small_btn") %></span>
+          <%= link_to_function("<span>#{tra('Search', 'Search button label')}</span>", "Tr8n.Effects.submit('case_search_form')", :class => "button translator_btn translator_small_btn") %>
         </div>
 
         <%=text_field_tag(:search, params[:search], {:style => "width:90%;font-size:12px;"})%>

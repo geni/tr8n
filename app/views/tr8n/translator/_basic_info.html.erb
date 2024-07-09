@@ -78,7 +78,7 @@
             <tr>
               <th style="padding:3px;vertical-align:middle;font-weight:bold;"></th>
               <td style="padding-top:15px;padding-bottom:15px;">
-                 <span><%= link_to_function(tra('Save'), "Tr8n.submit('basic_info_form')", :class => "button translator_btn translator_submit_btn") %></span>
+                <%= link_to_function("<span>#{tra('Save')}</span>", "Tr8n.submit('basic_info_form')", :class => "button translator_btn translator_submit_btn") %>
               </td>
             </tr>
           <% end %>

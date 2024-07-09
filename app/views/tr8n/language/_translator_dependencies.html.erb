@@ -21,5 +21,5 @@
 <% end %>
 
 <div id="tr8n_translator_buttons_container" class="buttons_container">
-    <span><%= link_to_function(trla('Continue...'), "tr8nTranslator.submitDependencies()", :class => "button translator_btn translator_submit_btn") %></span>
+    <%= link_to_function("<span>#{trla('Continue...')}</span>", "tr8nTranslator.submitDependencies()", :class => "button translator_btn translator_submit_btn") %>
 </div>

@@ -5,7 +5,7 @@
   <div class="section_box" style="margin-bottom:10px; background-color:#EFF8FF; margin-top:0px;">
     <% form_tag({:action => :index}, {:method => :get, :id => "glossary_search_form"}) do %>
        <div style="<%=tr8n_style_attribute_tag('float', 'right')%>">
-         <span><%= link_to_function(tra('Search'), "Tr8n.Effects.submit('glossary_search_form')", :class => "button translator_btn translator_small_btn") %></span>
+         <%= link_to_function("<span>#{tra('Search')}</span>", "Tr8n.Effects.submit('glossary_search_form')", :class => "button translator_btn translator_small_btn") %>
        </div>
 
       <%=text_field_tag(:search, params[:search], {:style => "width:90%;font-size:12px;height:20px"})%><br>

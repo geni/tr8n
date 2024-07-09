@@ -7,7 +7,7 @@
       <div style="margin-bottom:10px;">
         <div style="font-size:12px;padding-bottom:5px;"><%=tra("Relationship path in TPS notation:")%></div>
         <%=text_field_tag(:etps, params[:etps], {:id => :relationship_key, :style => "width:90%;font-size:24px", :id => "etps", :onKeyUp => "etpsKeyUp(event)"})%> &nbsp;
-        <span><%= link_to_function(tra('Evaluate'), "evaluateRelationshipPath()", :class => "button translator_btn translator_small_btn") %></span>
+        <%= link_to_function("<span>#{tra('Evaluate')}</span>", "evaluateRelationshipPath()", :class => "button translator_btn translator_small_btn") %>
       </div>
 
       <div style="margin-bottom:10px;">

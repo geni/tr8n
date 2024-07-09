@@ -107,7 +107,7 @@
   </div>
 
   <div class="ft">
-     <span><%= link_to_function(tra(@new_rule ? 'Add Rule' : 'Update Rule'), "hideLightboxAndUpdateLanguageCaseRule()", :class => "button translator_btn translator_submit_btn") %></span>
+     <%= link_to_function("<span>#{tra(@new_rule ? 'Add Rule' : 'Update Rule')}</span>", "hideLightboxAndUpdateLanguageCaseRule()", :class => "button translator_btn translator_submit_btn") %>
      <%=tra("or")%>
      <%=link_to_function(tra("Cancel"), "tr8nLightbox.hide()") %>
   </div>
