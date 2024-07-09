@@ -1,4 +1,6 @@
+.bash_history
 .bundle/
+Gemfile.lock
 pkg/
 *.sqlite3
 *.log
@@ -14,6 +16,7 @@ log/*
 Thumbs.db
 .tmp*
 tmp/
+vendor/bundle
 .vscode/*
 local/tr8n_server/db/*.sqlite3
 local/tr8n_server/log/*.log
