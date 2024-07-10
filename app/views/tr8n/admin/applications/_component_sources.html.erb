@@ -20,7 +20,7 @@
     }, 'text-align:right;width:100px;'],
     [:actions, lambda{|source|
       html = []
-      html << link_to_function("Update", "tr8nLightbox.show('/tr8n/admin/applications/lb_update_source?source_id=#{source.translation_source.id}', {height:350})")
+      html << link_to_function("Update", "tr8nLightbox.show('/tr8n/admin/applications/lb_update_source?source_id=#{source.translation_source.id}', {'height':350})")
       html << link_to("Remove", {:action => :remove_objects_from_component, :component_object_id => source.id, :type => :source}, {:confirm => "Are you sure you want to remove this source from the component?"})
       html.join(' | ')
     }, 'padding:5px;text-align:right;white-space:nowrap;width:200px;']

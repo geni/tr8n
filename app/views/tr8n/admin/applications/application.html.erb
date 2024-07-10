@@ -49,7 +49,7 @@
         <td>
           <%
             html = []
-            html << link_to_function("Update", "tr8nLightbox.show('/tr8n/admin/applications/lb_update?app_id=#{@app.id}', {height:350})")
+            html << link_to_function("Update", "tr8nLightbox.show('/tr8n/admin/applications/lb_update?app_id=#{@app.id}', {'height':350})")
           %>
           <%= html.join(' | ') %>
         </td>
