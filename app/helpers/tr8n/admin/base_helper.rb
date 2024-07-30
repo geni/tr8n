@@ -79,7 +79,7 @@ module Tr8n::Admin::BaseHelper
         data.addColumn('string', 'Language');
         data.addColumn('number', 'Count');
 
-        #{labels.each_with_index.collect {|label, index| "data.addRow(['#{label}', #{counts[index]}]);" }
+        #{labels.each_with_index.collect {|label, index| "data.addRow(['#{label}', #{counts[index]}]);" } }
 
         var options = {
           title: 'Language Metrics',
