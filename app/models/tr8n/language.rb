@@ -190,6 +190,8 @@ class Tr8n::Language < ActiveRecord::Base
   end
 
   def translate(label, desc = "", tokens = {}, options = {})
+    return label if label.blank?
+
     # raise Tr8n::Exception.new("The label is blank") if label.blank?
     raise Tr8n::Exception.new("The label is being translated twice") if label.tr8n_translated?
 
