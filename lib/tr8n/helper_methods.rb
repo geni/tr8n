@@ -35,7 +35,7 @@ module Tr8n::HelperMethods
   end
 
   def tr8n_google_charts_js_tag
-    javascript_include_tag('https://www.gstatic.com/charts/loader.js')
+    javascript_include_tag('https://www.gstatic.com/charts/loader.js', :nonce => true)
   end
 
 
