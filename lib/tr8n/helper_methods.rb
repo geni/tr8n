@@ -445,8 +445,10 @@ module Tr8n::HelperMethods
     html << "<div id='chart#{@chart_id}'></div>"
     addRows = values.each_with_index.collect {|value, index| "data.addRow(['#{names[index]}', #{value}]);" }.join("\n")
     html << javascript_tag(%Q|
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+      document.addEventListener('DOMContentLoaded', function() {
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+      });
 
       function drawChart() {
         var data = new google.visualization.DataTable();

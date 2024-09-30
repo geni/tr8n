@@ -71,8 +71,10 @@ module Tr8n::Admin::BaseHelper
     html = []
     html << "<div id='chart#{@chart_id}'></div>"
     html << javascript_tag(%Q|
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+      document.addEventListener('DOMContentLoaded', function() {
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+      });
 
       function drawChart() {
         var data = new google.visualization.DataTable();
