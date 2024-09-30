@@ -73,15 +73,17 @@ module Tr8n::Admin::BaseHelper
     html << javascript_tag(%Q|
       document.addEventListener('DOMContentLoaded', function() {
         google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawChart#{@chart_id});
       });
 
-      function drawChart() {
+      function drawChart#{@chart_id}() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Language');
         data.addColumn('number', 'Count');
 
-        #{labels.each_with_index.collect {|label, index| "data.addRow(['#{label}', #{counts[index]}]);" } }
+        #{labels.each_with_index.collect do |label, index|
+          "data.addRow(['#{label}', #{counts[index]}]);"
+        end.join("\n")}
 
         var options = {
           title: 'Language Metrics',
