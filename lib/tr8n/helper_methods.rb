@@ -447,10 +447,10 @@ module Tr8n::HelperMethods
     html << javascript_tag(%Q|
       document.addEventListener('DOMContentLoaded', function() {
         google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawChart#{@chart_id});
       });
 
-      function drawChart() {
+      function drawChart#{@chart_id}() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Name');
         data.addColumn('number', 'Value');
