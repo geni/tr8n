@@ -78,6 +78,13 @@
                   Tr8n.element('edit_rule_multipart').value='false';
                   return false;
                 }
+
+                function hideLightboxAndUpdateLanguageCaseRule() {
+                  tr8nLightbox.hide();
+                  updateLanguageCaseRule();
+                  return false;
+                }
+
               <% end %>
 
               <span id="add_condition_link">
@@ -112,11 +119,3 @@
      <%=link_to_function(tra("Cancel"), "tr8nLightbox.hide()") %>
   </div>
 </div>
-
-<% javascript_tag(nonce: true) do %>
-  function hideLightboxAndUpdateLanguageCaseRule() {
-    tr8nLightbox.hide();
-    updateLanguageCaseRule();
-    return false;
-  }
-<% end %>
