@@ -78,8 +78,8 @@
                   Tr8n.element('edit_rule_multipart').value='false';
                   return false;
                 }
-
-                function hideLightboxAndUpdateLanguageCaseRule() {
+  console.log('define');
+                hideLightboxAndUpdateLanguageCaseRule = function() {
                   tr8nLightbox.hide();
                   updateLanguageCaseRule();
                   return false;
@@ -88,7 +88,7 @@
               <% end %>
 
               <span id="add_condition_link">
-                <%=link_to_function(tra('+ Add condition'), "addCondition('#{rule_key}'", :style => more_link_style)%>
+                <%=link_to_function(tra('+ Add condition'), "addCondition('#{rule_key}')", :style => more_link_style)%>
               </span>
 
               <% second_part_style = 'display:none' unless multipart %>
