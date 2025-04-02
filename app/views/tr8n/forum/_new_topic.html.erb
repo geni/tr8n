@@ -38,8 +38,8 @@
     <div style="padding-top:20px; padding-bottom:10px;text-align:center">
         <%= link_to_function("<span>#{tra('Start a New Discussion')}</span>", "Tr8n.Effects.submit('forum_topic_form')", :class => "button translator_btn translator_submit_btn") %>
         <% if include_cancel_button %>
-        or
-        <%=link_to(tra("Cancel"), :action => :index)%>
+        <%= tra('or') %>
+        <%= link_to(tra("Cancel"), :action => :index) %>
         <% end %>
     </div>
   <% end %>
