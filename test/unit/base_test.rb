@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../test_helper.rb') 
+require File.expand_path(File.dirname(__FILE__) + '/../test_helper.rb')
 
 class Tr8n::BaseTest < ActiveRecord::TestCase
 
@@ -8,5 +8,5 @@ class Tr8n::BaseTest < ActiveRecord::TestCase
     @current_language = Tr8n::Language.create!(:id => 1, :locale => "ru", :english_name => "Russian")
     Tr8n::Config.init(@current_language.locale, @current_user)
   end
-  
+
 end

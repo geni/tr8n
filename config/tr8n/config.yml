@@ -148,9 +148,9 @@ defaults: &defaults
   # Rules Engine Settings
   #############################################################################
   rules_engine:
-    language_rule_classes:    [Tr8n::NumericRule, Tr8n::GenderRule, Tr8n::GenderListRule, Tr8n::DateRule, Tr8n::ValueRule]
-    data_token_classes:       [Tr8n::Tokens::DataToken, Tr8n::Tokens::HiddenToken, Tr8n::Tokens::MethodToken, Tr8n::Tokens::TransformToken]
-    decoration_token_classes: [Tr8n::Tokens::DecorationToken]
+    language_rule_classes:    ["Tr8n::NumericRule", "Tr8n::GenderRule", "Tr8n::GenderListRule", "Tr8n::DateRule", "Tr8n::ValueRule"]
+    data_token_classes:       ["Tr8n::Tokens::DataToken", "Tr8n::Tokens::HiddenToken", "Tr8n::Tokens::MethodToken", "Tr8n::Tokens::TransformToken"]
+    decoration_token_classes: ["Tr8n::Tokens::DecorationToken"]
     allow_nil_token_values:   true
     allow_invalid_tokens:     error    # options: true, warn, error
     allow_unused_tokens:      error    # options: true, warn, error
@@ -175,7 +175,7 @@ defaults: &defaults
       token_suffixes:         [date]
       object_method:          to_date
     value_rule:
-      token_suffixes:         *
+      token_suffixes:         "*"
       object_method:          to_s
 
     # minimal rank makes the translation acceptable for subsitution and counts towards the translator rank
