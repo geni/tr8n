@@ -8,7 +8,7 @@ ENV["RAILS_ENV"] = "test"
 module CaptureRubyWarnings
   def warn(message)
     return if message =~ /assigned but unused variable/
-    return if caller[0] =~ /vendor/ # Ignore warnings from vendored code
+    return if caller[0] =~ /vendor/ || message =~ /vendor/ # Ignore warnings from vendored code
     super
   end
 end
@@ -23,8 +23,25 @@ unless defined?($SKIP_COVERAGE)
   end
 end
 
-require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
-require 'test_help'
+class Object
+  def tap_pp(*args)
+    pp [*args, self]
+    self
+  end
+end
+
+require_relative '../config/environment'
+
+class Tr8n::TestCase < ActiveRecord::TestCase
+
+  def setup
+    @current_user = Tr8n::Translator.create!(:id => 1, :user_id => 1, :name => "Mike", :gender => "male")
+    @default_language = Tr8n::Language.create!(:locale => Tr8n::Config.default_locale, :english_name => "English")
+    @current_language = Tr8n::Language.create!(:id => 1, :locale => "ru", :english_name => "Russian")
+    Tr8n::Config.init(@current_language.locale, @current_user)
+  end
+
+end
 
 # create database tables
 Dir[File.expand_path(File.dirname(__FILE__) + '/../db/migrate/*.rb')].each do |file|

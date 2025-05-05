@@ -43,16 +43,16 @@ class String
   end
 
   def tr8n_translated?
-    @tr8n_translated
+    defined?(@tr8n_translated) ? @tr8n_translated : false
   end
-  
+
   def html_safe
     @html_safe = true
     self
   end
-  
+
   def html_safe?
-    @html_safe
+    defined?(@html_safe) ? @html_safe : false
   end
-  
+
 end
