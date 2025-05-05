@@ -22,5 +22,11 @@ group :development, :test do
   gem 'rake'
   gem 'simplecov',       :require => false
   gem 'sqlite3'
-  gem 'test-unit', '~>3'
+  gem 'test-unit', '3.6.2' # >3.6.3 have problems with elapsed_time
+end
+
+group :vscode do
+  gem 'debase',         :require => false
+  gem 'ruby-debug-ide', :require => false
+  gem 'solargraph',     :require => false
 end

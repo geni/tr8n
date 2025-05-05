@@ -11,8 +11,6 @@ Rails::Initializer.run do |config|
     :session_key => '_tr8n_session',
     :secret => '09ae61ae208e3df7066ff7d514533fcd'
   }
+
+  config.rails_lts_options = { :default => :compatible}
 end
-
-$KCODE = 'UTF8'
-
-
