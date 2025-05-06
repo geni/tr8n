@@ -113,4 +113,4 @@ class Tr8n::TokenTest < Tr8n::TestCase
                   "Tr8n::Tokens::DecorationToken"], tokens.collect{|t| t.class.name}
   end
 
-end
+end # class Tr8n::TokenTest

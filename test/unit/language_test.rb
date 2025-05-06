@@ -5,8 +5,7 @@ class Tr8n::LanguageTest < Tr8n::TestCase
   def setup
     super
     @user = Tr8n::Translator.create!(:id => 2, :user_id => 2, :name => "Mike")
-    @russian = Tr8n::Language.for("ru")
-    @spanish = Tr8n::Language.create!(:id => 1, :locale => "es", :english_name => "Spanish")
+    @current_language = @russian
   end
 
   test "default language" do
@@ -44,4 +43,4 @@ class Tr8n::LanguageTest < Tr8n::TestCase
     assert_equal "Hello World", @default_language.translate("Hello World")
   end
 
-end
+end # class Tr8n::LanguageTest

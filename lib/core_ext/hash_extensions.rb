@@ -21,38 +21,44 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class String
+module Tr8n
+  module HashExtensions
 
-  def translate(desc = "", tokens = {}, options = {}, language = Tr8n::Config.current_language)
-    language.translate(self, desc, tokens, options)
-  end
+    # Return all combinations of a hash.
+    #
+    # Example:
+    #   {
+    #     :a => [1, 2]
+    #     :b => [1, 2]
+    #   }.combinations #=> [{:a=>1, :b=>1}, {:a=>1, :b=>2}, {:a=>2, :b=>1}, {:a=>2, :b=>2}]
+    #
+    def combinations
+      return [{}] if empty?
 
-  def pluralize_for(count, plural = nil)
-    return self if count==1
-    plural || pluralize
-  end
+      copy = dup
+      values = copy.delete(key = keys.first)
 
-  def trl(desc = "", tokens = {}, options = {}, language = Tr8n::Config.current_language)
-    translate(desc, tokens, options.merge(:skip_decorations => true), language)
-  end
+      result = []
+      copy.combinations.each do |tail|
+        values.each do |value|
+          result << tail.merge(key=>value)
+        end
+      end
 
-  def tr8n_translated
-    return self if frozen?
-    @tr8n_translated = true
-    self
-  end
+      result
+    end
 
-  def tr8n_translated?
-    defined?(@tr8n_translated) ? @tr8n_translated : false
-  end
+    def tr8n_translated
+      return self if frozen?
+      @tr8n_translated = true
+      self
+    end
 
-  def html_safe
-    @html_safe = true
-    self
-  end
+    def tr8n_translated?
+      defined?(@tr8n_translated) ? @tr8n_translated : false
+    end
 
-  def html_safe?
-    defined?(@html_safe) ? @html_safe : false
-  end
+  end # module HashExtensions
+end # module Tr8n
 
-end
+Hash.send(:include, Tr8n::HashExtensions)

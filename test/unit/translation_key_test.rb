@@ -5,8 +5,7 @@ class Tr8n::TranslationKeyTest < Tr8n::TestCase
   def setup
     super
     @user = Tr8n::Translator.create!(:id => 2, :user_id => 2, :name => "Mike")
-    @russian = Tr8n::Language.for("ru")
-    @spanish = Tr8n::Language.create!(:id => 1, :locale => "es", :english_name => "Spanish")
+    Tr8n::Config.init(@russian.locale, @current_user)
   end
 
   test "find or create a translation key" do
@@ -242,4 +241,4 @@ class Tr8n::TranslationKeyTest < Tr8n::TestCase
     assert_equal "10 сообщений", key.translate(@russian, :count => 10, :_messages => "messages")
   end
 
-end
+end # class Tr8n::TranslationKeyTest
