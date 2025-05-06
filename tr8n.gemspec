@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = 'https://github.com/berk/tr8n'
   gem.license       = 'MIT'
 
-  gem.add_dependency 'rails', '~> 2.3.0'
+  gem.add_dependency 'rails', '~> 8.0.0'
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
