@@ -53,3 +53,7 @@ end
 
 ActiveRecord::Migration.verbose = true
 ActiveRecord::Migrator.migrate("db/migrate/")
+
+Tr8n::Config.init_language('en-US', )
+Tr8n::Config.init_language('ru')
+Tr8n::Config.init_language('es')
