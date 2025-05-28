@@ -15,5 +15,5 @@ bundle config --local without vscode
 rm Gemfile.lock
 bundle install
 
-#bundle exec rails db:create db:migrate
+rm db/test.sqlite3
 bundle exec rake test
