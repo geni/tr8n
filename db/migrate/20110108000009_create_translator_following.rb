@@ -1,4 +1,4 @@
-class CreateTranslatorFollowing < ActiveRecord::Migration
+class CreateTranslatorFollowing < ActiveRecord::Migration[4.2]
   def self.up
     create_table :tr8n_translator_following do |t|
       t.integer     :translator_id
@@ -6,7 +6,7 @@ class CreateTranslatorFollowing < ActiveRecord::Migration
       t.string      :object_type
       t.timestamps
     end
-    
+
     add_index :tr8n_translator_following, [:translator_id]
   end
 

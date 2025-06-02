@@ -1,4 +1,4 @@
-class CreateIpLocations < ActiveRecord::Migration
+class CreateIpLocations < ActiveRecord::Migration[4.2]
   def self.up
     create_table :tr8n_ip_locations do |t|
       t.integer   :low,       :limit => 8

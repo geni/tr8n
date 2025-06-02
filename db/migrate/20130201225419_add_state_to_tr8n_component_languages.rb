@@ -1,4 +1,4 @@
-class AddStateToTr8nComponentLanguages < ActiveRecord::Migration
+class AddStateToTr8nComponentLanguages < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tr8n_component_languages, :state, :string
   end

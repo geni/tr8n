@@ -1,4 +1,4 @@
-class AddNameToTr8nTranslationSources < ActiveRecord::Migration
+class AddNameToTr8nTranslationSources < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tr8n_translation_sources, :name, :string
     add_column :tr8n_translation_sources, :description, :text

@@ -21,7 +21,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class CreateTr8nSyncTables < ActiveRecord::Migration
+class CreateTr8nSyncTables < ActiveRecord::Migration[4.2]
   def self.up
     create_table :tr8n_sync_logs do |t|
       t.timestamp :started_at
@@ -32,7 +32,7 @@ class CreateTr8nSyncTables < ActiveRecord::Migration
       t.integer   :translations_received
       t.timestamps
     end
-    
+
     add_column :tr8n_translation_keys, :synced_at, :timestamp
     add_index :tr8n_translation_keys, :synced_at
     add_column :tr8n_translations, :synced_at, :timestamp

@@ -1,5 +1,5 @@
-class CreateTr8nLanguageCaseRules < ActiveRecord::Migration
-  
+class CreateTr8nLanguageCaseRules < ActiveRecord::Migration[4.2]
+
   def self.up
     create_table :tr8n_language_case_rules do |t|
       t.integer :language_case_id, :null => false

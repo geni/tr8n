@@ -1,4 +1,4 @@
-class AddExternalKeysToTr8nLanguages < ActiveRecord::Migration
+class AddExternalKeysToTr8nLanguages < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tr8n_languages, :google_key, :string
     add_column :tr8n_languages, :facebook_key, :string

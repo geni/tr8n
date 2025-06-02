@@ -1,4 +1,4 @@
-class RenameTr8nLanguageCaseValueMapKeyToKeyword < ActiveRecord::Migration
+class RenameTr8nLanguageCaseValueMapKeyToKeyword < ActiveRecord::Migration[4.2]
   def self.up
     rename_column :tr8n_language_case_value_maps, :key, :keyword
   end

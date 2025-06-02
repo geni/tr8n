@@ -1,4 +1,4 @@
-class CreateTr8nNotifications < ActiveRecord::Migration
+class CreateTr8nNotifications < ActiveRecord::Migration[4.2]
   def self.up
     create_table :tr8n_notifications do |t|
       t.string      :type

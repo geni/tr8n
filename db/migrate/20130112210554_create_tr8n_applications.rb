@@ -1,4 +1,4 @@
-class CreateTr8nApplications < ActiveRecord::Migration
+class CreateTr8nApplications < ActiveRecord::Migration[4.2]
   def self.up
     create_table :tr8n_applications do |t|
       t.string :key

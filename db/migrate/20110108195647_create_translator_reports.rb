@@ -1,4 +1,4 @@
-class CreateTranslatorReports < ActiveRecord::Migration
+class CreateTranslatorReports < ActiveRecord::Migration[4.2]
   def self.up
     create_table :tr8n_translator_reports do |t|
       t.integer     :translator_id
@@ -9,7 +9,7 @@ class CreateTranslatorReports < ActiveRecord::Migration
       t.text        :comment
       t.timestamps
     end
-    
+
     add_index :tr8n_translator_reports, [:translator_id]
   end
 

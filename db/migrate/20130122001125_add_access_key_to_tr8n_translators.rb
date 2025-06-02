@@ -1,4 +1,4 @@
-class AddAccessKeyToTr8nTranslators < ActiveRecord::Migration
+class AddAccessKeyToTr8nTranslators < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tr8n_translators, :access_key, :string
     add_index :tr8n_translators, [:access_key], :name => "tr8n_tran_key"

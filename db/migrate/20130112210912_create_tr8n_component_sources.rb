@@ -1,4 +1,4 @@
-class CreateTr8nComponentSources < ActiveRecord::Migration
+class CreateTr8nComponentSources < ActiveRecord::Migration[4.2]
   def self.up
     create_table :tr8n_component_sources do |t|
       t.integer :component_id

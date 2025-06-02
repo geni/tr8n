@@ -1,4 +1,4 @@
-class UpdateTr8nTranslatorIdTypes < ActiveRecord::Migration
+class UpdateTr8nTranslatorIdTypes < ActiveRecord::Migration[4.2]
   def self.up
     change_column :tr8n_language_case_rules, :translator_id, :integer, :limit => 8
     change_column :tr8n_language_case_value_maps, :translator_id, :integer, :limit => 8

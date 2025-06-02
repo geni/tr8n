@@ -1,4 +1,4 @@
-class CreateTranslationDomains < ActiveRecord::Migration
+class CreateTranslationDomains < ActiveRecord::Migration[4.2]
   def self.up
     create_table :tr8n_translation_domains do |t|
       t.string        :name

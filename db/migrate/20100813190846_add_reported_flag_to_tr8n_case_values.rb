@@ -1,4 +1,4 @@
-class AddReportedFlagToTr8nCaseValues < ActiveRecord::Migration
+class AddReportedFlagToTr8nCaseValues < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tr8n_language_case_value_maps, :reported, :boolean
   end

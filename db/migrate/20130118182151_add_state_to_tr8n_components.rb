@@ -1,4 +1,4 @@
-class AddStateToTr8nComponents < ActiveRecord::Migration
+class AddStateToTr8nComponents < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tr8n_components, :state, :string
   end

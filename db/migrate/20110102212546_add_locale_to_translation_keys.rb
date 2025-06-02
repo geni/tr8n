@@ -1,4 +1,4 @@
-class AddLocaleToTranslationKeys < ActiveRecord::Migration
+class AddLocaleToTranslationKeys < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tr8n_translation_keys, :locale, :string
   end

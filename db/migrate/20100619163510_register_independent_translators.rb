@@ -26,7 +26,7 @@
 # or if you want to register independent, not linked translators
 ###########################################################################
 
-class RegisterIndependentTranslators < ActiveRecord::Migration
+class RegisterIndependentTranslators < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tr8n_translators, :name, :string
     add_column :tr8n_translators, :gender, :string
@@ -35,7 +35,7 @@ class RegisterIndependentTranslators < ActiveRecord::Migration
     add_column :tr8n_translators, :mugshot, :string
     add_column :tr8n_translators, :link, :string
     add_column :tr8n_translators, :locale, :string
-    
+
     add_index :tr8n_translators, [:email]
     add_index :tr8n_translators, [:email, :password]
   end

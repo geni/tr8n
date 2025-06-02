@@ -22,7 +22,7 @@
 #++
 
 # Used for testing only
-class CreateTestUsers < ActiveRecord::Migration
+class CreateTestUsers < ActiveRecord::Migration[4.2]
   def self.up
     create_table :users do |t|
       t.string  :name
@@ -32,7 +32,7 @@ class CreateTestUsers < ActiveRecord::Migration
       t.string  :gender
       t.string  :link
       t.string  :locale
-      
+
       t.timestamps
     end
   end

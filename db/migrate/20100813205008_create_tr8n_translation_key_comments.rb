@@ -1,4 +1,4 @@
-class CreateTr8nTranslationKeyComments < ActiveRecord::Migration
+class CreateTr8nTranslationKeyComments < ActiveRecord::Migration[4.2]
   def self.up
     create_table :tr8n_translation_key_comments do |t|
       t.integer :language_id, :null => false

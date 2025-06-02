@@ -1,4 +1,4 @@
-class AddLevelToTr8nTranslator < ActiveRecord::Migration
+class AddLevelToTr8nTranslator < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tr8n_translators, :level, :integer, :default => 0
   end

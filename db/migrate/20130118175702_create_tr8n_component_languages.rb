@@ -1,4 +1,4 @@
-class CreateTr8nComponentLanguages < ActiveRecord::Migration
+class CreateTr8nComponentLanguages < ActiveRecord::Migration[4.2]
   def self.up
     create_table :tr8n_component_languages do |t|
       t.integer :component_id

@@ -21,7 +21,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class AddRemoteIdToTr8nTranslators < ActiveRecord::Migration
+class AddRemoteIdToTr8nTranslators < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tr8n_translators, :remote_id, :integer
   end
