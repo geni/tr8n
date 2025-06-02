@@ -23,6 +23,11 @@ into public/javascripts/tr8n.js and public/javascripts/tr8n-compiled.js.
 Make sure you bump the version number in the VERSION file before you commit
 the updated tr8n-compiled.js.
 
+## Annotating models
+```sh
+bundle exec annotaterb models -p before
+``
+
 ## Testing
 
 ### Running Automated Tests
