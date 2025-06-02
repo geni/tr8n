@@ -1,24 +1,21 @@
-# prevent re-drawing of routes if this gem is required multiple times
-return unless defined?(@drawn)
-@drawn = true
+Tr8n::Engine.routes.draw do
 
-ActionController::Routing::Routes.draw do |map|
   [:awards, :chart, :forum, :glossary, :help, :language_cases,
-   :language, :phrases, :translations, :translator, :home, :login].each do |ctrl|
-    map.connect "tr8n/#{ctrl}/:action", :controller => "tr8n/#{ctrl}"
+   :language, :phrases, :translations, :translator, :home, :login
+  ].each do |ctrl|
+    get "/#{ctrl}/:action", :to => "#{ctrl}##{action}"
   end
 
-  [:chart, :clientsdk, :forum, :glossary, :language, :translation, :translation_key, :translator, :applications].each do |ctrl|
-    map.connect "tr8n/admin/#{ctrl}/:action", :controller => "tr8n/admin/#{ctrl}"
+  [:chart, :clientsdk, :forum, :glossary, :language, :translation,
+   :translation_key, :translator, :applications
+  ].each do |ctrl|
+    get "/admin/#{ctrl}/:action", :to => "admin/#{ctrl}##{action}"
   end
 
   [:application, :language, :translation, :translator].each do |ctrl|
-    map.connect "tr8n/api/v1/#{ctrl}/:action", :controller => "tr8n/api/v1/#{ctrl}"
+    get "/api/v1/#{ctrl}/:action", :to => "api/v1/#{ctrl}##{action}"
   end
 
-  map.connect "tr8n/api/v1/language/translate.js", :controller => "tr8n/api/v1/language", :action => "translate"
-
-  map.namespace('tr8n') do |tr8n|
-    tr8n.root :controller => 'home'
-  end
+  get "/api/v1/language/translate.js", :to => 'api/v1/language#translate'
+  get '/', :to => 'home#index'
 end
