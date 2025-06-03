@@ -1,18 +1,8 @@
-# this will need to go away once we make tr8n a gem
-$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + "/../../will_filter/app/models")
+require 'mocha/minitest'
 
 require 'pp'
 
 ENV["RAILS_ENV"] = "test"
-
-module CaptureRubyWarnings
-  def warn(message)
-    return if message =~ /assigned but unused variable/
-    return if caller[0] =~ /vendor/ || message =~ /vendor/ # Ignore warnings from vendored code
-    super
-  end
-end
-Warning.extend(CaptureRubyWarnings)
 
 unless defined?($SKIP_COVERAGE)
   require 'simplecov'
@@ -30,9 +20,7 @@ class Object
   end
 end
 
-require_relative '../config/environment'
-
-class Tr8n::TestCase < ActiveRecord::TestCase
+class Tr8n::TestCase < ActiveSupport::TestCase
 
   def setup
     @current_user = Tr8n::Translator.create!(:id => 1, :user_id => 1, :name => 'Mike', :gender => 'male')
@@ -47,13 +35,12 @@ class Tr8n::TestCase < ActiveRecord::TestCase
 end
 
 # create database tables
-Dir[File.expand_path(File.dirname(__FILE__) + '/../db/migrate/*.rb')].each do |file|
-  require file
-end
+require_relative "../test/dummy/config/environment"
+ActiveRecord::Migrator.migrations_paths = [ File.expand_path("../test/dummy/db/migrate", __dir__) ]
+ActiveRecord::Migrator.migrations_paths << File.expand_path("../db/migrate", __dir__)
 
-ActiveRecord::Migration.verbose = true
-ActiveRecord::Migrator.migrate("db/migrate/")
+require "rails/test_help"
 
-Tr8n::Config.init_language('en-US', )
+Tr8n::Config.init_language('en-US')
 Tr8n::Config.init_language('ru')
 Tr8n::Config.init_language('es')

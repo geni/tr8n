@@ -29,12 +29,12 @@ class Tr8n::LanguageTest < Tr8n::TestCase
   end
 
   test "prohibited words" do
-    Tr8n::Config.default_language.update_attributes(:curse_words => "word1, word2, word3")
+    Tr8n::Config.default_language.update(:curse_words => "word1, word2, word3")
     assert_equal ["word1", "word2", "word3"], @default_language.bad_words
     assert !@default_language.clean_sentence?("I am using word1 in my sentence")
 
     @current_language.reload
-    @current_language.update_attributes(:curse_words => "-word1, word4, word5")
+    @current_language.update(:curse_words => "-word1, word4, word5")
     assert_equal ["word4", "word5", "word2", "word3"], @current_language.bad_words
     assert @current_language.clean_sentence?("I am using word1 in my sentence")
   end

@@ -4,6 +4,22 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
+# == Schema Information
+#
+# Table name: tr8n_component_languages
+#
+#  id           :integer          not null, primary key
+#  state        :string
+#  created_at   :datetime
+#  updated_at   :datetime
+#  component_id :integer
+#  language_id  :integer
+#
+# Indexes
+#
+#  tr8n_comp_lang_comp_id  (component_id)
+#  tr8n_comp_lang_lang_id  (language_id)
+#
 one: {}
 # column: value
 #

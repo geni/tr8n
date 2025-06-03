@@ -14,7 +14,6 @@ group :development, :test do
   gem 'puma'
   gem 'rake'
   gem 'simplecov',       :require => false
-  gem 'test-unit'
 end
 
 group :vscode do

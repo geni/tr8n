@@ -156,7 +156,7 @@ class Tr8n::TranslationKeyTest < Tr8n::TestCase
 
   test "nested tokens" do
     # see config/tr8n/tokens/decorations.yml
-    @user.stubs(:name).returns("Michael")
+    @user.stubs(:name => 'Michael')
 
     key = Tr8n::TranslationKey.find_or_create("Hello [b: {user.name}]")
     assert_equal ["{user.name}", "[b: {user.name}]"], key.tokens.collect{|t| t.full_name}
@@ -231,8 +231,8 @@ class Tr8n::TranslationKeyTest < Tr8n::TestCase
 
   test "number based translations" do
     key    = Tr8n::TranslationKey.find_or_create("{count} {_messages}")
-    lrule1 = Tr8n::NumericRule.create(:language => @russian, :definition => {:multipart => false, :part1 => 'is', :value1 => '1'})
-    lrule2 = Tr8n::NumericRule.create(:language => @russian, :definition => {:multipart => false, :part1 => 'is_not', :value1 => '1'})
+    lrule1 = Tr8n::NumericRule.create!(:translator => @user, :language => @russian, :definition => {:multipart => false, :part1 => 'is', :value1 => '1'})
+    lrule2 = Tr8n::NumericRule.create!(:translator => @user, :language => @russian, :definition => {:multipart => false, :part1 => 'is_not', :value1 => '1'})
 
     assert key.add_translation("{count} сообщение", [{:token => 'count', :rule_id => [lrule1.id]}])
     assert key.add_translation("{count} сообщений", [{:token => 'count', :rule_id => [lrule2.id]}])
