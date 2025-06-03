@@ -52,7 +52,7 @@ class Tr8n::LanguageController < Tr8n::BaseController
       return render(:partial => params[:section], :locals => {:mode => params[:mode].to_sym})
     end
 
-    tr8n_current_language.update_attributes(params[:language])
+    tr8n_current_language.update(params[:language])
 
     if params[:section] == 'grammar'
       old_rule_ids = tr8n_current_language.rules.collect{|rule| rule.id}

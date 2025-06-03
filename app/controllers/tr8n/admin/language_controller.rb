@@ -23,7 +23,7 @@
 
 class Tr8n::Admin::LanguageController < Tr8n::Admin::BaseController
   unloadable
-  
+
   def index
     @languages = Tr8n::Language.filter(:params => params, :filter => Tr8n::LanguageFilter)
   end
@@ -52,24 +52,24 @@ class Tr8n::Admin::LanguageController < Tr8n::Admin::BaseController
       params[:languages].each do |lang_id|
         language = Tr8n::Language.find_by_id(lang_id)
         language.enable! if language
-      end  
+      end
     end
     redirect_to_source
   end
-  
+
   def disable
     params[:languages] = [params[:lang_id]] if params[:lang_id]
     if params[:languages]
       params[:languages].each do |lang_id|
         language = Tr8n::Language.find_by_id(lang_id)
         language.disable! if language
-      end  
+      end
     end
     redirect_to_source
   end
-    
+
   def charts
-    
+
   end
 
   def metrics
@@ -89,7 +89,7 @@ class Tr8n::Admin::LanguageController < Tr8n::Admin::BaseController
     Tr8n::LanguageMetric.calculate_total_metrics
     redirect_to_source
   end
-  
+
   def rules
     @rules = Tr8n::LanguageRule.filter(:params => params, :filter => Tr8n::LanguageRuleFilter)
   end
@@ -97,48 +97,48 @@ class Tr8n::Admin::LanguageController < Tr8n::Admin::BaseController
   def cases
     @cases = Tr8n::LanguageCase.filter(:params => params, :filter => Tr8n::LanguageCaseFilter)
   end
-  
+
   def lb_update
     @language = Tr8n::Language.find_by_id(params[:lang_id]) unless params[:lang_id].blank?
     @language = Tr8n::Language.new unless @language
-    
+
     render :layout => false
   end
 
   def update
     language = Tr8n::Language.find_by_id(params[:language][:id]) unless params[:language][:id].blank?
-    
+
     if language
-      language.update_attributes(params[:language])
+      language.update(params[:language])
     else
       language = Tr8n::Language.create(params[:language])
       language.reset!
     end
-    
+
     redirect_to_source
   end
 
   def case_rules
     @case_rules = Tr8n::LanguageCaseRule.filter(:params => params, :filter => Tr8n::LanguageCaseRuleFilter)
   end
-  
+
   def case_values
     @case_values = Tr8n::LanguageCaseValueMap.filter(:params => params, :filter => Tr8n::LanguageCaseValueMapFilter)
   end
-  
+
   def lb_value_map
     @map = Tr8n::LanguageCaseValueMap.find_by_id(params[:map_id]) if params[:map_id]
     @map ||= Tr8n::LanguageCaseValueMap.new(:language => tr8n_current_language)
-    
+
     render :layout => false
   end
-  
+
   def delete_value_map
     map = Tr8n::LanguageCaseValueMap.find_by_id(params[:map_id]) if params[:map_id]
     map.destroy if map
 
     redirect_to(:action => :index)
   end
-  
-  
+
+
 end

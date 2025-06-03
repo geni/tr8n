@@ -46,7 +46,7 @@ class Tr8n::TranslatorController < Tr8n::BaseController
     if request.post?
       verify_authenticity_token
 
-      tr8n_current_translator.update_attributes(params[:translator])
+      tr8n_current_translator.update(params[:translator])
       tr8n_current_translator.reload
 
       trfn("Your information has been updated")

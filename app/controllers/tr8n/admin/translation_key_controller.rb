@@ -23,16 +23,16 @@
 
 class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
   unloadable
-  
+
   def index
     @keys = Tr8n::TranslationKey.filter(:params => params, :filter => Tr8n::TranslationKeyFilter)
   end
-  
+
   def view
     @key = Tr8n::TranslationKey.find_by_id(params[:key_id])
     unless @key
       trfe("Invalid key id")
-      return redirect_to(:action => :index) 
+      return redirect_to(:action => :index)
     end
 
     klass = {
@@ -48,22 +48,22 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
     @results = klass.filter(:params => params.merge(filter))
     @results.wf_filter.extra_params.merge!(extra_params)
   end
-  
+
   def delete
     params[:keys] = [params[:key_id]] if params[:key_id]
     if params[:keys]
       params[:keys].each do |key_id|
         key = Tr8n::TranslationKey.find_by_id(key_id)
         key.destroy if key
-      end  
+      end
     end
     redirect_to_source
   end
-  
+
   def lb_update
     @key = Tr8n::TranslationKey.find_by_id(params[:key_id]) unless params[:key_id].blank?
     @key = Tr8n::TranslationKey.new unless @key
-    
+
     render :layout => false
   end
 
@@ -74,7 +74,7 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
   def lb_add_to_source
     if request.post?
       if params[:source][:source].strip.blank?
-        source = Tr8n::TranslationSource.find_by_id(params[:source_id]) 
+        source = Tr8n::TranslationSource.find_by_id(params[:source_id])
       else
         source = Tr8n::TranslationSource.create(params[:source])
       end
@@ -83,7 +83,7 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
       keys = keys.split(',')
       keys = Tr8n::TranslationKey.find(:all, :conditions => ["id in (?)", keys])
       keys.each do |key|
-        Tr8n::TranslationKeySource.find_or_create(key, source) 
+        Tr8n::TranslationKeySource.find_or_create(key, source)
       end
 
       return redirect_to_source
@@ -95,9 +95,9 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
 
   def update
     key = Tr8n::TranslationKey.find_by_id(params[:translation_key][:id]) unless params[:translation_key][:id].blank?
-    
+
     if key
-      key.update_attributes(params[:translation_key])
+      key.update(params[:translation_key])
     else
       key = Tr8n::TranslationKey.create(params[:translation_key])
     end
@@ -106,7 +106,7 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
 
     redirect_to_source
   end
-  
+
   def update_lock
     if request.post?
       verify_authenticity_token
@@ -128,13 +128,13 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
     @keys = @keys.split(',')
     @keys = Tr8n::TranslationKey.find(:all, :conditions => ["id in (?)", @keys])
     @key = @keys.first
-    
+
     render :layout => false
   end
 
   def merge
     master_key = Tr8n::TranslationKey.find_by_id(params[:translation_key].delete(:id))
-    
+
     keys = params[:keys] || ''
     keys = keys.split(',')
     keys = Tr8n::TranslationKey.find(:all, :conditions => ["id in (?)", keys])
@@ -142,33 +142,33 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
       next if key.id == master_key.id
       key.translations.each do |translation|
         translation.clear_cache
-        translation.update_attributes(:translation_key => master_key)
+        translation.update(:translation_key => master_key)
       end
       key.translation_key_comments.each do |comment|
-        comment.update_attributes(:translation_key => master_key)
+        comment.update(:translation_key => master_key)
       end
       key.translation_key_sources.each do |source|
-        source.update_attributes(:translation_key => master_key)
+        source.update(:translation_key => master_key)
       end
-      
+
       key.reload
       key.destroy
     end
-    
+
     params[:translation_key][:label].strip!
     params[:translation_key][:description].strip!
-    master_key.update_attributes(params[:translation_key])
+    master_key.update(params[:translation_key])
     master_key.reset_key!
     master_key.update_translation_count!
     master_key.unlock_all!
-    
+
     redirect_to_source
   end
-  
+
   def comments
     @comments = Tr8n::TranslationKeyComment.filter(:params => params, :filter => Tr8n::TranslationKeyCommentFilter)
   end
-  
+
   def delete_comment
     if request.post?
       verify_authenticity_token
@@ -178,17 +178,17 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
         params[:comments].each do |comment_id|
           comment = Tr8n::TranslationKeyComment.find_by_id(comment_id)
           comment.destroy if comment
-        end  
+        end
       end
     end
 
     redirect_to_source
   end
-  
+
   def locks
     @locks = Tr8n::TranslationKeyLock.filter(:params => params, :filter => Tr8n::TranslationKeyLockFilter)
   end
-  
+
   def delete_lock
     if request.post?
       verify_authenticity_token
@@ -198,18 +198,18 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
         params[:locks].each do |lock_id|
           lock = Tr8n::TranslationKeyLock.find_by_id(lock_id)
           lock.destroy if lock
-        end  
+        end
       end
     end
 
     redirect_to_source
   end
-  
+
   def reset_verification_flags
     Tr8n::TranslationKey.connection.execute("update tr8n_translation_keys set verified_at = null")
     redirect_to_source
   end
-  
+
   def delete_unverified_keys
     Tr8n::TranslationKey.find(:all, :conditions => "verified_at is null").each do |key|
       next if key.translations.any?
@@ -222,5 +222,5 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
     Tr8n::TranslationKey.connection.execute("update tr8n_translation_keys set translation_count = (select count(id) from tr8n_translations where tr8n_translations.translation_key_id = tr8n_translation_keys.id)")
     redirect_to_source
   end
-  
+
 end
