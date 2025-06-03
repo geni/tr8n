@@ -37,7 +37,7 @@ module Tr8n
     end
 
     def translate(format = :default, language = Tr8n::Config.current_language, options = {})
-      label = (format.is_a?(String) ? format.clone : Tr8n::Config.default_date_formats[format].clone)
+      label = (format.is_a?(String) ? format: Tr8n::Config.default_date_formats[format]).dup
       symbols = label.scan(/(%\w)/).flatten.uniq
 
       selected_tokens = []

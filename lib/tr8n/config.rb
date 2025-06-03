@@ -22,6 +22,7 @@
 #++
 
 require 'json'
+require_relative 'cache'
 
 class Tr8n::Config
 
@@ -189,7 +190,7 @@ class Tr8n::Config
     lang = Tr8n::Language.find_or_create(locale, info[:english_name])
     info[:right_to_left] = false if info[:right_to_left].nil?
     fallback_key = info.delete(:fallback_key)
-    lang.update_attributes(info)
+    lang.update(info)
     lang.reset!
     lang
   end
@@ -251,7 +252,7 @@ class Tr8n::Config
   end
 
   def self.load_yml(file_path, for_env = env)
-    yml = YAML.load_file("#{root}#{file_path}")
+    yml = YAML.load_file("#{root}#{file_path}", :aliases => true)
     yml = yml[for_env] unless for_env.nil?
     HashWithIndifferentAccess.new(yml)
   end
@@ -790,25 +791,25 @@ class Tr8n::Config
   #########################################################
   def self.strftime_symbol_to_token(symbol)
     {
-      "%a" => "{short_week_day_name}",
-      "%A" => "{week_day_name}",
-      "%b" => "{short_month_name}",
-      "%B" => "{month_name}",
-      "%p" => "{am_pm}",
-      "%d" => "{days}",
-      "%e" => "{day_of_month}",
-      "%j" => "{year_days}",
-      "%m" => "{months}",
-      "%W" => "{week_num}",
-      "%w" => "{week_days}",
-      "%y" => "{short_years}",
-      "%Y" => "{years}",
-      "%l" => "{trimed_hour}",
-      "%H" => "{full_hours}",
-      "%I" => "{short_hours}",
-      "%M" => "{minutes}",
-      "%S" => "{seconds}",
-      "%s" => "{since_epoch}"
+      '%a' => String.new('{short_week_day_name}'),
+      '%A' => String.new('{week_day_name}'),
+      '%b' => String.new('{short_month_name}'),
+      '%B' => String.new('{month_name}'),
+      '%p' => String.new('{am_pm}'),
+      '%d' => String.new('{days}'),
+      '%e' => String.new('{day_of_month}'),
+      '%j' => String.new('{year_days}'),
+      '%m' => String.new('{months}'),
+      '%W' => String.new('{week_num}'),
+      '%w' => String.new('{week_days}'),
+      '%y' => String.new('{short_years}'),
+      '%Y' => String.new('{years}'),
+      '%l' => String.new('{trimed_hour}'),
+      '%H' => String.new('{full_hours}'),
+      '%I' => String.new('{short_hours}'),
+      '%M' => String.new('{minutes}'),
+      '%S' => String.new('{seconds}'),
+      '%s' => String.new('{since_epoch}')
     }[symbol]
   end
 
