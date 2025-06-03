@@ -21,6 +21,23 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
+# == Schema Information
+#
+# Table name: tr8n_language_rules
+#
+#  id            :integer          not null, primary key
+#  definition    :text
+#  type          :string
+#  created_at    :datetime
+#  updated_at    :datetime
+#  language_id   :integer          not null
+#  translator_id :integer
+#
+# Indexes
+#
+#  index_tr8n_language_rules_on_language_id                    (language_id)
+#  index_tr8n_language_rules_on_language_id_and_translator_id  (language_id,translator_id)
+#
 class Tr8n::GenderListRule < Tr8n::LanguageRule
   
   def self.description

@@ -21,20 +21,36 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::ComponentTranslator < ActiveRecord::Base
-  set_table_name :tr8n_component_translators
+# == Schema Information
+#
+# Table name: tr8n_component_translators
+#
+#  id            :integer          not null, primary key
+#  state         :string
+#  created_at    :datetime
+#  updated_at    :datetime
+#  component_id  :integer
+#  language_id   :integer
+#  translator_id :integer
+#
+# Indexes
+#
+#  tr8n_comp_trn_comp_id  (component_id)
+#  tr8n_comp_trn_trn_id   (translator_id)
+#
+class Tr8n::ComponentTranslator < ApplicationRecord
 
   belongs_to :component, :class_name => 'Tr8n::Component'
   belongs_to :translator, :class_name => 'Tr8n::Translator'
   belongs_to :language, :class_name => 'Tr8n::Language'
 
   def self.find_or_create(component, translator)
-    cs = find(:first, :conditions => ["component_id = ? and translator_id = ?", component.id, translator.id]) 
+    cs = find(:first, :conditions => ["component_id = ? and translator_id = ?", component.id, translator.id])
     cs || create(:component => component, :translator => translator)
   end
 
   def after_create
-    Tr8n::Notification.distribute(self)    
+    Tr8n::Notification.distribute(self)
   end
 
 end

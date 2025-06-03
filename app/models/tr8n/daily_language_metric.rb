@@ -21,6 +21,28 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
+# == Schema Information
+#
+# Table name: tr8n_language_metrics
+#
+#  id                   :integer          not null, primary key
+#  key_count            :integer          default(0)
+#  locked_key_count     :integer          default(0)
+#  metric_date          :date
+#  translated_key_count :integer          default(0)
+#  translation_count    :integer          default(0)
+#  translator_count     :integer          default(0)
+#  type                 :string
+#  user_count           :integer          default(0)
+#  created_at           :datetime
+#  updated_at           :datetime
+#  language_id          :integer          not null
+#
+# Indexes
+#
+#  index_tr8n_language_metrics_on_created_at   (created_at)
+#  index_tr8n_language_metrics_on_language_id  (language_id)
+#
 class Tr8n::DailyLanguageMetric < Tr8n::LanguageMetric
 
   def update_metrics!

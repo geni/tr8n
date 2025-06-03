@@ -21,6 +21,29 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
+# == Schema Information
+#
+# Table name: tr8n_translation_keys
+#
+#  id                :integer          not null, primary key
+#  admin             :boolean
+#  description       :text
+#  key               :string           not null
+#  label             :text             not null
+#  level             :integer          default(0)
+#  locale            :string
+#  synced_at         :datetime
+#  translation_count :integer
+#  type              :string
+#  verified_at       :datetime
+#  created_at        :datetime
+#  updated_at        :datetime
+#
+# Indexes
+#
+#  index_tr8n_translation_keys_on_key        (key) UNIQUE
+#  index_tr8n_translation_keys_on_synced_at  (synced_at)
+#
 class Tr8n::RelationshipKey < Tr8n::TranslationKey
 
   def self.normalize_key(label)

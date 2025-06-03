@@ -21,14 +21,34 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::LanguageCase < ActiveRecord::Base
-  set_table_name :tr8n_language_cases
+# == Schema Information
+#
+# Table name: tr8n_language_cases
+#
+#  id            :integer          not null, primary key
+#  application   :string
+#  description   :text
+#  keyword       :string
+#  latin_name    :string
+#  native_name   :string
+#  created_at    :datetime
+#  updated_at    :datetime
+#  language_id   :integer          not null
+#  translator_id :bigint
+#
+# Indexes
+#
+#  index_tr8n_language_cases_on_language_id                    (language_id)
+#  index_tr8n_language_cases_on_language_id_and_keyword        (language_id,keyword)
+#  index_tr8n_language_cases_on_language_id_and_translator_id  (language_id,translator_id)
+#
+class Tr8n::LanguageCase < ApplicationRecord
 
   belongs_to :language, :class_name => "Tr8n::Language"
   belongs_to :translator, :class_name => "Tr8n::Translator"
-  has_many   :language_case_rules, :class_name => "Tr8n::LanguageCaseRule", :order => 'position asc', :dependent => :destroy
+  has_many   :language_case_rules, Proc.new{order(:position => 'asc')}, :class_name => "Tr8n::LanguageCaseRule", :dependent => :destroy
 
-  serialize :definition
+  serialize :definition, :type => HashWithIndifferentAccess, :coder => YAML
 
   def self.by_id(case_id)
     Tr8n::Cache.fetch("language_case_#{case_id}") do

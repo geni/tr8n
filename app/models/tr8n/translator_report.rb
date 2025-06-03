@@ -21,10 +21,27 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::TranslatorReport < ActiveRecord::Base
-  set_table_name :tr8n_translator_reports
-  
-  belongs_to :translator, :class_name => "Tr8n::Translator"   
+# == Schema Information
+#
+# Table name: tr8n_translator_reports
+#
+#  id            :integer          not null, primary key
+#  comment       :text
+#  object_type   :string
+#  reason        :string
+#  state         :string
+#  created_at    :datetime
+#  updated_at    :datetime
+#  object_id     :integer
+#  translator_id :bigint
+#
+# Indexes
+#
+#  index_tr8n_translator_reports_on_translator_id  (translator_id)
+#
+class Tr8n::TranslatorReport < ApplicationRecord
+
+  belongs_to :translator, :class_name => "Tr8n::Translator"
   belongs_to :object, :polymorphic => true
 
   def self.find_or_create(translator, object)
@@ -34,11 +51,11 @@ class Tr8n::TranslatorReport < ActiveRecord::Base
   def self.report_for(translator, object)
     find(:first, :conditions => ["translator_id = ? and object_type = ? and object_id = ?", translator.id, object.class.name, object.id])
   end
-  
+
   def self.title_for(object)
     object.class.name.underscore.split('_').collect{|item| item.capitalize}.join(' ')
   end
-  
+
   def self.default_reasons_for(object)
     if object.is_a?(Tr8n::TranslationKey)
       return ['Bad Grammar', 'Bad Tokens', 'Premature Lock', 'Other:']
@@ -63,20 +80,20 @@ class Tr8n::TranslatorReport < ActiveRecord::Base
     if object.is_a?(Tr8n::TranslationKeyComment)
       return ['Inappropriate Language', 'Spam', 'Vandalism', 'Other:']
     end
-    
+
     ['Inappropriate Language']
   end
 
   def self.submit(translator, object, reason, comment)
     report = find_or_create(translator, object)
-    report.update_attributes(:reason => reason, :comment => comment)
-    
-    if object.is_a?(Tr8n::Translation) 
+    report.update(:reason => reason, :comment => comment)
+
+    if object.is_a?(Tr8n::Translation)
       object.vote!(translator, -100)
       submit(translator, object.translator, "bad translation #{object.id}", comment)
     elsif object.is_a?(Tr8n::LanguageForumMessage)
       submit(translator, object.translator, "bad message #{object.id}", comment)
     end
   end
-  
+
 end

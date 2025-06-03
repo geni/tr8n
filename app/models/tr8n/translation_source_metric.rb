@@ -21,14 +21,31 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::TranslationSourceMetric < ActiveRecord::Base
-  set_table_name :tr8n_translation_source_metrics
-  
-  belongs_to  :translation_source,            :class_name => "Tr8n::TranslationSource"
-  belongs_to  :language,                      :class_name => "Tr8n::Language"
-  
+# == Schema Information
+#
+# Table name: tr8n_translation_source_metrics
+#
+#  id                    :integer          not null, primary key
+#  key_count             :integer          default(0)
+#  locked_key_count      :integer          default(0)
+#  translated_key_count  :integer          default(0)
+#  translation_count     :integer          default(0)
+#  created_at            :datetime
+#  updated_at            :datetime
+#  language_id           :integer          not null
+#  translation_source_id :integer          not null
+#
+# Indexes
+#
+#  tr8n_tsm_on_translation_source_id_and_language_id  (translation_source_id,language_id)
+#
+class Tr8n::TranslationSourceMetric < ApplicationRecord
+
+  belongs_to  :translation_source
+  belongs_to  :language
+
   def self.find_or_create(translation_source, language = Tr8n::Config.current_language)
-    translation_source_metric = find(:first, :conditions => ["translation_source_id = ? and language_id = ?", translation_source.id, language.id])
+    translation_source_metric = where(:translation_source_id => translation_source.id, :language_id => language.id).first
     translation_source_metric ||= begin
       create(:translation_source => translation_source, :language => language)
     end
@@ -40,29 +57,29 @@ class Tr8n::TranslationSourceMetric < ActiveRecord::Base
         :joins => [
           "join tr8n_translation_key_sources as tks on tr8n_translation_keys.id = tks.translation_key_id"
         ]
-    ) 
+    )
 
-    self.translation_count = Tr8n::Translation.count("distinct tr8n_translations.id", 
+    self.translation_count = Tr8n::Translation.count("distinct tr8n_translations.id",
         # :conditions => ["tr8n_translations.language_id = ? and tr8n_translations.translation_key_id in (select tr8n_translation_key_sources.translation_key_id from tr8n_translation_key_sources where tr8n_translation_key_sources.translation_source_id = ?)", language_id, translation_source_id],
         :conditions => ["tr8n_translations.language_id = ? and tr8n_translation_key_sources.translation_source_id = ?", language_id, translation_source_id],
         :joins => "join tr8n_translation_key_sources on tr8n_translation_key_sources.translation_key_id = tr8n_translations.translation_key_id"
     )
-    
+
     self.locked_key_count = Tr8n::TranslationKey.count("distinct tr8n_translation_keys.id",
         :conditions => ["tkl.language_id = ? and tks.translation_source_id = ? and tkl.locked = ?", language_id, translation_source_id, true],
         :joins => [
           "join tr8n_translation_key_locks as tkl on tr8n_translation_keys.id = tkl.translation_key_id",
           "join tr8n_translation_key_sources as tks on tr8n_translation_keys.id = tks.translation_key_id"
         ]
-    ) 
+    )
 
-    self.translated_key_count = Tr8n::TranslationKey.count("distinct tr8n_translation_keys.id", 
-        :conditions => ["t.language_id = ? and tks.translation_source_id = ?", language_id, translation_source_id], 
+    self.translated_key_count = Tr8n::TranslationKey.count("distinct tr8n_translation_keys.id",
+        :conditions => ["t.language_id = ? and tks.translation_source_id = ?", language_id, translation_source_id],
         :joins => [
           "join tr8n_translations as t on tr8n_translation_keys.id = t.translation_key_id",
           "join tr8n_translation_key_sources as tks on tr8n_translation_keys.id = tks.translation_key_id"
         ]
-    ) 
+    )
 
     save
 
@@ -70,16 +87,16 @@ class Tr8n::TranslationSourceMetric < ActiveRecord::Base
     unless key_count == 0
       translation_source.completeness = 0
       translation_source.save
-    end    
+    end
 
     self
   end
-  
+
   def not_translated_count
     return key_count unless translated_key_count
-    key_count - translated_key_count    
+    key_count - translated_key_count
   end
-  
+
   def pending_approval_count
     return translated_key_count unless locked_key_count
     translated_key_count - locked_key_count

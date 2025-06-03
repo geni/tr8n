@@ -21,16 +21,31 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::TranslationVote < ActiveRecord::Base
-  set_table_name :tr8n_translation_votes
-  
+# == Schema Information
+#
+# Table name: tr8n_translation_votes
+#
+#  id             :integer          not null, primary key
+#  vote           :integer          not null
+#  created_at     :datetime
+#  updated_at     :datetime
+#  translation_id :integer          not null
+#  translator_id  :integer          not null
+#
+# Indexes
+#
+#  tr8n_trans_votes_trans_id_translator_id  (translation_id,translator_id)
+#  tr8n_trans_votes_translator_id           (translator_id)
+#
+class Tr8n::TranslationVote < ApplicationRecord
+
   belongs_to :translation,  :class_name => "Tr8n::Translation"
   belongs_to :translator,   :class_name => "Tr8n::Translator"
-    
+
   def self.find_or_create(translation, translator)
-    vote = find(:first, :conditions => ["translation_id = ? and translator_id = ?", translation.id, translator.id])
+    vote = where(:translation_id => translation.id, :translator_id => translator.id).first
     vote = create(:translation => translation, :translator => translator, :vote => 0) unless vote
     vote
   end
-  
+
 end

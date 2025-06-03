@@ -21,8 +21,27 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::IpLocation < ActiveRecord::Base
-  set_table_name :tr8n_ip_locations
+# == Schema Information
+#
+# Table name: tr8n_ip_locations
+#
+#  id         :integer          not null, primary key
+#  assigned   :date
+#  cntry      :string(3)
+#  country    :string(80)
+#  ctry       :string(2)
+#  high       :bigint
+#  low        :bigint
+#  registry   :string(20)
+#  created_at :datetime
+#  updated_at :datetime
+#
+# Indexes
+#
+#  index_tr8n_ip_locations_on_high  (high)
+#  index_tr8n_ip_locations_on_low   (low)
+#
+class Tr8n::IpLocation < ApplicationRecord
 
   def self.no_country_clause
     %q{COALESCE(country, 'ZZZ') = 'ZZZ'}
@@ -70,5 +89,5 @@ class Tr8n::IpLocation < ActiveRecord::Base
     end
     puts "Done." if opts[:verbose]
   end
-  
+
 end

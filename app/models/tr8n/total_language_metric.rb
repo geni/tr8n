@@ -21,32 +21,55 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
+# == Schema Information
+#
+# Table name: tr8n_language_metrics
+#
+#  id                   :integer          not null, primary key
+#  key_count            :integer          default(0)
+#  locked_key_count     :integer          default(0)
+#  metric_date          :date
+#  translated_key_count :integer          default(0)
+#  translation_count    :integer          default(0)
+#  translator_count     :integer          default(0)
+#  type                 :string
+#  user_count           :integer          default(0)
+#  created_at           :datetime
+#  updated_at           :datetime
+#  language_id          :integer          not null
+#
+# Indexes
+#
+#  index_tr8n_language_metrics_on_created_at   (created_at)
+#  index_tr8n_language_metrics_on_language_id  (language_id)
+#
 class Tr8n::TotalLanguageMetric < Tr8n::LanguageMetric
 
   def update_metrics!
-    self.user_count = Tr8n::LanguageUser.count(:conditions => ["language_id = ?", language_id])
-    self.translator_count = Tr8n::LanguageUser.count(:conditions => ["language_id = ? and translator_id is not null", language_id])
-    self.translation_count = Tr8n::Translation.count(:conditions => ["language_id = ?", language_id])
+    self.user_count = Tr8n::LanguageUser.where(:language_id => language_id).count
+    self.translator_count = Tr8n::LanguageUser.where(:language_id => language_id, :translator_id => nil).count
+    self.translation_count = Tr8n::Translation.where(:language_id => language_id).count
     self.key_count = Tr8n::TranslationKey.count
-    
-    self.locked_key_count = Tr8n::TranslationKey.count("distinct tr8n_translation_keys.id",
-        :conditions => ["tr8n_translation_key_locks.language_id = ? and tr8n_translation_key_locks.locked = ?", language_id, true],
-        :joins => "join tr8n_translation_key_locks on tr8n_translation_keys.id = tr8n_translation_key_locks.translation_key_id") 
-    self.translated_key_count = Tr8n::TranslationKey.count("distinct tr8n_translation_keys.id", 
-        :conditions => ["tr8n_translations.language_id = ?", language_id], 
-        :joins => "join tr8n_translations on tr8n_translation_keys.id = tr8n_translations.translation_key_id") 
+
+    self.locked_key_count = Tr8n::TranslationKey.joins(:translation_key_locks)
+                                                .where('tr8n_translation_key_locks.language_id' => language_id, 'tr8n_translation_key_locks.locked' => true)
+                                                .distinct.count
+
+    self.translated_key_count = Tr8n::TranslationKey.joins(:translations)
+                                                    .where('tr8n_translations.language_id' => language_id)
+                                                    .distinct.count('tr8n_translation_keys.id')
     save
-      
+
     language.completeness = (locked_key_count * 100 / key_count)
     language.save
-    
+
     self
   end
 
   def completeness
     language.completeness
   end
-  
+
   def translation_completeness
     return 0 if key_count.nil? or key_count == 0
     (translated_key_count * 100)/key_count

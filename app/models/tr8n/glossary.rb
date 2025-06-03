@@ -21,7 +21,6 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::Glossary < ActiveRecord::Base
-  set_table_name :tr8n_glossary
-  
+class Tr8n::Glossary < ApplicationRecord
+
 end

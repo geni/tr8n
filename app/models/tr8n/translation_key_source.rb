@@ -21,8 +21,23 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::TranslationKeySource < ActiveRecord::Base
-  set_table_name :tr8n_translation_key_sources
+# == Schema Information
+#
+# Table name: tr8n_translation_key_sources
+#
+#  id                    :integer          not null, primary key
+#  details               :text
+#  created_at            :datetime
+#  updated_at            :datetime
+#  translation_key_id    :integer          not null
+#  translation_source_id :integer          not null
+#
+# Indexes
+#
+#  tr8n_trans_keys_key_id     (translation_key_id)
+#  tr8n_trans_keys_source_id  (translation_source_id)
+#
+class Tr8n::TranslationKeySource < ApplicationRecord
 
   belongs_to :translation_source, :class_name => "Tr8n::TranslationSource"
   belongs_to :translation_key,    :class_name => "Tr8n::TranslationKey"
@@ -30,7 +45,7 @@ class Tr8n::TranslationKeySource < ActiveRecord::Base
   alias :source :translation_source
   alias :key :translation_key
 
-  serialize :details
+  serialize :details, :type => HashWithIndifferentAccess, :coder => YAML
 
   def self.cache_key(translation_key_id, translation_source_id)
     "translation_key_source_#{translation_key_id}_#{translation_source_id}"

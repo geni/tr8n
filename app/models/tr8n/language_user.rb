@@ -21,18 +21,37 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::LanguageUser < ActiveRecord::Base
-  set_table_name :tr8n_language_users
-  
+# == Schema Information
+#
+# Table name: tr8n_language_users
+#
+#  id            :integer          not null, primary key
+#  manager       :boolean          default(FALSE)
+#  created_at    :datetime
+#  updated_at    :datetime
+#  language_id   :integer          not null
+#  translator_id :integer
+#  user_id       :integer          not null
+#
+# Indexes
+#
+#  index_tr8n_language_users_on_created_at                     (created_at)
+#  index_tr8n_language_users_on_language_id_and_translator_id  (language_id,translator_id)
+#  index_tr8n_language_users_on_language_id_and_user_id        (language_id,user_id)
+#  index_tr8n_language_users_on_updated_at                     (updated_at)
+#  index_tr8n_language_users_on_user_id                        (user_id)
+#
+class Tr8n::LanguageUser < ApplicationRecord
+
   belongs_to :user, :class_name => Tr8n::Config.user_class_name, :foreign_key => :user_id
   belongs_to :language, :class_name => "Tr8n::Language"
   belongs_to :translator, :class_name => "Tr8n::Translator"
-  
+
   # this object can belong to both the user and the translator
   # users may choose to switch to a language without becoming translators
   # once user becomes a translator, this record will be associated with both for ease of use
   # when users get promoted, they are automatically get associated with a language and marked as translators
-  
+
   def self.find_or_create(user, language)
     lu = find(:first, :conditions => ["user_id = ? and language_id = ?", user.id, language.id])
     lu || create(:user => user, :language => language)
@@ -51,10 +70,10 @@ class Tr8n::LanguageUser < ActiveRecord::Base
   def self.create_or_touch(user, language)
     return unless user.id
     lu = Tr8n::LanguageUser.find_or_create(user, language)
-    lu.update_attributes(:updated_at => Time.now)
+    lu.update(:updated_at => Time.now)
     lu
   end
-  
+
   def translator?
     translator != nil
   end

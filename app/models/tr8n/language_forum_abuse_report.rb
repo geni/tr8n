@@ -21,13 +21,30 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::LanguageForumAbuseReport < ActiveRecord::Base
-  set_table_name :tr8n_language_forum_abuse_reports
+# == Schema Information
+#
+# Table name: tr8n_language_forum_abuse_reports
+#
+#  id                        :integer          not null, primary key
+#  reason                    :string
+#  created_at                :datetime
+#  updated_at                :datetime
+#  language_forum_message_id :integer          not null
+#  language_id               :integer          not null
+#  translator_id             :integer          not null
+#
+# Indexes
+#
+#  tr8n_forum_reports_lang_id                (language_id)
+#  tr8n_forum_reports_lang_id_translator_id  (language_id,translator_id)
+#  tr8n_forum_reports_message_id             (language_forum_message_id)
+#
+class Tr8n::LanguageForumAbuseReport < ApplicationRecord
 
-  belongs_to :language,               :class_name => "Tr8n::Language"  
-  belongs_to :translator,             :class_name => "Tr8n::Translator"   
+  belongs_to :language,               :class_name => "Tr8n::Language"
+  belongs_to :translator,             :class_name => "Tr8n::Translator"
   belongs_to :language_forum_message, :class_name => "Tr8n::LanguageForumMessage"
-  
+
   alias :message :language_forum_message
-  
+
 end

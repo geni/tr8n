@@ -21,17 +21,35 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::TranslationSource < ActiveRecord::Base
-  set_table_name :tr8n_translation_sources
+# == Schema Information
+#
+# Table name: tr8n_translation_sources
+#
+#  id                    :integer          not null, primary key
+#  completeness          :integer          default(0)
+#  description           :text
+#  key_count             :integer
+#  name                  :string
+#  source                :string
+#  url                   :string
+#  created_at            :datetime
+#  updated_at            :datetime
+#  translation_domain_id :integer
+#
+# Indexes
+#
+#  tr8n_sources_source  (source)
+#
+class Tr8n::TranslationSource < ApplicationRecord
 
-  belongs_to  :translation_domain,            :class_name => "Tr8n::TranslationDomain"
+  has_one   :translation_domain
 
-  has_many    :translation_key_sources,       :class_name => "Tr8n::TranslationKeySource",      :dependent => :destroy
-  has_many    :translation_keys,              :class_name => "Tr8n::TranslationKey",            :through => :translation_key_sources
-  has_many    :translation_source_languages,  :class_name => "Tr8n::TranslationSourceLanguage", :dependent => :destroy
-  has_many    :translation_source_metrics,    :class_name => 'Tr8n::TranslationSourceMetric',   :dependent => :destroy
-  has_many    :component_sources,             :class_name => "Tr8n::ComponentSource",           :dependent => :destroy
-  has_many    :components,                    :class_name => "Tr8n::Component",                 :through => :component_sources
+  has_many  :translation_key_sources,       :dependent => :destroy
+  has_many  :translation_keys,              :through => :translation_key_sources
+  has_many  :translation_source_languages,  :dependent => :destroy
+  has_many  :translation_source_metrics,    :dependent => :destroy
+  has_many  :component_sources,             :dependent => :destroy
+  has_many  :components,                    :through => :component_sources
 
   alias :domain   :translation_domain
   alias :sources  :translation_key_sources
@@ -64,10 +82,8 @@ class Tr8n::TranslationSource < ActiveRecord::Base
 
   def self.fetch_source(source)
     Tr8n::Cache.fetch(cache_key(source)) do
-      model = first(:conditions => ["source = ?", source]) || create(:source => source)
-      model.update_attributes(
-        :key_count => Tr8n::TranslationKeySource.count(:id, :conditions => ["translation_source_id = ?", model.id])
-      )
+      model = where(:source => source).first || create!(:source => source)
+      model.update!(:key_count => Tr8n::TranslationKeySource.where(:translation_source_id => model.id).count)
       model
     end
   end

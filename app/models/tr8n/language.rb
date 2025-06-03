@@ -21,13 +21,36 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::Language < ActiveRecord::Base
-  set_table_name :tr8n_languages
+# == Schema Information
+#
+# Table name: tr8n_languages
+#
+#  id                   :integer          not null, primary key
+#  completeness         :integer
+#  curse_words          :text
+#  enabled              :boolean
+#  english_name         :string           not null
+#  facebook_key         :string
+#  featured_index       :integer          default(0)
+#  google_key           :string
+#  locale               :string           not null
+#  myheritage_key       :string
+#  native_name          :string
+#  right_to_left        :boolean
+#  created_at           :datetime
+#  updated_at           :datetime
+#  fallback_language_id :integer
+#
+# Indexes
+#
+#  index_tr8n_languages_on_locale  (locale)
+#
+class Tr8n::Language < ApplicationRecord
 
-  belongs_to :fallback_language,    :class_name => 'Tr8n::Language',            :foreign_key => :fallback_language_id
+  has_one  :fallback_language,      :class_name => 'Tr8n::Language',            :foreign_key => :fallback_language_id
 
-  has_many :language_rules,         :class_name => 'Tr8n::LanguageRule',        :dependent => :destroy, :order => "type asc"
-  has_many :language_cases,         :class_name => 'Tr8n::LanguageCase',        :dependent => :destroy, :order => "id asc"
+  has_many :language_rules,         Proc.new { order(:type => 'asc') },         :class_name => 'Tr8n::LanguageRule', :dependent => :destroy
+  has_many :language_cases,         Proc.new { order(:id  => 'asc') },          :class_name => 'Tr8n::LanguageCase', :dependent => :destroy
   has_many :language_users,         :class_name => 'Tr8n::LanguageUser',        :dependent => :destroy
   has_many :translations,           :class_name => 'Tr8n::Translation',         :dependent => :destroy
   has_many :translation_key_locks,  :class_name => 'Tr8n::TranslationKeyLock',  :dependent => :destroy
@@ -157,7 +180,7 @@ class Tr8n::Language < ActiveRecord::Base
   end
 
   def dir
-    right_to_left? ? "rtl" : "ltr"
+    right_to_left? ? 'rtl' : 'ltr'
   end
 
   def align(dest)
@@ -167,13 +190,13 @@ class Tr8n::Language < ActiveRecord::Base
 
   def self.enabled_languages
     Tr8n::Cache.fetch("enabled_languages") do
-      find(:all, :conditions => ["enabled = ?", true], :order => "english_name asc")
+      where(:enabled => true).order('english_name asc')
     end
   end
 
   def self.featured_languages
     Tr8n::Cache.fetch("featured_languages") do
-      find(:all, :conditions => ["enabled = ? and featured_index is not null and featured_index > 0", true], :order => "featured_index desc")
+      where(:enabled => true).where.not(:featured_index => nil).where('featured_index > 0').order('featured_index desc')
     end
   end
 
@@ -242,7 +265,7 @@ class Tr8n::Language < ActiveRecord::Base
 
   def total_metric
     @total_metric ||= begin
-      metric = Tr8n::TotalLanguageMetric.find(:first, :conditions => ["language_id = ?", self.id])
+      metric = Tr8n::TotalLanguageMetric.where(:language_id => self.id).first
       metric || Tr8n::TotalLanguageMetric.create(Tr8n::LanguageMetric.default_attributes.merge(:language_id => self.id))
     end
   end
@@ -308,11 +331,11 @@ class Tr8n::Language < ActiveRecord::Base
   end
 
   def recently_added_forum_messages
-    @recently_added_forum_messages ||= Tr8n::LanguageForumMessage.find(:all, :conditions => ["language_id = ?", self.id], :order => "created_at desc", :limit => 5)
+    @recently_added_forum_messages ||= Tr8n::LanguageForumMessage.where(:language_id => self.id).order("created_at desc").limit(5)
   end
 
   def recently_added_translations
-    @recently_added_translations ||= Tr8n::Translation.find(:all, :conditions => ["language_id = ?", self.id], :order => "created_at desc", :limit => 5)
+    @recently_added_translations ||= Tr8n::Translation.where(:language_id => self.id).order("created_at desc").limit(5)
   end
 
   def recently_updated_translations
@@ -320,12 +343,12 @@ class Tr8n::Language < ActiveRecord::Base
       conditions = ["language_id = ?", self.id]
       conditions[0] << " and translation_key_id in (select id from tr8n_translation_keys where level <= ? and (type is null or type = 'Tr8n::TranslationKey' or type = 'TranslationKey')) "
       conditions << Tr8n::Config.current_translator.level
-      Tr8n::Translation.find(:all, :conditions => conditions, :order => "updated_at desc", :limit => 5)
+      Tr8n::Translation.where(conditions).order("updated_at desc").limit(5)
     end
   end
 
   def recently_updated_votes(translator = Tr8n::Config.current_translator)
-    @recently_updated_votes ||= Tr8n::TranslationVote.find(:all, :conditions => ["translation_id in (select tr8n_translations.id from tr8n_translations where tr8n_translations.language_id = ? and tr8n_translations.translator_id = ?)", self.id, translator.id], :order => "updated_at desc", :limit => 5)
+    @recently_updated_votes ||= Tr8n::TranslationVote.where("translation_id in (select tr8n_translations.id from tr8n_translations where tr8n_translations.language_id = ? and tr8n_translations.translator_id = ?)", self.id, translator.id).order("updated_at desc").limit(5)
   end
 
 end

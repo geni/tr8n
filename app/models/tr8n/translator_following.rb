@@ -21,10 +21,9 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::TranslatorFollowing < ActiveRecord::Base
-  set_table_name :tr8n_translator_following
-  
-  belongs_to :translator, :class_name => "Tr8n::Translator"   
+class Tr8n::TranslatorFollowing < ApplicationRecord
+
+  belongs_to :translator, :class_name => "Tr8n::Translator"
   belongs_to :object, :polymorphic => true
 
   def self.find_or_create(translator, object)
@@ -34,9 +33,9 @@ class Tr8n::TranslatorFollowing < ActiveRecord::Base
   def self.following_for(translator, object)
     find(:first, :conditions => ["translator_id = ? and object_type = ? and object_id = ?", translator.id, object.class.name, object.id])
   end
-  
+
   def after_create
-    Tr8n::Notification.distribute(self)    
+    Tr8n::Notification.distribute(self)
   end
 
 end

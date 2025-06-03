@@ -21,14 +21,29 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::ComponentLanguage < ActiveRecord::Base
-  set_table_name :tr8n_component_languages
+# == Schema Information
+#
+# Table name: tr8n_component_languages
+#
+#  id           :integer          not null, primary key
+#  state        :string
+#  created_at   :datetime
+#  updated_at   :datetime
+#  component_id :integer
+#  language_id  :integer
+#
+# Indexes
+#
+#  tr8n_comp_lang_comp_id  (component_id)
+#  tr8n_comp_lang_lang_id  (language_id)
+#
+class Tr8n::ComponentLanguage < ApplicationRecord
 
   belongs_to :component, :class_name => 'Tr8n::Component'
   belongs_to :language, :class_name => 'Tr8n::Language'
 
   def self.find_or_create(component, language)
-    cs = find(:first, :conditions => ["component_id = ? and language_id = ?", component.id, language.id]) 
+    cs = find(:first, :conditions => ["component_id = ? and language_id = ?", component.id, language.id])
     cs || create(:component => component, :language => language)
   end
 

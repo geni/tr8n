@@ -21,16 +21,38 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::Translation < ActiveRecord::Base
-  set_table_name :tr8n_translations
+# == Schema Information
+#
+# Table name: tr8n_translations
+#
+#  id                 :integer          not null, primary key
+#  label              :text             not null
+#  rank               :integer          default(0)
+#  rules              :text
+#  synced_at          :datetime
+#  created_at         :datetime
+#  updated_at         :datetime
+#  approved_by_id     :bigint
+#  language_id        :integer          not null
+#  translation_key_id :integer          not null
+#  translator_id      :integer          not null
+#
+# Indexes
+#
+#  index_tr8n_translations_on_synced_at     (synced_at)
+#  r8n_trans_translator_id                  (translator_id)
+#  tr8n_trans_created_at                    (created_at)
+#  tr8n_trans_key_id_translator_id_lang_id  (translation_key_id,translator_id,language_id)
+#
+class Tr8n::Translation < ApplicationRecord
 
-  belongs_to :language,         :class_name => "Tr8n::Language"
-  belongs_to :translation_key,  :class_name => "Tr8n::TranslationKey"
-  belongs_to :translator,       :class_name => "Tr8n::Translator"
+  belongs_to :language
+  belongs_to :translation_key
+  belongs_to :translator
 
-  has_many   :translation_votes, :class_name => "Tr8n::TranslationVote", :dependent => :destroy
+  has_many   :translation_votes, :dependent => :destroy
 
-  serialize :rules
+  serialize :rules, :type => Object, :coder => YAML
 
   alias :key :translation_key
   alias :votes :translation_votes
@@ -40,7 +62,7 @@ class Tr8n::Translation < ActiveRecord::Base
   def vote!(translator, score)
     score = score.to_i
     vote = Tr8n::TranslationVote.find_or_create(self, translator)
-    vote.update_attributes(:vote => score.to_i)
+    vote.update(:vote => score.to_i)
 
     Tr8n::Notification.distribute(vote)
 
@@ -48,7 +70,7 @@ class Tr8n::Translation < ActiveRecord::Base
     self.translator.update_rank!(language) if self.translator
 
     # add the translator to the watch list
-    self.translator.update_attributes(:reported => true) if score < VIOLATION_INDICATOR
+    self.translator.update(:reported => true) if score < VIOLATION_INDICATOR
 
     translator.voted_on_translation!(self)
     translator.update_metrics!(language)
@@ -56,7 +78,7 @@ class Tr8n::Translation < ActiveRecord::Base
   end
 
   def update_rank!
-    self.rank = Tr8n::TranslationVote.sum("vote", :conditions => ["translation_id = ?", self.id])
+    self.rank = Tr8n::TranslationVote.where(:translation_id => self.id).sum("vote")
     save
   end
 
@@ -234,7 +256,7 @@ class Tr8n::Translation < ActiveRecord::Base
   ###############################################################
   # generates the hash without rule ids, but with full definitions
   def mark_as_synced!
-    update_attributes(:synced_at => Time.now + 2.seconds)
+    update(:synced_at => Time.now + 2.seconds)
   end
 
   def rules_sync_hash(opts = {})

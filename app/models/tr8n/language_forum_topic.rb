@@ -21,16 +21,31 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::LanguageForumTopic < ActiveRecord::Base
-  set_table_name :tr8n_language_forum_topics
+# == Schema Information
+#
+# Table name: tr8n_language_forum_topics
+#
+#  id            :integer          not null, primary key
+#  topic         :text             not null
+#  created_at    :datetime
+#  updated_at    :datetime
+#  language_id   :integer
+#  translator_id :integer          not null
+#
+# Indexes
+#
+#  tr8n_forum_topics_lang_id        (language_id)
+#  tr8n_forum_topics_translator_id  (translator_id)
+#
+class Tr8n::LanguageForumTopic < ApplicationRecord
 
-  belongs_to :language, :class_name => "Tr8n::Language"    
-  belongs_to :translator, :class_name => "Tr8n::Translator"    
-  
+  belongs_to :language, :class_name => "Tr8n::Language"
+  belongs_to :translator, :class_name => "Tr8n::Translator"
+
   has_many :language_forum_messages, :class_name => "Tr8n::LanguageForumMessage", :dependent => :destroy
-  
+
   alias :messages :language_forum_messages
-  
+
   def post_count
     @post_count ||= Tr8n::LanguageForumMessage.count(:conditions => ["language_forum_topic_id = ?", self.id])
   end

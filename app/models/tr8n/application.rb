@@ -21,8 +21,22 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::Application < ActiveRecord::Base
-  set_table_name :tr8n_applications
+# == Schema Information
+#
+# Table name: tr8n_applications
+#
+#  id          :integer          not null, primary key
+#  description :string
+#  key         :string
+#  name        :string
+#  created_at  :datetime
+#  updated_at  :datetime
+#
+# Indexes
+#
+#  index_tr8n_applications_on_key  (key)
+#
+class Tr8n::Application < ApplicationRecord
 
   has_many :components, :class_name => 'Tr8n::Component', :dependent => :destroy
   has_many :component_sources, :class_name => 'Tr8n::ComponentSource', :through => :components

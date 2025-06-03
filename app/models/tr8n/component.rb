@@ -21,8 +21,25 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::Component < ActiveRecord::Base
-  set_table_name :tr8n_components
+# == Schema Information
+#
+# Table name: tr8n_components
+#
+#  id             :integer          not null, primary key
+#  description    :string
+#  key            :string
+#  name           :string
+#  state          :string
+#  created_at     :datetime
+#  updated_at     :datetime
+#  application_id :integer
+#
+# Indexes
+#
+#  tr8n_comp_app_id  (application_id)
+#  tr8n_comp_key     (key)
+#
+class Tr8n::Component < ApplicationRecord
 
   belongs_to :application, :class_name => 'Tr8n::Application'
 
@@ -51,9 +68,9 @@ class Tr8n::Component < ActiveRecord::Base
     return component if key.is_a?(Tr8n::Component)
     key = key.to_s
 
-    Tr8n::Cache.fetch(cache_key(key)) do 
+    Tr8n::Cache.fetch(cache_key(key)) do
       find(:first, :conditions => ["key = ?", key.to_s]) || create(:key => key.to_s, :state => "restricted")
-    end  
+    end
   end
 
   def self.state_options
@@ -86,7 +103,7 @@ class Tr8n::Component < ActiveRecord::Base
   def after_destroy
     Tr8n::Cache.delete(cache_key)
   end
-  
+
   def after_save
     Tr8n::Cache.delete(cache_key)
   end
