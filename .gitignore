@@ -11,8 +11,9 @@ log/*
 *.log
 .DS_Store
 *.swp
-.project
 .loadpath
+.project
+restart.txt
 *~
 Thumbs.db
 .tmp*
