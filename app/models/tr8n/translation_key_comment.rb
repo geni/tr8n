@@ -41,9 +41,9 @@
 #
 class Tr8n::TranslationKeyComment < ApplicationRecord
 
-  belongs_to :language,               :class_name => "Tr8n::Language"
-  belongs_to :translator,             :class_name => "Tr8n::Translator"
-  belongs_to :translation_key,        :class_name => "Tr8n::TranslationKey"
+  belongs_to :language
+  belongs_to :translator
+  belongs_to :translation_key
 
   alias :key :translation_key
 

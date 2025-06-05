@@ -44,9 +44,9 @@
 #
 class Tr8n::LanguageCase < ApplicationRecord
 
-  belongs_to :language, :class_name => "Tr8n::Language"
-  belongs_to :translator, :class_name => "Tr8n::Translator"
-  has_many   :language_case_rules, Proc.new{order(:position => 'asc')}, :class_name => "Tr8n::LanguageCaseRule", :dependent => :destroy
+  belongs_to :language
+  belongs_to :translator
+  has_many   :language_case_rules, Proc.new{order(:position => 'asc')}, :dependent => :destroy
 
   serialize :definition, :type => HashWithIndifferentAccess, :coder => YAML
 

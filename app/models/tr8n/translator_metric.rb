@@ -45,8 +45,8 @@
 #
 class Tr8n::TranslatorMetric < ApplicationRecord
 
-  belongs_to :translator, :class_name => "Tr8n::Translator"
-  belongs_to :language, :class_name => "Tr8n::Language"
+  belongs_to :translator
+  belongs_to :language
 
   def self.find_or_create(translator, language)
     if language

@@ -48,12 +48,12 @@ require 'digest/md5'
 
 class Tr8n::TranslationKey < ApplicationRecord
 
-  has_many :translations,             :class_name => "Tr8n::Translation",           :dependent => :destroy
-  has_many :translation_key_locks,    :class_name => "Tr8n::TranslationKeyLock",    :dependent => :destroy
-  has_many :translation_key_sources,  :class_name => "Tr8n::TranslationKeySource",  :dependent => :destroy
-  has_many :translation_sources,      :class_name => "Tr8n::TranslationSource",     :through => :translation_key_sources
-  has_many :translation_domains,      :class_name => "Tr8n::TranslationDomain",     :through => :translation_sources
-  has_many :translation_key_comments, Proc.new{order(:created_at => :desc)},        :class_name => "Tr8n::TranslationKeyComment", :dependent => :destroy
+  has_many :translations,             :dependent => :destroy
+  has_many :translation_key_locks,    :dependent => :destroy
+  has_many :translation_key_sources,  :dependent => :destroy
+  has_many :translation_sources,      :through => :translation_key_sources
+  has_many :translation_domains,      :through => :translation_sources
+  has_many :translation_key_comments, Proc.new{order(:created_at => :desc)}, :dependent => :destroy
 
   alias :locks        :translation_key_locks
   alias :key_sources  :translation_key_sources

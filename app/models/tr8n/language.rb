@@ -47,14 +47,14 @@
 #
 class Tr8n::Language < ApplicationRecord
 
-  has_one  :fallback_language,      :class_name => 'Tr8n::Language',            :foreign_key => :fallback_language_id
+  has_one  :fallback_language, :class_name => 'Tr8n::Language', :foreign_key => :fallback_language_id
 
-  has_many :language_rules,         Proc.new { order(:type => 'asc') },         :class_name => 'Tr8n::LanguageRule', :dependent => :destroy
-  has_many :language_cases,         Proc.new { order(:id  => 'asc') },          :class_name => 'Tr8n::LanguageCase', :dependent => :destroy
-  has_many :language_users,         :class_name => 'Tr8n::LanguageUser',        :dependent => :destroy
-  has_many :translations,           :class_name => 'Tr8n::Translation',         :dependent => :destroy
-  has_many :translation_key_locks,  :class_name => 'Tr8n::TranslationKeyLock',  :dependent => :destroy
-  has_many :language_metrics,       :class_name => 'Tr8n::LanguageMetric',      :dependent => :destroy
+  has_many :language_rules,         Proc.new { order(:type => 'asc') }, :dependent => :destroy
+  has_many :language_cases,         Proc.new { order(:id  => 'asc') },  :dependent => :destroy
+  has_many :language_users,         :dependent => :destroy
+  has_many :translations,           :dependent => :destroy
+  has_many :translation_key_locks,  :dependent => :destroy
+  has_many :language_metrics,       :dependent => :destroy
 
   def self.find_or_create(lcl, english_name)
     find_by_locale(lcl) || create(:locale => lcl, :english_name => english_name)

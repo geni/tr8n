@@ -45,8 +45,8 @@ require 'tr8n/logger'
 
 class Tr8n::TranslatorLog < ApplicationRecord
 
-  belongs_to :translator, :class_name => "Tr8n::Translator"
-  belongs_to :user,       :class_name => Tr8n::Config.user_class_name, :foreign_key => :user_id
+  belongs_to :translator
+  belongs_to :user, :class_name => Tr8n::Config.user_class_name, :foreign_key => :user_id
 
   TRANSLATOR_LEVEL = 0
   MANAGER_LEVEL = 10

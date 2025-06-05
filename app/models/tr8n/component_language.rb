@@ -39,8 +39,8 @@
 #
 class Tr8n::ComponentLanguage < ApplicationRecord
 
-  belongs_to :component, :class_name => 'Tr8n::Component'
-  belongs_to :language, :class_name => 'Tr8n::Language'
+  belongs_to :component
+  belongs_to :language
 
   def self.find_or_create(component, language)
     cs = find(:first, :conditions => ["component_id = ? and language_id = ?", component.id, language.id])

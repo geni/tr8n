@@ -23,10 +23,10 @@ require 'tr8n/offline_task'
 
 class Tr8n::Notification < ApplicationRecord
 
-  belongs_to :translator, :class_name => "Tr8n::Translator"
+  belongs_to :translator
 
-  belongs_to :actor, :class_name => "Tr8n::Translator", :foreign_key => :actor_id
-  belongs_to :target, :class_name => "Tr8n::Translator", :foreign_key => :target_id
+  belongs_to :actor
+  belongs_to :target
   belongs_to :object, :polymorphic => true
 
   def self.distribute(object)

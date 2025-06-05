@@ -41,18 +41,18 @@
 #
 class Tr8n::Component < ApplicationRecord
 
-  belongs_to :application, :class_name => 'Tr8n::Application'
+  belongs_to :application
 
-  has_many :component_sources, :class_name => 'Tr8n::ComponentSource', :dependent => :destroy
-  has_many :translation_sources, :class_name => 'Tr8n::TranslationSource', :through => :component_sources
-  has_many :translation_key_sources, :class_name => 'Tr8n::TranslationKeySource', :through => :translation_sources
-  has_many :translation_keys, :class_name => 'Tr8n::TranslationKey', :through => :translation_key_sources
+  has_many :component_sources,       :dependent => :destroy
+  has_many :translation_sources,     :through => :component_sources
+  has_many :translation_key_sources, :through => :translation_sources
+  has_many :translation_keys,        :through => :translation_key_sources
 
-  has_many :component_languages, :class_name => 'Tr8n::ComponentLanguage', :dependent => :destroy
-  has_many :languages, :class_name => 'Tr8n::Language', :through => :component_languages
+  has_many :component_languages, :dependent => :destroy
+  has_many :languages,           :through => :component_languages
 
-  has_many :component_translators, :class_name => 'Tr8n::ComponentTranslator', :dependent => :destroy
-  has_many :translators, :class_name => 'Tr8n::Translator', :through => :component_translators
+  has_many :component_translators, :dependent => :destroy
+  has_many :translators,           :through => :component_translators
 
   alias :sources :translation_sources
 

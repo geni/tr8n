@@ -38,9 +38,9 @@
 #
 class Tr8n::Application < ApplicationRecord
 
-  has_many :components, :class_name => 'Tr8n::Component', :dependent => :destroy
-  has_many :component_sources, :class_name => 'Tr8n::ComponentSource', :through => :components
-  has_many :translation_sources, :class_name => 'Tr8n::TranslationSource', :through => :component_sources
+  has_many :components,           :dependent => :destroy
+  has_many :component_sources,    :through => :components
+  has_many :translation_sources,  :through => :component_sources
 
   def self.options
     Tr8n::Application.find(:all, :order => "name asc").collect{|app| [app.name, app.id]}

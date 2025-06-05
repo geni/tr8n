@@ -39,8 +39,8 @@
 #
 class Tr8n::TranslationKeySource < ApplicationRecord
 
-  belongs_to :translation_source, :class_name => "Tr8n::TranslationSource"
-  belongs_to :translation_key,    :class_name => "Tr8n::TranslationKey"
+  belongs_to :translation_source
+  belongs_to :translation_key
 
   alias :source :translation_source
   alias :key :translation_key

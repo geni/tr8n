@@ -37,8 +37,8 @@
 #
 class Tr8n::TranslationSourceLanguage < ApplicationRecord
 
-  belongs_to  :translation_source,  :class_name => "Tr8n::TranslationSource"
-  belongs_to  :language,  :class_name => "Tr8n::Language"
+  belongs_to  :translation_source
+  belongs_to  :language
 
   def self.find_or_create(translation_source, language = Tr8n::Config.current_language)
     source_lang = find(:first, :conditions => ["translation_source_id = ? and language_id = ?", translation_source.id, language.id])

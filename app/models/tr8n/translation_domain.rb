@@ -38,9 +38,9 @@
 #
 class Tr8n::TranslationDomain < ApplicationRecord
 
-  has_many    :translation_sources,       :class_name => "Tr8n::TranslationSource",     :dependent => :destroy
-  has_many    :translation_key_sources,   :class_name => "Tr8n::TranslationKeySource",  :through => :translation_sources
-  has_many    :translation_keys,          :class_name => "Tr8n::TranslationKey",        :through => :translation_key_sources
+  has_many    :translation_sources,     :dependent => :destroy
+  has_many    :translation_key_sources, :through => :translation_sources
+  has_many    :translation_keys,        :through => :translation_key_sources
 
   alias :sources      :translation_sources
   alias :key_sources  :translation_key_sources

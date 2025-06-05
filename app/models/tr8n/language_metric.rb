@@ -45,7 +45,7 @@
 #
 class Tr8n::LanguageMetric < ApplicationRecord
 
-  belongs_to :language, :class_name => "Tr8n::Language"
+  belongs_to :language
 
   def self.default_attributes
     {:user_count => 0, :translator_count => 0,

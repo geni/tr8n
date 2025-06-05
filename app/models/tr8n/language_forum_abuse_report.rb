@@ -41,9 +41,9 @@
 #
 class Tr8n::LanguageForumAbuseReport < ApplicationRecord
 
-  belongs_to :language,               :class_name => "Tr8n::Language"
-  belongs_to :translator,             :class_name => "Tr8n::Translator"
-  belongs_to :language_forum_message, :class_name => "Tr8n::LanguageForumMessage"
+  belongs_to :language
+  belongs_to :translator
+  belongs_to :language_forum_message
 
   alias :message :language_forum_message
 

@@ -42,9 +42,9 @@
 #
 class Tr8n::LanguageCaseRule < ApplicationRecord
 
-  belongs_to :language_case,  :class_name => "Tr8n::LanguageCase"
-  belongs_to :language,       :class_name => "Tr8n::Language"
-  belongs_to :translator,     :class_name => "Tr8n::Translator"
+  belongs_to :language_case
+  belongs_to :language
+  belongs_to :translator
 
   serialize :definition, :type => HashWithIndifferentAccess, :coder => YAML
 

@@ -39,8 +39,8 @@
 #
 class Tr8n::TranslationVote < ApplicationRecord
 
-  belongs_to :translation,  :class_name => "Tr8n::Translation"
-  belongs_to :translator,   :class_name => "Tr8n::Translator"
+  belongs_to :translation
+  belongs_to :translator
 
   def self.find_or_create(translation, translator)
     vote = where(:translation_id => translation.id, :translator_id => translator.id).first

@@ -41,11 +41,11 @@
 #
 class Tr8n::LanguageForumMessage < ApplicationRecord
 
-  belongs_to :language,               :class_name => "Tr8n::Language"
-  belongs_to :translator,             :class_name => "Tr8n::Translator"
-  belongs_to :language_forum_topic,   :class_name => "Tr8n::LanguageForumTopic"
+  belongs_to :language
+  belongs_to :translator
+  belongs_to :language_forum_topic
 
-  has_many :language_forum_abuse_reports, :class_name => "Tr8n::LanguageForumAbuseReport", :dependent => :destroy
+  has_many :language_forum_abuse_reports, :dependent => :destroy
 
   alias :topic :language_forum_topic
 

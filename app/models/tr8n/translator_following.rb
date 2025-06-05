@@ -23,7 +23,7 @@
 
 class Tr8n::TranslatorFollowing < ApplicationRecord
 
-  belongs_to :translator, :class_name => "Tr8n::Translator"
+  belongs_to :translator
   belongs_to :object, :polymorphic => true
 
   def self.find_or_create(translator, object)

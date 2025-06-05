@@ -41,8 +41,8 @@
 #
 class Tr8n::LanguageCaseValueMap < ApplicationRecord
 
-  belongs_to :language, :class_name => "Tr8n::Language"
-  belongs_to :translator, :class_name => "Tr8n::Translator"
+  belongs_to :language
+  belongs_to :translator
 
   serialize :map, :type => HashWithIndifferentAccess, :coder => YAML
 

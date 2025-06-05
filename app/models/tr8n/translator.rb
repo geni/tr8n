@@ -60,19 +60,19 @@ class Tr8n::Translator < ApplicationRecord
 
   has_one   :user,                          :class_name => Tr8n::Config.user_class_name,      :foreign_key => :user_id
 
-  has_many  :translator_logs,               Proc.new{order(:created_at => :desc)},            :class_name => "Tr8n::TranslatorLog", :dependent => :destroy
-  has_many  :translator_following,          Proc.new{order(:created_at => :desc)},            :class_name => "Tr8n::TranslatorFollowing",       :dependent => :destroy
-  has_many  :translator_metrics,            :class_name => "Tr8n::TranslatorMetric",          :dependent => :destroy
-  has_many  :translations,                  :class_name => "Tr8n::Translation",               :dependent => :destroy
-  has_many  :translation_votes,             :class_name => "Tr8n::TranslationVote",           :dependent => :destroy
-  has_many  :translation_key_locks,         :class_name => "Tr8n::TranslationKeyLock",        :dependent => :destroy
-  has_many  :language_users,                :class_name => "Tr8n::LanguageUser",              :dependent => :destroy
-  has_many  :language_forum_topics,         :class_name => "Tr8n::LanguageForumTopic",        :dependent => :destroy
-  has_many  :language_forum_messages,       :class_name => "Tr8n::LanguageForumMessage",      :dependent => :destroy
-  has_many  :language_forum_abuse_reports,  :class_name => "Tr8n::LanguageForumAbuseReport",  :dependent => :destroy
-  has_many  :languages,                     :class_name => "Tr8n::Language",                  :through => :language_users
+  has_many  :translator_logs,               Proc.new{order(:created_at => :desc)}, :dependent => :destroy
+  has_many  :translator_following,          Proc.new{order(:created_at => :desc)}, :dependent => :destroy
+  has_many  :translator_metrics,            :dependent => :destroy
+  has_many  :translations,                  :dependent => :destroy
+  has_many  :translation_votes,             :dependent => :destroy
+  has_many  :translation_key_locks,         :dependent => :destroy
+  has_many  :language_users,                :dependent => :destroy
+  has_many  :language_forum_topics,         :dependent => :destroy
+  has_many  :language_forum_messages,       :dependent => :destroy
+  has_many  :language_forum_abuse_reports,  :dependent => :destroy
+  has_many  :languages,                     :through => :language_users
 
-  has_one   :fallback_language,             :class_name => 'Tr8n::Language',                  :foreign_key => :fallback_language_id
+  has_one   :fallback_language, :class_name => 'Tr8n::Language', :foreign_key => :fallback_language_id
 
   after_update  :invalidate_cache
   after_destroy :invalidate_cache
