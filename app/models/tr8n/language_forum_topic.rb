@@ -47,10 +47,10 @@ class Tr8n::LanguageForumTopic < ApplicationRecord
   alias :messages :language_forum_messages
 
   def post_count
-    @post_count ||= Tr8n::LanguageForumMessage.count(:conditions => ["language_forum_topic_id = ?", self.id])
+    @post_count ||= Tr8n::LanguageForumMessage.where(:language_forum_topic_id => self.id).count
   end
 
   def last_post
-    @last_post ||= Tr8n::LanguageForumMessage.find(:first, :conditions => ["language_forum_topic_id = ?", self.id], :order => "created_at desc")
+    @last_post ||= Tr8n::LanguageForumMessage.where(:language_forum_topic_id => self.id).order("created_at desc").first
   end
 end

@@ -52,34 +52,24 @@ class Tr8n::TranslationSourceMetric < ApplicationRecord
   end
 
   def update_metrics!
-    self.key_count = Tr8n::TranslationKey.count("distinct tr8n_translation_keys.id",
-        :conditions => ["tks.translation_source_id = ?", translation_source_id],
-        :joins => [
-          "join tr8n_translation_key_sources as tks on tr8n_translation_keys.id = tks.translation_key_id"
-        ]
+    self.key_count = Tr8n::TranslationKey.where(['tks.translation_source_id = ?', translation_source_id])
+        .joins('JOIN tr8n_translation_key_sources AS tks ON tr8n_translation_keys.id = tks.translation_key_id')
+        .distinct.count('tr8n_translation_keys.id')
+
+    self.translation_count = Tr8n::Translation.where(['tr8n_translations.language_id = ? and tr8n_translation_key_sources.translation_source_id = ?', language_id, translation_source_id])
+        .joins('JOIN tr8n_translation_key_sources ON tr8n_translation_key_sources.translation_key_id = tr8n_translations.translation_key_id')
+        .distinct.count('tr8n_translations.id'
     )
 
-    self.translation_count = Tr8n::Translation.count("distinct tr8n_translations.id",
-        # :conditions => ["tr8n_translations.language_id = ? and tr8n_translations.translation_key_id in (select tr8n_translation_key_sources.translation_key_id from tr8n_translation_key_sources where tr8n_translation_key_sources.translation_source_id = ?)", language_id, translation_source_id],
-        :conditions => ["tr8n_translations.language_id = ? and tr8n_translation_key_sources.translation_source_id = ?", language_id, translation_source_id],
-        :joins => "join tr8n_translation_key_sources on tr8n_translation_key_sources.translation_key_id = tr8n_translations.translation_key_id"
-    )
+    self.locked_key_count = Tr8n::TranslationKey.where(['tkl.language_id = ? and tks.translation_source_id = ? and tkl.locked = ?', language_id, translation_source_id, true])
+        .joins('JOIN tr8n_translation_key_locks AS tkl ON tr8n_translation_keys.id = tkl.translation_key_id')
+        .joins('JOIN tr8n_translation_key_sources AS tks ON tr8n_translation_keys.id = tks.translation_key_id')
+        .distinct.count('tr8n_translation_keys.id')
 
-    self.locked_key_count = Tr8n::TranslationKey.count("distinct tr8n_translation_keys.id",
-        :conditions => ["tkl.language_id = ? and tks.translation_source_id = ? and tkl.locked = ?", language_id, translation_source_id, true],
-        :joins => [
-          "join tr8n_translation_key_locks as tkl on tr8n_translation_keys.id = tkl.translation_key_id",
-          "join tr8n_translation_key_sources as tks on tr8n_translation_keys.id = tks.translation_key_id"
-        ]
-    )
-
-    self.translated_key_count = Tr8n::TranslationKey.count("distinct tr8n_translation_keys.id",
-        :conditions => ["t.language_id = ? and tks.translation_source_id = ?", language_id, translation_source_id],
-        :joins => [
-          "join tr8n_translations as t on tr8n_translation_keys.id = t.translation_key_id",
-          "join tr8n_translation_key_sources as tks on tr8n_translation_keys.id = tks.translation_key_id"
-        ]
-    )
+    self.translated_key_count = Tr8n::TranslationKey.where(['t.language_id = ? and tks.translation_source_id = ?', language_id, translation_source_id])
+        .joins('JOIN tr8n_translations AS t ON tr8n_translation_keys.id = t.translation_key_id')
+        .joins('JOIN tr8n_translation_key_sources AS tks ON tr8n_translation_keys.id = tks.translation_key_id')
+        .distinct.count('tr8n_translation_keys.id')
 
     save
 

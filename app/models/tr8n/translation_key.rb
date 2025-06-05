@@ -574,7 +574,7 @@ class Tr8n::TranslationKey < ApplicationRecord
   end
 
   def update_translation_count!
-    update(:translation_count => Tr8n::Translation.count(:conditions => ["translation_key_id = ?", self.id]))
+    update(:translation_count => Tr8n::Translation.where(:translation_key_id => self.id).count)
   end
 
   # deprecated

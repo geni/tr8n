@@ -60,7 +60,7 @@ class Tr8n::SyncLog < ApplicationRecord
     # STDOUT.sync = true
 
     languages = Tr8n::Language.enabled_languages
-    total_key_count = Tr8n::TranslationKey.count(:conditions => conditions)
+    total_key_count = Tr8n::TranslationKey.where(conditions).count
     log("#{total_key_count} translation keys will be synchronized with the remote server in chunks of #{batch_size} keys...")
 
     Tr8n::TranslationKey.find_each(:conditions => conditions, :batch_size => batch_size) do |key|
