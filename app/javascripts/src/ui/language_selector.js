@@ -105,6 +105,10 @@ Tr8n.LanguageSelector.prototype = {
   },
 
   enableInlineTranslations: function() {
+    if (!Tr8n.element('source_url')) {
+      return;  // likely keyboard shortcut misfire
+    }
+
     Tr8n.element('source_url').value = location;
     Tr8n.element('language_selector_action').value = 'enable_inline_mode';
     Tr8n.element('language_selector_form').submit();
@@ -125,8 +129,13 @@ Tr8n.LanguageSelector.prototype = {
   },
 
   toggleInlineTranslations: function() {
+    if (!Tr8n.element('source_url')) {
+      return;  // likely keyboard shortcut misfire
+    }
+
     Tr8n.element('source_url').value = location;
     Tr8n.element('language_selector_action').value = 'toggle_inline_mode';
     Tr8n.element('language_selector_form').submit();
   }
 }
+
