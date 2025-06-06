@@ -1,5 +1,3 @@
-#RAILS_GEM_VERSION = '2.3.10' unless defined? RAILS_GEM_VERSION
-
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 require 'pp'
@@ -11,8 +9,6 @@ Rails::Initializer.run do |config|
     :session_key => '_tr8n_session',
     :secret => '09ae61ae208e3df7066ff7d514533fcd'
   }
+
+  config.rails_lts_options = { :default => :compatible}
 end
-
-$KCODE = 'UTF8'
-
-

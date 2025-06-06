@@ -244,7 +244,7 @@
   enabled:  false
 "km":
   english_name: "Cambodian"
-  native_name: "Cambodian"
+  native_name: "Khmer"
   google_key: "km"
   facebook_key: ""
   enabled:  false
@@ -564,31 +564,31 @@
   enabled:  true
   featured_index: 600
 "de-AT":
-  english_name: "German (Austria)" 
+  english_name: "German (Austria)"
   native_name: "Deutsch (Austria)"
   google_key: "de"
   facebook_key: ""
   enabled:  false
 "de-DE":
-  english_name: "German (Germany)" 
+  english_name: "German (Germany)"
   native_name: "Deutsch (Germany)"
   google_key: "de"
   facebook_key: ""
   enabled:  false
 "de-LI":
-  english_name: "German (Liechtenstein)" 
+  english_name: "German (Liechtenstein)"
   native_name: "Deutsch (Liechtenstein)"
   google_key: "de"
   facebook_key: ""
   enabled:  false
 "de-LU":
-  english_name: "German (Luxembourg)" 
+  english_name: "German (Luxembourg)"
   native_name: "Deutsch (Luxembourg)"
   google_key: "de"
   facebook_key: ""
   enabled:  false
 "de-CH":
-  english_name: "German (Switzerland)" 
+  english_name: "German (Switzerland)"
   native_name: "Deutsch (Switzerland)"
   google_key: "de"
   facebook_key: ""
@@ -607,7 +607,7 @@
   enabled:  false
 "gn":
   english_name: "Guarani"
-  native_name: "Avañe\ẽ"
+  native_name: "Avañe'ẽ"
   google_key: "gn"
   facebook_key: "gn-PY"
   enabled:  false
@@ -738,12 +738,6 @@
   english_name: "Kazakh"
   native_name: "Қазақша"
   google_key: "kk"
-  facebook_key: ""
-  enabled:  false
-"km":
-  english_name: "Khmer"
-  native_name: "Khmer"
-  google_key: ""
   facebook_key: ""
   enabled:  false
 "rw":
@@ -1172,12 +1166,6 @@
   google_key: "sr"
   facebook_key: ""
   enabled:  false
-"sd":
-  english_name: "Sindhi"
-  native_name: "Sindhi"
-  google_key: ""
-  facebook_key: ""
-  enabled:  false
 "sh":
   english_name: "Serbo-Croatian"
   native_name: "Serbo-Croatian"
@@ -1241,12 +1229,6 @@
 "nso":
   english_name: "Sotho (Northern)"
   native_name: "Sotho (Northern)"
-  google_key: ""
-  facebook_key: ""
-  enabled:  false
-"st":
-  english_name: "Sotho (Southern)"
-  native_name: "Sotho (Southern)"
   google_key: ""
   facebook_key: ""
   enabled:  false
@@ -1401,12 +1383,6 @@
   google_key: "sv"
   facebook_key: ""
   enabled:  false
-"tl":
-  english_name: "Tagalog"
-  native_name: "Tagalog"
-  google_key: ""
-  facebook_key: ""
-  enabled:  false
 "pf":
   english_name: "Tahitian"
   native_name: "Mā`ohi"
@@ -1470,12 +1446,6 @@
 "ts":
   english_name: "Tsonga"
   native_name: "Tsonga"
-  google_key: ""
-  facebook_key: ""
-  enabled:  false
-"tn":
-  english_name: "Tswana"
-  native_name: "Tswana"
   google_key: ""
   facebook_key: ""
   enabled:  false

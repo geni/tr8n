@@ -1,17 +1,16 @@
-require File.expand_path(File.dirname(__FILE__) + '/base_test.rb') 
+require_relative '../test_helper'
 
-class Tr8n::TranslationKeyTest < Tr8n::BaseTest
+class Tr8n::TranslationKeyTest < Tr8n::TestCase
 
   def setup
     super
     @user = Tr8n::Translator.create!(:id => 2, :user_id => 2, :name => "Mike")
-    @russian = Tr8n::Language.for("ru")
-    @spanish = Tr8n::Language.create!(:id => 1, :locale => "es", :english_name => "Spanish")
+    Tr8n::Config.init(@russian.locale, @current_user)
   end
 
   test "find or create a translation key" do
     key = Tr8n::TranslationKey.find_or_create("Hello World", "We must start with this sentence!")
-    assert key.key   
+    assert key.key
     the_key = Tr8n::TranslationKey.find_or_create("Hello World", "We must start with this sentence!")
     assert key.key, the_key.key
   end
@@ -22,11 +21,11 @@ class Tr8n::TranslationKeyTest < Tr8n::BaseTest
     assert key.key
     assert key.translation_tokens?
     assert (not key.decoration_tokens?)
-    
+
     assert_equal ["{user}", "{count}"], key.tokens.collect{|t| t.sanitized_name}
     assert_equal ["{user}", "{count}"], key.translation_tokens.collect{|t| t.sanitized_name}
   end
-  
+
   test "basic translations" do
     key = Tr8n::TranslationKey.find_or_create("Hello World")
     t = key.translate(@default_language)
@@ -63,20 +62,20 @@ class Tr8n::TranslationKeyTest < Tr8n::BaseTest
     assert_equal ["{custom:gender}", "{custom:gender|his,her}"], key.tokens.collect{|t| t.full_name}
     assert_equal ["Tr8n::Tokens::DataToken", "Tr8n::Tokens::TransformToken"], key.tokens.collect{|t| t.class.name}
     assert_equal "Mike updated his profile", key.translate(@default_language, {:custom => @user})
-    
+
     key = Tr8n::TranslationKey.find_or_create("{user} updated {user|his,her} profile")
     assert_equal ["{user}", "{user|his,her}"], key.tokens.collect{|t| t.full_name}
     assert_equal ["Tr8n::Tokens::DataToken", "Tr8n::Tokens::TransformToken"], key.tokens.collect{|t| t.class.name}
     assert_equal "Mike updated his profile", key.translate(@default_language, :user => @user)
-    
+
     @user.stubs(:name).returns("Tina")
     @user.stubs(:gender).returns("female")
     assert_equal "Tina updated her profile", key.translate(@default_language, :user => @user)
-    
+
     @user.stubs(:name).returns("Alex")
     @user.stubs(:gender).returns("unknown")
     assert_equal "Alex updated his/her profile", key.translate(@default_language, :user => @user)
-    
+
     key = Tr8n::TranslationKey.find_or_create("{user} updated {user | his, her, his-her} profile")
     assert_equal ["{user}", "{user | his, her, his-her}"], key.tokens.collect{|t| t.full_name}
     assert_equal ["Tr8n::Tokens::DataToken", "Tr8n::Tokens::TransformToken"], key.tokens.collect{|t| t.class.name}
@@ -88,7 +87,7 @@ class Tr8n::TranslationKeyTest < Tr8n::BaseTest
     assert_equal ["Tr8n::Tokens::TransformToken"], key.tokens.collect{|t| t.class.name}
     assert_equal "Alex updated his/her profile", key.translate(@default_language, :user => [@user, :name])
   end
-  
+
   test "number based translations in English" do
     # old way of doing things
     key = Tr8n::TranslationKey.find_or_create("{val:number} {_messages}")
@@ -108,7 +107,7 @@ class Tr8n::TranslationKeyTest < Tr8n::BaseTest
     assert_equal ["Tr8n::Tokens::DataToken", "Tr8n::Tokens::DataToken", "Tr8n::Tokens::HiddenToken"], key.tokens.collect{|t| t.class.name}
     assert_equal "Alex is now 5 years old", key.translate(@default_language, :user => [@user, :name], :years => @user.age, :_years => "year".pluralize_for(@user.age))
 
-    # new way 
+    # new way
     key = Tr8n::TranslationKey.find_or_create("{user} is now {age} {age|year} old")
     assert_equal ["{user}", "{age}", "{age|year}"], key.tokens.collect{|t| t.full_name}
     assert_equal ["{user}", "{age}", "{age}"], key.tokens.collect{|t| t.sanitized_name}
@@ -133,10 +132,10 @@ class Tr8n::TranslationKeyTest < Tr8n::BaseTest
     assert_equal "1 person", key.translate(@default_language, :count => 1)
     assert_equal "2 people", key.translate(@default_language, :count => 2)
     assert_equal "0 people", key.translate(@default_language, :count => 0)
-  end  
-  
+  end
+
   test "decoration tokens" do
-    Tr8n::Config.stubs(:default_lambdas).returns({"b" => "<strong>{$0}</strong>"})
+    # see config/tr8n/tokens/decorations.yml
 
     key = Tr8n::TranslationKey.find_or_create("[b: hello world]")
     assert_equal ["[b: hello world]"], key.tokens.collect{|t| t.full_name}
@@ -145,20 +144,18 @@ class Tr8n::TranslationKeyTest < Tr8n::BaseTest
     assert_equal "<b>hello world</b>", key.translate(@default_language, :b => lambda{|str| "<b>#{str}</b>"})
     assert_equal "<b>hello world</b>", key.translate(@default_language, :b => "<b>{$0}</b>")
     assert_equal "<strong>hello world</strong>", key.translate(@default_language)
-    
-    Tr8n::Config.stubs(:default_lambdas).returns({"link" => "<a href='{$1}'>{$0}</a>"})
+
     key = Tr8n::TranslationKey.find_or_create("[link: click here]")
     assert_equal ["[link: click here]"], key.tokens.collect{|t| t.full_name}
     assert_equal ["[link: ]"], key.tokens.collect{|t| t.sanitized_name}
     assert_equal ["Tr8n::Tokens::DecorationToken"], key.tokens.collect{|t| t.class.name}
     assert_equal "<a href='www.google.com' style=''>click here</a>", key.translate(@default_language, :link => ["www.google.com"])
 
-    Tr8n::Config.stubs(:default_lambdas).returns({"link" => "<a href='{$1}' style='{$2}'>{$0}</a>"})
     assert_equal "<a href='www.google.com' style=''>click here</a>", key.translate(@default_language, :link => ["www.google.com"])
   end
-  
+
   test "nested tokens" do
-    Tr8n::Config.stubs(:default_lambdas).returns({"b" => "<b>{$0}</b>"})
+    # see config/tr8n/tokens/decorations.yml
     @user.stubs(:name).returns("Michael")
 
     key = Tr8n::TranslationKey.find_or_create("Hello [b: {user.name}]")
@@ -166,96 +163,82 @@ class Tr8n::TranslationKeyTest < Tr8n::BaseTest
     assert_equal ["{user.name}", "[b: ]"], key.tokens.collect{|t| t.sanitized_name}
     assert_equal ["Tr8n::Tokens::MethodToken", "Tr8n::Tokens::DecorationToken"], key.tokens.collect{|t| t.class.name}
     assert_equal "Hello <strong>Michael</strong>", key.translate(@default_language, :user => @user)
-    
+
     key = Tr8n::TranslationKey.find_or_create("Dear {user}, you have [b: {count||message}] in your inbox")
     assert_equal ["{user}", "{count||message}", "[b: {count||message}]"], key.tokens.collect{|t| t.full_name}
     assert_equal ["{user}", "{count}", "[b: ]"], key.tokens.collect{|t| t.sanitized_name}
     assert_equal ["Tr8n::Tokens::DataToken", "Tr8n::Tokens::TransformToken", "Tr8n::Tokens::DecorationToken"], key.tokens.collect{|t| t.class.name}
     assert_equal "Dear Michael, you have <strong>5 messages</strong> in your inbox", key.translate(@default_language, :user => @user, :count => 5)
-  end  
-#  
-#  test "words" do
-#    key = Tr8n::TranslationKey.find_or_create("Hello [link1: {user}], you have [link2: {count} {_posted__items}]")
-#    assert_equal ["Hello", "Link1", "User", "Have", "Link2", "Count", "Posted", "Items"], key.words
-#  end
-#  
-#  
-##  test "dependency tokens" do
-##    ["user", "{profile}", "actor", "{target}", "first_user", "my_profile", "{story_actor}", "viewing_user"].each do |token|
-##      assert Tr8n::TranslationKey.gender_dependent_token?(token)
-##    end
-##    
-##    ["message_count", "message_num", "{my_age}", "{hours}", "current_minutes", "years", "seconds"].each do |token|
-##      assert Tr8n::TranslationKey.number_dependent_token?(token)
-##    end
-##
-##    key = Tr8n::TranslationKey.find_or_create("Hello [link1: {user}], you have [link2: {count} {_posted__items}]")
-##    assert_equal ["user", "count", "viewing_user"], key.dependency_tokens
-##  end
-#  
-#  
-#  test "locking translation key" do
-#    key = Tr8n::TranslationKey.find_or_create("Hello [link1: {user}], you have [link2: {count} {_posted__items}]")
-#    assert key.unlocked?
-#    key.lock!
-#    assert key.locked?
-#    key.unlock!
-#    assert key.unlocked?
-#  end
-#  
-#  test "simple translations" do
-#    key = Tr8n::TranslationKey.find_or_create("Hello World")
-#
-#    assert key.add_translation("Привет Мир")
-#    
-#    # for Russian
-#    assert_equal "Привет Мир", key.translate(@russian)
-#    
-#    # for Spanish
-#    assert_equal "Hello World", key.translate(@spanish)
-#  end
-#
-#  test "simple token translations" do
-#    key = Tr8n::TranslationKey.find_or_create("Hello {name}")
-#
-#    assert key.add_translation("Привет {name}")
-#    
-#    # for Russian
-#    assert_equal "Привет Mike", key.translate(@russian, :name => "Mike")
-#    
-#    # for Spanish
-#    assert_equal "Hello Mike", key.translate(@spanish, :name => "Mike")
-#  end
-#
-#  test "object translations" do
-#    key = Tr8n::TranslationKey.find_or_create("Hello {user.first_name}")
-#    assert key.add_translation("Привет {user.first_name}")
-#    
-#    # for Russian
-#    assert_equal "Привет Mike", key.translate(@russian, :user => @user)
-#    
-#    # for Spanish
-#    assert_equal "Hello Mike", key.translate(@spanish, :user => @user)
-#  end
-#
-#  test "more object translations" do
-#    key = Tr8n::TranslationKey.find_or_create("Hello {user}")
-#    assert key.add_translation("Привет {user}")
-#    
-#    assert_equal "Привет Mike", key.translate(@russian, :user => [@user, @user.name])
-#    assert_equal "Привет Mike", key.translate(@russian, :user => [@user, :name])
-#  end
-#
-#  test "number based translations" do
-##    key = Tr8n::TranslationKey.find_or_create("{count} {_messages}")
-##    lrule1 = NumericRule.create(:language => @russian, :multipart => false, :part1 => "is", :value1 => "1")    
-##    lrule2 = NumericRule.create(:language => @russian, :multipart => false, :part1 => "is_not", :value1 => "1")    
-##
-##    assert key.add_translation("{count} сообщение", [TranslationRule.new(:language_rule => lrule1, :token => "count")])
-###    assert key.add_translation("{count} сообщений", [TranslationRule.new(:language_rule => lrule2, :token => "count")])
-##    
-##    assert_equal "1 сообщение", key.translate(@russian, :count => 1, :_messages => "message")
-## #   assert_equal "10 сообщений", key.translate(@russian, :count => 10, :_messages => "messages")
-#  end
+  end
 
-end
+  test "words" do
+    key = Tr8n::TranslationKey.find_or_create("Hello [link1: {user}], you have [link2: {count} {_posted__items}]")
+    assert_equal ["Hello", "Link1", "User", "Have", "Link2", "Count", "Posted", "Items"], key.words
+  end
+
+  test "locking translation key" do
+    key = Tr8n::TranslationKey.find_or_create("Hello [link1: {user}], you have [link2: {count} {_posted__items}]")
+    assert key.unlocked?
+    key.lock!
+    assert key.locked?
+    key.unlock!
+    assert key.unlocked?
+  end
+
+  test "simple translations" do
+    key = Tr8n::TranslationKey.find_or_create("Hello World")
+
+    assert key.add_translation("Привет Мир")
+
+    # for Russian
+    assert_equal "Привет Мир", key.translate(@russian)
+
+    # for Spanish
+    assert_equal "Hello World", key.translate(@spanish)
+  end
+
+  test "simple token translations" do
+    key = Tr8n::TranslationKey.find_or_create("Hello {name}")
+
+    assert key.add_translation("Привет {name}")
+
+    # for Russian
+    assert_equal "Привет Mike", key.translate(@russian, :name => "Mike")
+
+    # for Spanish
+    assert_equal "Hello Mike", key.translate(@spanish, :name => "Mike")
+  end
+
+  test "object translations" do
+    @user.stubs(:first_name => 'Mike')
+    key = Tr8n::TranslationKey.find_or_create("Hello {user.first_name}")
+    assert key.add_translation("Привет {user.first_name}")
+
+    # for Russian
+    assert_equal "Привет Mike", key.translate(@russian, :user => @user)
+
+    # for Spanish
+    assert_equal "Hello Mike", key.translate(@spanish, :user => @user)
+  end
+
+  test "more object translations" do
+    key = Tr8n::TranslationKey.find_or_create("Hello {user}")
+    assert key.add_translation("Привет {user}")
+
+    assert_equal "Привет Mike", key.translate(@russian, :user => [@user, @user.name])
+    assert_equal "Привет Mike", key.translate(@russian, :user => [@user, :name])
+  end
+
+  test "number based translations" do
+    key    = Tr8n::TranslationKey.find_or_create("{count} {_messages}")
+    lrule1 = Tr8n::NumericRule.create(:language => @russian, :definition => {:multipart => false, :part1 => 'is', :value1 => '1'})
+    lrule2 = Tr8n::NumericRule.create(:language => @russian, :definition => {:multipart => false, :part1 => 'is_not', :value1 => '1'})
+
+    assert key.add_translation("{count} сообщение", [{:token => 'count', :rule_id => [lrule1.id]}])
+    assert key.add_translation("{count} сообщений", [{:token => 'count', :rule_id => [lrule2.id]}])
+
+    assert_equal "1 сообщение", key.translate(@russian, :count => 1, :_messages => "message")
+    assert_equal "10 сообщений", key.translate(@russian, :count => 10, :_messages => "messages")
+  end
+
+end # class Tr8n::TranslationKeyTest

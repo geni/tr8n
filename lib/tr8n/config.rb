@@ -179,15 +179,19 @@ class Tr8n::Config
 
   def self.init_default_languages
     puts "Initializing default languages..." unless env.test?
-    default_languages.each do |locale, info|
-      puts ">> Initializing #{info[:english_name]}..."
-      lang = Tr8n::Language.find_or_create(locale, info[:english_name])
-      info[:right_to_left] = false if info[:right_to_left].nil?
-      fallback_key = info.delete(:fallback_key)
-      lang.update_attributes(info)
-      lang.reset!
-    end
+    default_languages.keys.each { |locale| init_language(locale) }
     puts "Created #{default_languages.size} languages."
+  end
+
+  def self.init_language(locale)
+    info = default_languages[locale]
+    puts ">> Initializing #{info[:english_name]}..."
+    lang = Tr8n::Language.find_or_create(locale, info[:english_name])
+    info[:right_to_left] = false if info[:right_to_left].nil?
+    fallback_key = info.delete(:fallback_key)
+    lang.update_attributes(info)
+    lang.reset!
+    lang
   end
 
   def self.init_glossary
