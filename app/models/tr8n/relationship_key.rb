@@ -55,7 +55,7 @@ class Tr8n::RelationshipKey < Tr8n::TranslationKey
         find_by_key(key) || create(:key => key, :label => label || key, :description => description, :level => 0, :admin => false)
     end
   end
-  
+
   def self.for_key(key)
     Tr8n::Cache.fetch("relationship_key_#{key}") do
         find_by_key(key)
@@ -71,7 +71,7 @@ class Tr8n::RelationshipKey < Tr8n::TranslationKey
   end
 
   # must be overloaded
-  def gender 
+  def gender
     'unknown'
   end
 
@@ -85,35 +85,35 @@ class Tr8n::RelationshipKey < Tr8n::TranslationKey
     conditions[0] << " tr8n_translation_keys.id in (select tr8n_translations.translation_key_id from tr8n_translations where tr8n_translations.language_id = ? and tr8n_translations.rank >= ?) "
     conditions << lang.id
     conditions << Tr8n::Config.translation_threshold
-    Tr8n::RelationshipKey.find(:all, :conditions => conditions)
+    Tr8n::RelationshipKey.where(conditions)
   end
 
 
   def translate(language = Tr8n::Config.current_language, token_values = {}, options = {})
     return find_all_valid_translations(valid_translations_for(language)) if options[:api]
-    
+
     translation_language, translation = find_first_valid_translation_for_language(language, token_values)
-    
+
     # if you want to present the label in it's sanitized form - for the phrase list
-    if options[:default_language] 
+    if options[:default_language]
       return decorate_translation(language, sanitized_label, translation != nil, options)
     end
-    
+
     if translation
       translated_label = substitute_tokens(translation.label, token_values, options, language)
       return decorate_translation(language, translated_label, translation != nil, options.merge(:fallback => (translation_language != language)))
     end
 
-    # no translation found  
+    # no translation found
     translated_label = substitute_tokens(label, token_values, options, Tr8n::Config.default_language)
-    decorate_translation(language, translated_label, translation != nil, options)  
+    decorate_translation(language, translated_label, translation != nil, options)
   end
 
   def default_translation
     @default_translation ||= begin
       trn = valid_translations_for(Tr8n::Config.default_language).first
       trn.nil? ? "" : trn.label
-    end  
+    end
   end
 
   ###############################################################
@@ -152,7 +152,7 @@ class Tr8n::RelationshipKey < Tr8n::TranslationKey
   def sort_key
     label
   end
-  
+
   ###############################################################
   ## Search Related Stuff
   ###############################################################

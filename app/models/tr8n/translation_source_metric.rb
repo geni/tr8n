@@ -52,21 +52,25 @@ class Tr8n::TranslationSourceMetric < ApplicationRecord
   end
 
   def update_metrics!
-    self.key_count = Tr8n::TranslationKey.where(['tks.translation_source_id = ?', translation_source_id])
+    self.key_count = Tr8n::TranslationKey
+        .where(['tks.translation_source_id = ?', translation_source_id])
         .joins('JOIN tr8n_translation_key_sources AS tks ON tr8n_translation_keys.id = tks.translation_key_id')
         .distinct.count('tr8n_translation_keys.id')
 
-    self.translation_count = Tr8n::Translation.where(['tr8n_translations.language_id = ? and tr8n_translation_key_sources.translation_source_id = ?', language_id, translation_source_id])
+    self.translation_count = Tr8n::Translation
+        .where(['tr8n_translations.language_id = ? and tr8n_translation_key_sources.translation_source_id = ?', language_id, translation_source_id])
         .joins('JOIN tr8n_translation_key_sources ON tr8n_translation_key_sources.translation_key_id = tr8n_translations.translation_key_id')
         .distinct.count('tr8n_translations.id'
     )
 
-    self.locked_key_count = Tr8n::TranslationKey.where(['tkl.language_id = ? and tks.translation_source_id = ? and tkl.locked = ?', language_id, translation_source_id, true])
+    self.locked_key_count = Tr8n::TranslationKey
+        .where(['tkl.language_id = ? and tks.translation_source_id = ? and tkl.locked = ?', language_id, translation_source_id, true])
         .joins('JOIN tr8n_translation_key_locks AS tkl ON tr8n_translation_keys.id = tkl.translation_key_id')
         .joins('JOIN tr8n_translation_key_sources AS tks ON tr8n_translation_keys.id = tks.translation_key_id')
         .distinct.count('tr8n_translation_keys.id')
 
-    self.translated_key_count = Tr8n::TranslationKey.where(['t.language_id = ? and tks.translation_source_id = ?', language_id, translation_source_id])
+    self.translated_key_count = Tr8n::TranslationKey
+        .where(['t.language_id = ? and tks.translation_source_id = ?', language_id, translation_source_id])
         .joins('JOIN tr8n_translations AS t ON tr8n_translation_keys.id = t.translation_key_id')
         .joins('JOIN tr8n_translation_key_sources AS tks ON tr8n_translation_keys.id = tks.translation_key_id')
         .distinct.count('tr8n_translation_keys.id')

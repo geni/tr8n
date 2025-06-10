@@ -139,8 +139,8 @@ module Tr8n
       translation_source_language = Tr8n::TranslationSourceLanguage.find_or_create(translation_source, language)
 
       if last_updated_at(translation_source_language) < translation_source_language.updated_at
-        keys = Tr8n::TranslationKey.find(:all, :conditions => ["id in (select translation_key_id from #{Tr8n::TranslationKeySource.table_name} where translation_source_id = ?) and updated_at > ?",
-                                          translation_source.id, last_updated_at(translation_source_language)])
+        keys = Tr8n::TranslationKey
+                .where(["id in (select translation_key_id from #{Tr8n::TranslationKeySource.table_name} where translation_source_id = ?) and updated_at > ?", translation_source.id, last_updated_at(translation_source_language)])
 
         # pp "****************************** Found #{keys.count} outdated keys for this language"
         keys.each do |key|

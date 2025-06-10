@@ -62,9 +62,20 @@ class Tr8n::TranslatorMetric < ApplicationRecord
   # updated when an action is done by the translator
   def update_metrics!
     if language
-      self.total_translations = Tr8n::Translation.where(:translator_id => translator.id, :language_id => language.id).count
-      self.total_votes = Tr8n::TranslationVote.joins(:translation).where(:tr8n_translation_votes => {:translator_id => translator.id}, :tr8n_translations => {:language_id => language.id}).count
-      self.positive_votes = Tr8n::TranslationVote.joins(:translation).where(:tr8n_translation_votes => {:translator_id => translator.id, :vote => 1}, :tr8n_translations => {:language_id => language.id}).count
+      self.total_translations = Tr8n::Translation
+                                  .where(:translator_id => translator.id, :language_id => language.id)
+                                  .count
+
+      self.total_votes = Tr8n::TranslationVote
+                          .where(:tr8n_translation_votes => {:translator_id => translator.id}, :tr8n_translations => {:language_id => language.id})
+                          .joins(:translation)
+                          .count
+
+      self.positive_votes = Tr8n::TranslationVote
+                              .where(:tr8n_translation_votes => {:translator_id => translator.id, :vote => 1}, :tr8n_translations => {:language_id => language.id})
+                              .joins(:translation)
+                              .count
+
       self.negative_votes = self.total_votes - self.positive_votes
     else
       self.total_translations = Tr8n::Translation.where(:translator_id => translator.id).count
@@ -79,11 +90,20 @@ class Tr8n::TranslatorMetric < ApplicationRecord
   # updated when an action is done to the translator's translations
   def update_rank!
     if language
-      self.accepted_translations = Tr8n::Translation.where(:translator_id => translator.id, :language_id => language.id, :rank => Tr8n::Config.translation_threshold..Float::INFINITY).count
-      self.rejected_translations = Tr8n::Translation.where(:translator_id => translator.id, :language_id => language.id, :rank => 0..Float::INFINITY).count
+      self.accepted_translations = Tr8n::Translation
+                                    .where(:translator_id => translator.id, :language_id => language.id, :rank => Tr8n::Config.translation_threshold..Float::INFINITY)
+                                    .count
+
+      self.rejected_translations = Tr8n::Translation
+                                    .where(:translator_id => translator.id, :language_id => language.id, :rank => 0..Float::INFINITY)
+                                    .count
     else
-      self.accepted_translations = Tr8n::Translation.where(:translator_id => translator.id, :rank => Tr8n::Config.translation_threshold..Float::INFINITY).count
-      self.rejected_translations = Tr8n::Translation.where(:translator_id => translator.id, :rank => 0..Float::INFINITY).count
+      self.accepted_translations = Tr8n::Translation
+                                    .where(:translator_id => translator.id, :rank => Tr8n::Config.translation_threshold..Float::INFINITY)
+                                    .count
+      self.rejected_translations = Tr8n::Translation
+                                    .where(:translator_id => translator.id, :rank => 0..Float::INFINITY)
+                                    .count
     end
 
     save

@@ -56,7 +56,10 @@ module Tr8n::Admin::BaseHelper
   def language_metric_chart(field = :user_count, limit = 20)
     labels = []
     counts = []
-    Tr8n::TotalLanguageMetric.find(:all, :conditions => ["language_id <> ?", Tr8n::Config.default_language.id], :order => "#{field} desc", :limit => limit).each do |metric|
+    Tr8n::TotalLanguageMetric.where(["language_id <> ?", Tr8n::Config.default_language.id])
+                             .order("#{field} desc")
+                             .limit(limit)
+    .each do |metric|
       labels << metric.language.english_name
       counts << (metric.send(field) || 0)
     end

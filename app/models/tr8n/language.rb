@@ -252,13 +252,13 @@ class Tr8n::Language < ApplicationRecord
   end
 
   def update_daily_metrics_for(metric_date)
-    metric = Tr8n::DailyLanguageMetric.find(:first, :conditions => ["language_id = ? and metric_date = ?", self.id, metric_date])
+    metric = Tr8n::DailyLanguageMetric.where(["language_id = ? and metric_date = ?", self.id, metric_date]).first
     metric ||= Tr8n::DailyLanguageMetric.create(:language_id => self.id, :metric_date => metric_date)
     metric.update_metrics!
   end
 
   def update_monthly_metrics_for(metric_date)
-    metric = Tr8n::MonthlyLanguageMetric.find(:first, :conditions => ["language_id = ? and metric_date = ?", self.id, metric_date])
+    metric = Tr8n::MonthlyLanguageMetric.where(["language_id = ? and metric_date = ?", self.id, metric_date]).first
     metric ||= Tr8n::MonthlyLanguageMetric.create(:language_id => self.id, :metric_date => metric_date)
     metric.update_metrics!
   end
@@ -331,7 +331,10 @@ class Tr8n::Language < ApplicationRecord
   end
 
   def recently_added_forum_messages
-    @recently_added_forum_messages ||= Tr8n::LanguageForumMessage.where(:language_id => self.id).order("created_at desc").limit(5)
+    @recently_added_forum_messages ||= Tr8n::LanguageForumMessage
+                                        .where(:language_id => self.id)
+                                        .order("created_at desc")
+                                        .limit(5)
   end
 
   def recently_added_translations
@@ -348,7 +351,10 @@ class Tr8n::Language < ApplicationRecord
   end
 
   def recently_updated_votes(translator = Tr8n::Config.current_translator)
-    @recently_updated_votes ||= Tr8n::TranslationVote.where("translation_id in (select tr8n_translations.id from tr8n_translations where tr8n_translations.language_id = ? and tr8n_translations.translator_id = ?)", self.id, translator.id).order("updated_at desc").limit(5)
+    @recently_updated_votes ||= Tr8n::TranslationVote
+                                  .where("translation_id in (select tr8n_translations.id from tr8n_translations where tr8n_translations.language_id = ? and tr8n_translations.translator_id = ?)", self.id, translator.id)
+                                  .order("updated_at desc")
+                                  .limit(5)
   end
 
 end

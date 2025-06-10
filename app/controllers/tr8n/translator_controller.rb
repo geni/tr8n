@@ -118,7 +118,7 @@ class Tr8n::TranslatorController < Tr8n::BaseController
     if request.post?
       verify_authenticity_token
 
-      reported_object = params[:object_type].constantize.find(params[:object_id])
+      reported_object = params[:object_type].constantize.find_by_id(params[:object_id])
       Tr8n::TranslatorReport.submit(Tr8n::Config.current_translator, reported_object, params[:reason], params[:comment])
       trfn("Thank you for submitting your report.")
     end
@@ -127,12 +127,8 @@ class Tr8n::TranslatorController < Tr8n::BaseController
   end
 
   def assignments
-    @components = Tr8n::Component.find(:all,
-          :conditions => ["ct.translator_id = ?", Tr8n::Config.current_translator.id],
-          :joins => [
-            "join tr8n_component_translators as ct on tr8n_components.id = ct.component_id",
-          ]
-    )
+    @components = Tr8n::Component.where(["ct.translator_id = ?", Tr8n::Config.current_translator.id])
+                                 .joins("join tr8n_component_translators as ct on tr8n_components.id = ct.component_id")
   end
 
   def notifications
@@ -147,10 +143,8 @@ class Tr8n::TranslatorController < Tr8n::BaseController
   end
 
   def following
-    @translators = Tr8n::TranslatorFollowing.find(:all,
-                   :conditions => ["translator_id = ? and object_type = ?", tr8n_current_translator.id, "Tr8n::Translator"]).collect{|f| f.object}
-    @translation_keys = Tr8n::TranslatorFollowing.find(:all,
-                   :conditions => ["translator_id = ? and object_type = ?", tr8n_current_translator.id, "Tr8n::TranslationKey"]).collect{|f| f.object}
+    @translators = Tr8n::TranslatorFollowing.where(["translator_id = ? and object_type = ?", tr8n_current_translator.id, "Tr8n::Translator"]).collect{|f| f.object}
+    @translation_keys = Tr8n::TranslatorFollowing.where(["translator_id = ? and object_type = ?", tr8n_current_translator.id, "Tr8n::TranslationKey"]).collect{|f| f.object}
   end
 
 end

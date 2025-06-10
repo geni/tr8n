@@ -49,8 +49,9 @@ class Tr8n::MonthlyLanguageMetric < Tr8n::LanguageMetric
     attribs = default_attributes
 
     attribs.each do |key, value|
-      attribs[key] = Tr8n::DailyLanguageMetric.where(['language_id = ? and metric_date >= ? and metric_date < ?', language_id, metric_date, metric_date + 1.month])
-                                              .sum(key)
+      attribs[key] = Tr8n::DailyLanguageMetric
+                      .where(['language_id = ? and metric_date >= ? and metric_date < ?', language_id, metric_date, metric_date + 1.month])
+                      .sum(key)
     end
 
     update(attribs)

@@ -197,7 +197,7 @@ class Tr8n::Translation < ApplicationRecord
       conditions << self.id
     end
 
-    self.class.find(:all, :conditions => conditions).empty?
+    self.class.where(conditions).empty?
   end
 
   def clean?

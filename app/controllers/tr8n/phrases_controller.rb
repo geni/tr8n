@@ -74,10 +74,11 @@ class Tr8n::PhrasesController < Tr8n::BaseController
     conditions << tr8n_current_language.id
     conditions << @translation_key.id
 
-    @translations = Tr8n::Translation.find(:all, :conditions => conditions, :order => "rank desc, created_at desc")
-    @comments = Tr8n::TranslationKeyComment.paginate(:page => page, :per_page => per_page,
-                      :conditions => ["language_id = ? and translation_key_id = ?", tr8n_current_language.id, @translation_key.id],
-                      :order => "created_at desc")
+    @translations = Tr8n::Translation.where(conditions).order("rank desc, created_at desc")
+    @comments = Tr8n::TranslationKeyComment
+                  .where(["language_id = ? and translation_key_id = ?", tr8n_current_language.id, @translation_key.id])
+                  .order("created_at desc")
+                  .paginate(:page => page, :per_page => per_page)
 
     @grouping = {}
     if params[:grouped_by] != "nothing"
@@ -111,7 +112,7 @@ class Tr8n::PhrasesController < Tr8n::BaseController
 
   # main translation method used by the translator and translation screens
   def translate
-    @translation_key = Tr8n::TranslationKey.find(params[:translation_key_id])
+    @translation_key = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
     @translations = @translation_key.translations_for(tr8n_current_language)
     @source_url = params[:source_url] || request.env['HTTP_REFERER']
 
@@ -131,7 +132,7 @@ class Tr8n::PhrasesController < Tr8n::BaseController
     if params[:translation_id].blank?
       @translation = Tr8n::Translation.new(:translation_key => @translation_key, :language => tr8n_current_language, :translator => tr8n_current_translator)
     else
-      @translation = Tr8n::Translation.find(params[:translation_id])
+      @translation = Tr8n::Translation.find_by_id(params[:translation_id])
     end
 
     @translation.label = sanitize_label(params[:translation][:label])
@@ -156,7 +157,7 @@ class Tr8n::PhrasesController < Tr8n::BaseController
   end
 
   def vote
-    @translation = Tr8n::Translation.find(params[:translation_id])
+    @translation = Tr8n::Translation.find_by_id(params[:translation_id])
 
     @translation.vote!(tr8n_current_translator, vote_value(params[:vote]))
     @translation_key = @translation.translation_key
@@ -173,7 +174,7 @@ class Tr8n::PhrasesController < Tr8n::BaseController
 
   #  ajax based method for updating individual translations
   def update
-    @translation = Tr8n::Translation.find(params[:translation_id])
+    @translation = Tr8n::Translation.find_by_id(params[:translation_id])
     mode = params[:mode] || :view
 
     if request.post?
@@ -204,7 +205,7 @@ class Tr8n::PhrasesController < Tr8n::BaseController
   end
 
   def delete
-    translation = Tr8n::Translation.find(params[:translation_id])
+    translation = Tr8n::Translation.find_by_id(params[:translation_id])
     translator = translation.translator
 
     unless translation.can_be_edited_by?(tr8n_current_translator)
@@ -220,13 +221,13 @@ class Tr8n::PhrasesController < Tr8n::BaseController
   end
 
   def lock
-    @translation_key = Tr8n::TranslationKey.find(params[:translation_key_id])
+    @translation_key = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
     @translation_key.lock!
     redirect_to(:action => :view, :translation_key_id => @translation_key.id)
   end
 
   def unlock
-    @translation_key = Tr8n::TranslationKey.find(params[:translation_key_id])
+    @translation_key = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
     @translation_key.unlock!
     redirect_to(:action => :view, :translation_key_id => @translation_key.id)
   end
@@ -236,7 +237,7 @@ class Tr8n::PhrasesController < Tr8n::BaseController
   end
 
   def dictionary
-    @translation_key = Tr8n::TranslationKey.find(params[:translation_key_id])
+    @translation_key = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
     @definitions = Tr8n::Dictionary.load_definitions_for(@translation_key.words)
     render :partial => "dictionary", :layout => false
   end
@@ -245,7 +246,7 @@ class Tr8n::PhrasesController < Tr8n::BaseController
     if request.post?
       verify_authenticity_token
 
-      @translation_key = Tr8n::TranslationKey.find(params[:translation_key_id])
+      @translation_key = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
       Tr8n::TranslationKeyComment.create(:language => tr8n_current_language,
                                          :translator => tr8n_current_translator,
                                          :translation_key => @translation_key,
@@ -278,7 +279,7 @@ class Tr8n::PhrasesController < Tr8n::BaseController
   end
 
   def lb_sources
-    @translation_key = Tr8n::TranslationKey.find(params[:translation_key_id])
+    @translation_key = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
     render :layout => false
   end
 
@@ -304,7 +305,7 @@ private
     @translated = 0
     @locked = 0
 
-    sources = Tr8n::TranslationSource.find(:all, :conditions => ["source in (?)", sources])
+    sources = Tr8n::TranslationSource.where(["source in (?)", sources])
     if sources.empty?
       conditions = ["1=2"]
       return Tr8n::TranslationKey.paginate(:per_page => per_page, :page => page, :conditions => conditions, :order => "created_at desc")

@@ -62,7 +62,7 @@ module Tr8n::HelperMethods
 
     else  # translations are embedded right into the page
 
-      sources = Tr8n::TranslationSource.find(:all, :conditions => ["source in (?)", opts[:sources]])
+      sources = Tr8n::TranslationSource.where(["source in (?)", opts[:sources]])
       source_ids = sources.collect{|source| source.id}
 
       if source_ids.empty?
@@ -73,7 +73,7 @@ module Tr8n::HelperMethods
       end
 
       translations = []
-      Tr8n::TranslationKey.find(:all, :conditions => conditions).each_with_index do |tkey, index|
+      Tr8n::TranslationKey.where(conditions).each_with_index do |tkey, index|
         trn = tkey.translate(Tr8n::Config.current_language, {}, {:api => true})
         translations << trn
       end

@@ -29,7 +29,7 @@ class Tr8n::Admin::LanguageController < Tr8n::Admin::BaseController
   end
 
   def view
-    @lang = Tr8n::Language.find(params[:lang_id])
+    @lang = Tr8n::Language.find_by_id(params[:lang_id])
 
     klass = {
       :metrics => Tr8n::LanguageMetric,

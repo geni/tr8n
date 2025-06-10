@@ -48,25 +48,20 @@ class Tr8n::Notification < ApplicationRecord
   end
 
   def self.commenters(tkey, language)
-    Tr8n::TranslationKeyComment.find(:all,
-        :conditions => ["translation_key_id = ? and language_id = ?",
-                         tkey.id, language.id]
-    ).collect{|f| f.translator}
+    Tr8n::TranslationKeyComment.where(["translation_key_id = ? and language_id = ?", tkey.id, language.id])
+                               .collect {|f| f.translator}
   end
 
   def self.followers(obj)
-    Tr8n::TranslatorFollowing.find(:all,
-          :conditions => ["object_type = ? and object_id = ?",
-                          obj.class.name, obj.id]
-    ).collect{|f| f.translator}
+    Tr8n::TranslatorFollowing.where(["object_type = ? and object_id = ?", obj.class.name, obj.id])
+                             .collect {|f| f.translator}
   end
 
   def self.translators_for_translation(translation)
     tkey = translation.translation_key
 
     # find translators for all other translations of the key in this language
-    tanslations = Tr8n::Translation.find(:all, :conditions => ["translation_key_id = ? and language_id = ?",
-                                                 tkey.id, translation.language.id])
+    tanslations = Tr8n::Translation.where(["translation_key_id = ? and language_id = ?", tkey.id, translation.language.id])
     translators = []
     tanslations.each do |t|
       translators << t.translator

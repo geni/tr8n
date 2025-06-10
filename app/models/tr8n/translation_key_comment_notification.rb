@@ -48,8 +48,7 @@ class Tr8n::TranslationKeyCommentNotification < Tr8n::Notification
     tkey = comment.translation_key
 
     # find translators for all other translations of the key in this language
-    tanslations = Tr8n::Translation.find(:all, :conditions => ["translation_key_id = ? and language_id = ?", 
-                                                 tkey.id, comment.language.id])
+    tanslations = Tr8n::Translation.where(["translation_key_id = ? and language_id = ?", tkey.id, comment.language.id])
 
     translators = []
     tanslations.each do |t|
@@ -70,18 +69,18 @@ class Tr8n::TranslationKeyCommentNotification < Tr8n::Notification
 
   def title
     if object.translation_key.followed?
-      return tr("[link: {user}] commented on a translation to a phrase you are following.", nil, 
+      return tr("[link: {user}] commented on a translation to a phrase you are following.", nil,
           :user => actor, :link => [actor.url]
       )
     end
 
     if object.translation_key.commented?(object.language)
-      return tr("[link: {user}] replied to your comment.", nil, 
+      return tr("[link: {user}] replied to your comment.", nil,
           :user => actor, :link => [actor.url]
       )
     end
 
-    tr("[link: {user}] commented on a phrase you've translated.", nil, 
+    tr("[link: {user}] commented on a phrase you've translated.", nil,
       :user => actor, :link => [actor.url]
     )
   end

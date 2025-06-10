@@ -81,7 +81,7 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
 
       keys = params[:keys] || ''
       keys = keys.split(',')
-      keys = Tr8n::TranslationKey.find(:all, :conditions => ["id in (?)", keys])
+      keys = Tr8n::TranslationKey.where(["id in (?)", keys])
       keys.each do |key|
         Tr8n::TranslationKeySource.find_or_create(key, source)
       end
@@ -89,7 +89,7 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
       return redirect_to_source
     end
 
-    @sources = Tr8n::TranslationSource.find(:all, :order => "name asc, source asc").collect{|s| [s.name_and_source, s.id]}
+    @sources = Tr8n::TranslationSource.order("name asc, source asc").collect{|s| [s.name_and_source, s.id]}
     render :layout => false
   end
 
@@ -111,7 +111,7 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
     if request.post?
       verify_authenticity_token
 
-      lock = Tr8n::TranslationKeyLock.find(params[:lock_id])
+      lock = Tr8n::TranslationKeyLock.find_by_id(params[:lock_id])
 
       if params[:locked] == "true"
         lock.lock!
@@ -126,7 +126,7 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
   def lb_merge
     @keys = params[:keys] || ''
     @keys = @keys.split(',')
-    @keys = Tr8n::TranslationKey.find(:all, :conditions => ["id in (?)", @keys])
+    @keys = Tr8n::TranslationKey.where(["id in (?)", @keys])
     @key = @keys.first
 
     render :layout => false
@@ -137,7 +137,7 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
 
     keys = params[:keys] || ''
     keys = keys.split(',')
-    keys = Tr8n::TranslationKey.find(:all, :conditions => ["id in (?)", keys])
+    keys = Tr8n::TranslationKey.where(["id in (?)", keys])
     keys.each do |key|
       next if key.id == master_key.id
       key.translations.each do |translation|
@@ -211,7 +211,7 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
   end
 
   def delete_unverified_keys
-    Tr8n::TranslationKey.find(:all, :conditions => "verified_at is null").each do |key|
+    Tr8n::TranslationKey.where("verified_at is null").each do |key|
       next if key.translations.any?
       key.destroy
     end

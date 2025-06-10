@@ -30,36 +30,36 @@ class Tr8n::Api::V1::TranslationController < Tr8n::Api::V1::BaseController
     if params[:translation_key]
       translation_key = Tr8n::TranslationKey.find_by_key(params[:translation_key])
     else
-      translation_key = Tr8n::TranslationKey.find(params[:translation_key_id])
+      translation_key = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
     end
-    
+
     unless request.post?
       return sanitize_api_response({:error => "Please use a translator window for submitting translations"})
     end
 
     if params[:translation_id].blank?
       translation = Tr8n::Translation.new(:translation_key => translation_key, :language => tr8n_current_language, :translator => tr8n_current_translator)
-    else  
-      translation = Tr8n::Translation.find(params[:translation_id])
+    else
+      translation = Tr8n::Translation.find_by_id(params[:translation_id])
     end
-    
+
     translation.label = sanitize_label(params[:label])
 
     unless translation.can_be_edited_by?(tr8n_current_translator)
       tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to update translation which is locked or belongs to another translator")
       return sanitize_api_response({:error => "You are not authorized to edit this translation"})
-    end  
+    end
 
     if translation.blank?
       tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to submit an empty translation")
       return sanitize_api_response({:error => "Your translation was empty and was not accepted"})
     end
-    
+
     unless translation.uniq?
       tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to submit an identical translation")
       return sanitize_api_response({:error => "There already exists such translation for this phrase. Please vote on it instead or suggest an elternative translation."})
     end
-    
+
     unless translation.clean?
       tr8n_current_translator.used_abusive_language!
       return sanitize_api_response({:error => "Your translation contains prohibited words and will not be accepted"})
@@ -70,5 +70,5 @@ class Tr8n::Api::V1::TranslationController < Tr8n::Api::V1::BaseController
 
     sanitize_api_response({:translation_key => translation_key.key, :label => translation.label})
   end
-  
+
 end

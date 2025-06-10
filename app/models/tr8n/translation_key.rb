@@ -171,7 +171,7 @@ class Tr8n::TranslationKey < ApplicationRecord
 
   # comments are left for a specific language
   def comments(language = Tr8n::Config.current_language)
-    Tr8n::TranslationKeyComment.find(:all, :conditions => ["language_id = ? and translation_key_id = ?", language.id, self.id])
+    Tr8n::TranslationKeyComment.where(["language_id = ? and translation_key_id = ?", language.id, self.id])
   end
 
   delegate :tokens, :tokens?, :to => :tokenized_label
@@ -207,7 +207,7 @@ class Tr8n::TranslationKey < ApplicationRecord
   end
 
   def glossary
-    @glossary ||= Tr8n::Glossary.find(:all, :conditions => ["keyword in (?)", words], :order => "keyword asc")
+    @glossary ||= Tr8n::Glossary.where(["keyword in (?)", words]).order("keyword asc")
   end
 
   def glossary?
@@ -249,10 +249,9 @@ class Tr8n::TranslationKey < ApplicationRecord
   def commented?(language, translator = nil)
     translator ||= (Tr8n::Config.current_user_is_translator? ? Tr8n::Config.current_translator : nil)
     return false unless translator
-    Tr8n::TranslationKeyComment.find(:first,
-        :conditions => ["translator_id = ? and translation_key_id = ? and language_id = ?",
-                         translator.id, self.id, language.id]
-    )
+    Tr8n::TranslationKeyComment
+            .where(["translator_id = ? and translation_key_id = ? and language_id = ?", translator.id, self.id, language.id])
+            .first
   end
 
   # returns all translations for the key, language and minimal rank
@@ -624,8 +623,8 @@ class Tr8n::TranslationKey < ApplicationRecord
   end
 
   def self.update_metrics_offline(opts)
-    tkey = Tr8n::TranslationKey.find(opts[:translation_key_id])
-    language = Tr8n::Language.find(opts[:language_id])
+    tkey = Tr8n::TranslationKey.find_by_id(opts[:translation_key_id])
+    language = Tr8n::Language.find_by_id(opts[:language_id])
     Tr8n::TranslationKeySource.where(:translation_key_id => tkey.id).each do |tks|
       next unless tks.source
       tks.source.update_metrics!(language)
@@ -730,15 +729,13 @@ class Tr8n::TranslationKey < ApplicationRecord
   ###############################################################
 
   def self.all_restricted_ids
-    Tr8n::TranslationKey.find(:all,
-        :select => "distinct tr8n_translation_keys.id",
-        :conditions => ["c.state = ?", 'restricted'],
-        :joins => [
-          "join tr8n_translation_key_sources as tks on tr8n_translation_keys.id = tks.translation_key_id",
-          "join tr8n_component_sources as cs on tks.translation_source_id = cs.translation_source_id",
-          "join tr8n_components as c on cs.component_id = c.id"
-        ]
-    ).collect{|key| key.id}
+    Tr8n::TranslationKey
+        .where(["c.state = ?", 'restricted'])
+        .select("distinct tr8n_translation_keys.id")
+        .joins("join tr8n_translation_key_sources as tks on tr8n_translation_keys.id = tks.translation_key_id")
+        .joins("join tr8n_component_sources as cs on tks.translation_source_id = cs.translation_source_id")
+        .joins("join tr8n_components as c on cs.component_id = c.id")
+        .collect{|key| key.id}
   end
 
   def self.filter_phrase_type_options

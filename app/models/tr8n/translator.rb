@@ -193,7 +193,10 @@ class Tr8n::Translator < ApplicationRecord
   end
 
   def self.top_translators_for_language(lang = Tr8n::Config.current_language, limit = 5)
-    Tr8n::TranslatorMetric.find(:all, :conditions => {:language_id => lang.id}, :order => "total_translations desc, total_votes desc", :limit => limit)
+    Tr8n::TranslatorMetric
+      .where({:language_id => lang.id})
+      .order("total_translations desc, total_votes desc")
+      .limit(limit)
   end
 
   def deleted_language_rule!(rule)
@@ -279,7 +282,10 @@ class Tr8n::Translator < ApplicationRecord
   end
 
   def last_logs
-    Tr8n::TranslatorLog.find(:all, :conditions => ["translator_id = ?", self.id], :order => "created_at desc", :limit => 20)
+    Tr8n::TranslatorLog
+      .where(["translator_id = ?", self.id])
+      .order("created_at desc")
+      .limit(20)
   end
 
   def name
@@ -385,15 +391,17 @@ class Tr8n::Translator < ApplicationRecord
   end
 
   def unfollow(object)
-    tf = Tr8n::TranslatorFollowing.find(:first, :conditions => ["object_type = ? and object_id = ?", object.class.name, object.id])
+    tf = Tr8n::TranslatorFollowing
+          .where(["object_type = ? and object_id = ?", object.class.name, object.id])
+          .first
     tf.destroy if tf
   end
 
   def followed_objects(type=nil)
     if type
-      following = Tr8n::TranslatorFollowing.find(:all, :conditions => ["translator_id = ? and object_type = ?", self.id, type])
+      following = Tr8n::TranslatorFollowing.where(["translator_id = ? and object_type = ?", self.id, type])
     else
-      following = Tr8n::TranslatorFollowing.find(:all, :conditions => ["translator_id = ?", self.id])
+      following = Tr8n::TranslatorFollowing.where(["translator_id = ?", self.id])
     end
 
     following.collect{|f| f.object}

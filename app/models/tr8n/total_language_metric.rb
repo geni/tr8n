@@ -51,13 +51,16 @@ class Tr8n::TotalLanguageMetric < Tr8n::LanguageMetric
     self.translation_count = Tr8n::Translation.where(:language_id => language_id).count
     self.key_count = Tr8n::TranslationKey.count
 
-    self.locked_key_count = Tr8n::TranslationKey.joins(:translation_key_locks)
-                                                .where('tr8n_translation_key_locks.language_id' => language_id, 'tr8n_translation_key_locks.locked' => true)
-                                                .distinct.count('tr8n_translation_key_locks.id')
+    self.locked_key_count = Tr8n::TranslationKey
+                              .where('tr8n_translation_key_locks.language_id' => language_id, 'tr8n_translation_key_locks.locked' => true)
+                              .joins(:translation_key_locks)
+                              .distinct
+                              .count('tr8n_translation_key_locks.id')
 
-    self.translated_key_count = Tr8n::TranslationKey.joins(:translations)
-                                                    .where('tr8n_translations.language_id' => language_id)
-                                                    .distinct.count('tr8n_translation_keys.id')
+    self.translated_key_count = Tr8n::TranslationKey
+                                  .where('tr8n_translations.language_id' => language_id)
+                                  .joins(:translations)
+                                  .distinct.count('tr8n_translation_keys.id')
     save
 
     language.completeness = (locked_key_count * 100 / key_count)

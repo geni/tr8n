@@ -19,7 +19,7 @@ namespace :tr8n do
   desc "Switches from manager flag to levels approach"
   task :upgrade_managers => :environment do
     # both of the following management approaches are deprecated, now use level only
-    Tr8n::LanguageUser.find(:all, :conditions => "manager = true").each do |lu|
+    Tr8n::LanguageUser.where("manager = true").each do |lu|
       next unless lu.translator
       lu.translator.update(:level => Tr8n::Config.manager_level)
     end
@@ -81,7 +81,10 @@ namespace :tr8n do
 
   task :rtl_languages => :environment do
     File.open('rtllanguages.yml', 'w') do |f|
-      Tr8n::Language.find(:all, :conditions => ["right_to_left = ?", true], :order => "english_name asc").each do |l|
+      Tr8n::Language
+        .where(["right_to_left = ?", true])
+        .order("english_name asc")
+      .each do |l|
         f.puts("\"#{l.locale}\":\n")
       end
     end
@@ -89,7 +92,9 @@ namespace :tr8n do
 
   task :export_languages => :environment do
     File.open('languages.yml', 'w') do |f|
-      Tr8n::Language.find(:all, :order => "english_name asc").each do |l|
+      Tr8n::Language
+        .order("english_name asc")
+      .each do |l|
         f.puts("\"#{l.locale}\":\n")
         f.puts("\tenglish_name: \"#{l.english_name}\"\n")
         f.puts("\tnative_name: \"#{l.native_name}\"\n")
@@ -172,7 +177,7 @@ namespace :tr8n do
     t0 = Time.now
 
     puts "All keys not verified after #{date} will be destroyed!"
-    unverified_keys = Tr8n::TranslationKey.find(:all, :conditions => ["verified_at is null or verified_at < ?", date])
+    unverified_keys = Tr8n::TranslationKey.where(["verified_at is null or verified_at < ?", date])
 
     puts "There are #{unverified_keys.size} keys to be destroyed."
     puts "Destroying unverified keys..." if unverified_keys.size > 0
@@ -212,7 +217,8 @@ namespace :tr8n do
 
   desc 'delete translations without keys'
   task :delete_orphan_translations => :environment do
-    trns = Tr8n::Translation.find(:all, :conditions => "translation_key_id not in (select tr8n_translation_keys.id from tr8n_translation_keys)")
+    trns = Tr8n::Translation
+            .where("translation_key_id not in (select tr8n_translation_keys.id from tr8n_translation_keys)")
     puts "Deleting #{trns.count} translations..."
 
     trns.each do |trn|

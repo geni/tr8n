@@ -43,7 +43,7 @@ class Tr8n::Application < ApplicationRecord
   has_many :translation_sources,  :through => :component_sources
 
   def self.options
-    Tr8n::Application.find(:all, :order => "name asc").collect{|app| [app.name, app.id]}
+    Tr8n::Application.order("name asc").collect{|app| [app.name, app.id]}
   end
 
 end

@@ -108,7 +108,7 @@ class Tr8n::TranslationSource < ApplicationRecord
   end
 
   def self.options
-    @sources = Tr8n::TranslationSource.find(:all, :order => "source asc").collect{|src| [src.source, src.source]}
+    @sources = Tr8n::TranslationSource.order("source asc").collect {|src| [src.source, src.source]}
   end
 
   def title

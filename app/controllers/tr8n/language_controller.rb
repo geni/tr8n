@@ -64,7 +64,7 @@ class Tr8n::LanguageController < Tr8n::BaseController
 
       # clean up the remaining/deleted rules
       old_rule_ids.each do |id|
-        rule = Tr8n::LanguageRule.find(id)
+        rule = Tr8n::LanguageRule.find_by_id(id)
         rule.destroy_with_log!(tr8n_current_translator)
       end
 
@@ -225,8 +225,10 @@ class Tr8n::LanguageController < Tr8n::BaseController
       verify_authenticity_token
 
       if params[:language_action] == "remove"
-        lu = Tr8n::LanguageUser.find(:first, :conditions => ["language_id = ? and user_id = ?", params[:language_id], tr8n_current_user.id])
-        lu.destroy
+        lu = Tr8n::LanguageUser
+              .where(["language_id = ? and user_id = ?", params[:language_id], tr8n_current_user.id])
+              .first
+        lu.destroy if lu
       end
     end
 
@@ -239,7 +241,9 @@ class Tr8n::LanguageController < Tr8n::BaseController
     if request.post?
       verify_authenticity_token
 
-      lu = Tr8n::LanguageUser.find(:first, :conditions => ["language_id = ? and user_id = ?", params[:language_id], tr8n_current_user.id])
+      lu = Tr8n::LanguageUser
+            .where(["language_id = ? and user_id = ?", params[:language_id], tr8n_current_user.id])
+            .first
       lu.destroy if lu
     end
 
@@ -282,7 +286,7 @@ class Tr8n::LanguageController < Tr8n::BaseController
 
   # inline translator popup window as well as translation backend method
   def translator
-    @translation_key = Tr8n::TranslationKey.find(params[:translation_key_id])
+    @translation_key = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
     @translations = @translation_key.inline_translations_for(tr8n_current_language)
     @source_url = params[:source_url] || request.env['HTTP_REFERER']
     @translation = Tr8n::Translation.default_translation(@translation_key, tr8n_current_language, tr8n_current_translator)
