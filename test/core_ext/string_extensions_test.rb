@@ -10,4 +10,10 @@ class StringExtensionsTest < Tr8n::TestCase
     assert_equal 'Hola',  'Hello'.translate(nil, {}, {}, @spanish)
   end
 
+  test 'html_safe' do
+    string = '<b>foo</b>'
+    assert !string.html_safe?
+    assert string.html_safe.html_safe?
+  end
+
 end # class StringExtensionsTest

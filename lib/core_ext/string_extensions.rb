@@ -59,4 +59,5 @@ module Tr8n
   end # module StringExtensions
 end # module Tr8n
 
-String.send(:include, Tr8n::StringExtensions)
+# have to use prepend because rails has its own html_safe implementation
+String.send(:prepend, Tr8n::StringExtensions)
