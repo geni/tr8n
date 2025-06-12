@@ -47,17 +47,7 @@ module Tr8n
       defined?(@tr8n_translated) ? @tr8n_translated : false
     end
 
-    def html_safe
-      @html_safe = true
-      self
-    end
-
-    def html_safe?
-      defined?(@html_safe) ? @html_safe : false
-    end
-
   end # module StringExtensions
 end # module Tr8n
 
-# have to use prepend because rails has its own html_safe implementation
-String.send(:prepend, Tr8n::StringExtensions)
+String.send(:include, Tr8n::StringExtensions)
