@@ -3,17 +3,42 @@
 # Tr8n Data Tokens
 #
 #############################################################################
+html:
+  ndash:        "&ndash;"   # –
+  mdash:        "&mdash;"   # —
+  iexcl:        "&iexcl;"   # ¡
+  iquest:       "&iquest;"  # ¿
+  quot:         "&quot;"    # "
+  ldquo:        "&ldquo;"   # “
+  rdquo:        "&rdquo;"   # ”
+  lsquo:        "&lsquo;"   # ‘
+  rsquo:        "&rsquo;"   # ’
+  laquo:        "&laquo;"   # «
+  raquo:        "&raquo;"   # »
+  larr:         "&larr;"    # ←
+  rarr:         "&rarr;"    # →
+  nbsp:         "&nbsp;"    # space
+  br:           "<br/>"     # line break
+  lsaquo:       "&lsaquo;"  # ‹
+  trade:        "&trade;"   # TM
+  trade_uni:    "™"         # TM (unicode)
 
-ndash:    "&ndash;"   # –
-mdash:    "&mdash;"   # —   
-iexcl:    "&iexcl;"   # ¡
-iquest:   "&iquest;"  # ¿  
-quot:     "&quot;"    # "   
-ldquo:    "&ldquo;"   # “
-rdquo:    "&rdquo;"   # ”
-lsquo:    "&lsquo;"   # ‘   
-rsquo:    "&rsquo;"   # ’   
-laquo:    "&laquo;"   # « 
-raquo:    "&raquo;"   # »  
-nbsp:     "&nbsp;"    # space
-br:       "<br/>"     # line break 
+plain:
+  ndash:        "–"         # –
+  mdash:        "—"         # —
+  iexcl:        "¡"         # ¡
+  iquest:       "¿"         # ¿
+  quot:         '"'         # "
+  ldquo:        "“"         # “
+  rdquo:        "”"         # ”
+  lsquo:        "‘"         # ‘
+  rsquo:        "’"         # ’
+  laquo:        "«"         # «
+  raquo:        "»"         # »
+  larr:         "←"         # ←
+  rarr:         "→"         # →
+  nbsp:         " "         # space
+  br:           "\n"        # line break
+  lsaquo:       "‹"         # ‹
+  trade:        "™"         # TM
+  trade_uni:    "™"         # TM (unicode)

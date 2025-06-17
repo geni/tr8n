@@ -125,12 +125,12 @@ defaults: &defaults
     tr8n_helpers:             []                              # if you need to add extra helpers
     admin_layout:             tr8n_admin                      # layout to be used for the admin user interface
     admin_helpers:            []                              # if you need to add extra helpers
-    before_filters:           []                              # filters from application controller
-    skip_before_filters:      []                              # filters from application controller
+    before_actions:           []                              # filters from application controller
+    skip_before_actions:      []                              # filters from application controller
     after_filters:            []                              # filters from application controller
     application_init:         false                           # if set to true, application must call the tr8n_init as one of the before filters
     user_info:
-      enabled:                false                           # if disabled, will fallback onto translators
+      enabled:                true                            # if disabled, will fallback onto translators
       class_name:             User                            # class name for the User object type
       current_user_method:    current_user                    # returns current user object
       methods:                                                # User object methods mapping
@@ -195,8 +195,8 @@ defaults: &defaults
     enabled:                  true
     response_encoding:        json     # options: xml, json
     allow_key_registration:   true
-    skip_before_filters:      []       # filters from application controller
-    before_filters:           []       # filters from application controller
+    skip_before_actions:      []       # filters from application controller
+    before_actions:           []       # filters from application controller
     after_filters:            []       # filters from application controller
 
   #############################################################################

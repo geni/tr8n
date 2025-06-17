@@ -22,7 +22,7 @@
 #++
 
 class Tr8n::Api::V1::TranslationController < Tr8n::Api::V1::BaseController
-  unloadable
+
 
   def submit
     return sanitize_api_response({:error => "Guest user cannot submit a translation"}) if tr8n_current_user_is_guest?

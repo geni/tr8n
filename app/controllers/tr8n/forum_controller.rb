@@ -22,13 +22,15 @@
 #++
 
 class Tr8n::ForumController < Tr8n::BaseController
-  unloadable
-
   set_tr8n_feature  :forum
-  before_filter :validate_current_translator
+
+  before_action :validate_current_translator
 
   def index
-    @topics = Tr8n::LanguageForumTopic.paginate(:all, :conditions => ["language_id = ?", tr8n_current_language.id], :page => page, :per_page => per_page, :order => "created_at desc")
+    @topics = Tr8n::LanguageForumTopic
+                .where(['language_id = ?', tr8n_current_language.id])
+                .order('created_at DESC')
+                .paginate(:page => page, :per_page => per_page)
   end
 
   def topic

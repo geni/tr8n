@@ -22,16 +22,16 @@
 #++
 
 class Tr8n::Admin::BaseController < Tr8n::BaseController
-  unloadable
-  
+
+
   if Tr8n::Config.admin_helpers.any?
     helper *Tr8n::Config.admin_helpers
   end
 
-  before_filter :validate_admin
-  
+  before_action :validate_admin
+
   layout Tr8n::Config.site_info[:admin_layout]
-  
+
 private
 
   def validate_tr8n_enabled
@@ -41,7 +41,7 @@ private
   def validate_current_user
     # don't do anything for admin pages
   end
-  
+
   def tr8n_admin_tabs
     [
         {"title" => "Applications", "description" => "Admin tab", "controller" => "applications"},
@@ -59,11 +59,11 @@ private
 
   def validate_admin
     return if Tr8n::Config.env == 'development'
-    
+
     unless tr8n_current_user_is_admin?
       trfe("You must be an admin in order to view this section of the site")
       redirect_to_site_default_url
     end
   end
-  
+
 end

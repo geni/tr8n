@@ -143,7 +143,7 @@ module Tr8n::HelperMethods
   end
 
   def tr8n_splash_screen_tag
-    html = "<div id='tr8n_splash_screen' style='display:none'>"
+    html = String.new("<div id='tr8n_splash_screen' style='display:none'>")
     html << (render :partial => Tr8n::Config.splash_screen)
     html << "</div>"
     html.html_safe
@@ -161,7 +161,7 @@ module Tr8n::HelperMethods
     name_type = opts[:name].nil? ? :full : opts[:name] # :full, :native, :english, :locale
     linked = opts[:linked].nil? ? true : opts[:linked]
 
-    html = "<span style='white-space: nowrap'>"
+    html = String.new("<span style='white-space: nowrap'>")
     html << tr8n_language_flag_tag(lang, opts) if show_flag
     html << "<span dir='ltr'>"
 
@@ -249,7 +249,7 @@ module Tr8n::HelperMethods
 
   def tr8n_help_link(text, opts = {})
     filename = opts[:filename].nil? ? text.downcase.gsub(' ', '_') : opts[:filename]
-    classname = "tr8n_selected" if filename == controller.action_name
+    classname = "tr8n_selected" if filename == action_name
     link_to(text, { :controller => "/tr8n/help", :action => filename }, :class => classname).html_safe
   end
 
@@ -294,7 +294,7 @@ module Tr8n::HelperMethods
   end
 
   def tr8n_breadcrumb_tag(source = nil, opts = {})
-    source ||= "#{controller.class.name.underscore.gsub("_controller", "")}/#{controller.action_name}"
+    source ||= "#{controller.class.name.underscore.gsub("_controller", "")}/#{action_name}"
     section = Tr8n::SiteMap.section_for_source(source)
     return "" unless section
     opts[:separator] ||= " >> "

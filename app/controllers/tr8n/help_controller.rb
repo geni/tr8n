@@ -22,17 +22,16 @@
 #++
 
 class Tr8n::HelpController < Tr8n::BaseController
-  unloadable
-
   set_tr8n_feature  :help
-  before_filter :validate_current_translator, :except => [:lb_shortcuts, :lb_stats, :credits, :license]
-  before_filter :validate_guest_user, :except => [:lb_shortcuts, :lb_stats, :credits, :license]
-  before_filter :validate_current_user, :except => [:lb_shortcuts, :lb_stats, :credits, :license]  
-  
+
+  before_action :validate_current_translator, :except => [:lb_shortcuts, :lb_stats, :credits, :license]
+  before_action :validate_guest_user, :except => [:lb_shortcuts, :lb_stats, :credits, :license]
+  before_action :validate_current_user, :except => [:lb_shortcuts, :lb_stats, :credits, :license]
+
   def index
 
   end
-    
+
   def lb_shortcuts
     render :layout => false
   end
@@ -46,13 +45,13 @@ class Tr8n::HelpController < Tr8n::BaseController
     @translation_source_metric = @translation_source.total_metric
     render :layout => false
   end
-  
+
   def credits
-    
+
   end
-  
+
   def license
-    
+
   end
 
 end

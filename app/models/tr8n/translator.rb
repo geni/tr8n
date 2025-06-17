@@ -58,7 +58,7 @@
 #
 class Tr8n::Translator < ApplicationRecord
 
-  has_one   :user,                          :class_name => Tr8n::Config.user_class_name,      :foreign_key => :user_id
+  belongs_to :user, :class_name => Tr8n::Config.user_class_name, :foreign_key => :user_id
 
   has_many  :translator_logs,               Proc.new{order(:created_at => :desc)}, :dependent => :destroy
   has_many  :translator_following,          Proc.new{order(:created_at => :desc)}, :dependent => :destroy
@@ -110,7 +110,7 @@ class Tr8n::Translator < ApplicationRecord
     return nil if Tr8n::Config.guest_user?(user)
 
     translator = Tr8n::Translator.find_or_create(user)
-    Tr8n::LanguageUser.find_all_by_user_id(user.id).each do |lu|
+    Tr8n::LanguageUser.where(:user_id => user.id).each do |lu|
       lu.update(:translator => translator)
     end
     translator

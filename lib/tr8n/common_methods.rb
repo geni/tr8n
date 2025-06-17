@@ -76,4 +76,32 @@ module Tr8n::CommonMethods
   end
   # end translation helper methods
 
-end
+  def tr(label, desc = "", tokens = {}, options = {})
+    unless desc.nil? or desc.is_a?(String)
+      raise Tr8n::Exception.new("The second parameter of the tr function must be a description")
+    end
+
+    # if the label has already been translated, just return it back.
+    # if this line is removed, an exception will be raised from within the Language object
+    return label if label.tr8n_translated?
+
+    begin
+      url     = request.url
+      host    = request.env['HTTP_HOST']
+    rescue Exception => ex
+      url = nil
+      host = 'localhost'
+    end
+
+    options.merge!(:caller => caller)
+    options.merge!(:url => url)
+    options.merge!(:host => host)
+
+    unless Tr8n::Config.enabled?
+      return Tr8n::TranslationKey.substitute_tokens(label, tokens, options)
+    end
+
+    Tr8n::Config.current_language.translate(label, desc, tokens, options)
+  end # def tr
+
+end # module Tr8n::CommonMethods

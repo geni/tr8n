@@ -22,19 +22,19 @@
 #++
 
 class Tr8n::Api::V1::BaseController < ApplicationController
-  unloadable
 
-  before_filter :check_api_enabled
-  
 
-  if Tr8n::Config.api_skip_before_filters.any?
-    skip_before_filter *Tr8n::Config.api_skip_before_filters
+  before_action :check_api_enabled
+
+
+  if Tr8n::Config.api_skip_before_actions.any?
+    skip_before_action *Tr8n::Config.api_skip_before_actions
   end
 
-  if Tr8n::Config.api_before_filters.any?
-    before_filter *Tr8n::Config.api_before_filters
+  if Tr8n::Config.api_before_actions.any?
+    before_action *Tr8n::Config.api_before_actions
   end
-  
+
   if Tr8n::Config.api_after_filters.any?
     after_filter *Tr8n::Config.api_after_filters
   end
@@ -68,12 +68,12 @@ private
     Tr8n::Config.current_translator
   end
   helper_method :tr8n_current_translator
-  
+
   def tr8n_current_user_is_admin?
     Tr8n::Config.current_user_is_admin?
   end
   helper_method :tr8n_current_user_is_admin?
-  
+
   def tr8n_current_user_is_translator?
     Tr8n::Config.current_user_is_translator?
   end
@@ -84,22 +84,22 @@ private
     tr8n_current_translator.manager?
   end
   helper_method :tr8n_current_user_is_manager?
-  
+
   def tr8n_current_user_is_guest?
     Tr8n::Config.current_user_is_guest?
   end
   helper_method :tr8n_current_user_is_guest?
-  
+
   def sanitize_label(label)
     label.strip
   end
-  
+
   def sanitize_api_response(response)
     if Tr8n::Config.api[:response_encoding] == "xml"
       render(:text => response.to_xml)
     else
       render(:text => response.to_json)
-    end      
+    end
   end
 
 end

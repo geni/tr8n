@@ -22,7 +22,7 @@
 #++
 
 class Tr8n::Admin::TranslationController < Tr8n::Admin::BaseController
-  unloadable
+
 
   def index
     @translations = Tr8n::Translation.filter(:params => params, :filter => Tr8n::TranslationFilter)
@@ -45,7 +45,7 @@ class Tr8n::Admin::TranslationController < Tr8n::Admin::BaseController
       params[:translations].each do |translation_id|
         translation = Tr8n::Translation.find_by_id(translation_id)
         translation.destroy if translation
-      end  
+      end
     end
     redirect_to_source
   end
@@ -63,7 +63,7 @@ class Tr8n::Admin::TranslationController < Tr8n::Admin::BaseController
         vote.destroy if vote
         translation.reload
         translation.update_rank!
-      end  
+      end
     end
     redirect_to_source
   end

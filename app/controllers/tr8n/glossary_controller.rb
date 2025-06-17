@@ -22,21 +22,19 @@
 #++
 
 class Tr8n::GlossaryController < Tr8n::BaseController
-  unloadable
 
   set_tr8n_feature  :glossary
-  before_filter :validate_current_translator
-  
+
+  before_action :validate_current_translator
+
   def index
-    conditions = [""]
-    
-    unless params[:search].blank?
-      conditions[0] << "(keyword like ? or description like ?)" 
-      conditions << "%#{params[:search]}%"
-      conditions << "%#{params[:search]}%"  
+    if params[:search].blank?
+      @terms = Tr8n::Glossary.all
+    else
+      @terms = Tr8n::Glossary.where(['(keyword like ? OR description like ?)', params[:search], params[:search]])
     end
-    
-    @terms = Tr8n::Glossary.paginate(:order=>"keyword asc", :page=>page, :per_page=>per_page, :conditions=>conditions)
+
+    @terms = @terms.order('keyword asc').paginate(:page => page, :per_page => per_page)
   end
-    
+
 end

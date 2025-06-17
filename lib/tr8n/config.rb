@@ -531,14 +531,14 @@ class Tr8n::Config
     @admin_helpers ||= site_info[:admin_helpers].collect{|helper| helper.to_sym}
   end
 
-  def self.skip_before_filters
-    return [] unless site_info[:skip_before_filters]
-    @skip_before_filters ||= site_info[:skip_before_filters].collect{|filter| filter.to_sym}
+  def self.skip_before_actions
+    return [] unless site_info[:skip_before_actions]
+    @skip_before_actions ||= site_info[:skip_before_actions].collect{|filter| filter.to_sym}
   end
 
-  def self.before_filters
-    return [] unless site_info[:before_filters]
-    @before_filters ||= site_info[:before_filters].collect{|filter| filter.to_sym}
+  def self.before_actions
+    return [] unless site_info[:before_actions]
+    @before_actions ||= site_info[:before_actions].collect{|filter| filter.to_sym}
   end
 
   def self.after_filters
@@ -885,14 +885,14 @@ class Tr8n::Config
     5000
   end
 
-  def self.api_skip_before_filters
-    return [] unless api[:skip_before_filters]
-    @api_skip_before_filters ||= api[:skip_before_filters].collect{|filter| filter.to_sym}
+  def self.api_skip_before_actions
+    return [] unless api[:skip_before_actions]
+    @api_skip_before_actions ||= api[:skip_before_actions].collect{|filter| filter.to_sym}
   end
 
-  def self.api_before_filters
-    return [] unless api[:before_filters]
-    @api_before_filters ||= api[:before_filters].collect{|filter| filter.to_sym}
+  def self.api_before_actions
+    return [] unless api[:before_actions]
+    @api_before_actions ||= api[:before_actions].collect{|filter| filter.to_sym}
   end
 
   def self.api_after_filters

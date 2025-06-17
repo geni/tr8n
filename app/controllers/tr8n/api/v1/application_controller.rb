@@ -26,7 +26,7 @@
 ###########################################################################
 
 class Tr8n::Api::V1::ApplicationController < ActionController::Base
-  unloadable
+
 
   # for ssl access to the translator - using ssl_requirement plugin
   ssl_allowed :sync  if respond_to?(:ssl_allowed)

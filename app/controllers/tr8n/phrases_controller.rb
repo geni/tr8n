@@ -22,11 +22,15 @@
 #++
 
 class Tr8n::PhrasesController < Tr8n::BaseController
-  unloadable
 
-  before_filter :validate_current_translator
-  before_filter :validate_default_language, :except => [:translate, :vote]
-  before_filter :init_sitemap_section, :except => [:translate, :vote]
+
+  before_action :validate_tr8n_enabled,     :except => [:translate]
+  before_action :validate_guest_user,       :except => [:translate]
+  before_action :validate_current_user,     :except => [:translate]
+
+  before_action :validate_current_translator
+  before_action :validate_default_language, :except => [:translate, :vote]
+  before_action :init_sitemap_section,      :except => [:translate, :vote]
 
   def index
     conditions = Tr8n::TranslationKey.search_conditions_for(params)
@@ -48,7 +52,10 @@ class Tr8n::PhrasesController < Tr8n::BaseController
 
       @translated = Tr8n::Config.current_language.total_metric.translation_completeness
       @locked = Tr8n::Config.current_language.completeness
-      @translation_keys = Tr8n::TranslationKey.paginate(:per_page => per_page, :page => page, :conditions => conditions, :order => "created_at desc")
+      @translation_keys = Tr8n::TranslationKey
+                            .where(conditions)
+                            .order('created_at DESC')
+                            .paginate(:per_page => per_page, :page => page)
     end
   end
 

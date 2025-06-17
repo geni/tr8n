@@ -21,241 +21,244 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::BaseController < ApplicationController
-  unloadable
+module Tr8n
+  # TODO: Why is this needed? Can't these just be pushed down to Tr8n::ApplicationController?
+  class BaseController < ApplicationController
 
-  layout Tr8n::Config.site_info[:tr8n_layout]
 
-  if Tr8n::Config.tr8n_helpers.any?
-    helper *Tr8n::Config.tr8n_helpers
-  end
+    layout Tr8n::Config.site_info[:tr8n_layout]
 
-  if Tr8n::Config.skip_before_filters.any?
-    skip_before_filter *Tr8n::Config.skip_before_filters
-  end
-
-  if Tr8n::Config.before_filters.any?
-    before_filter *Tr8n::Config.before_filters
-  end
-
-  if Tr8n::Config.after_filters.any?
-    after_filter *Tr8n::Config.after_filters
-  end
-
-  before_filter :validate_tr8n_enabled, :except => [:translate]
-  before_filter :validate_guest_user, :except => [:select, :switch, :translate, :table, :registration]
-  before_filter :validate_current_user, :except => [:select, :switch, :translate, :table, :registration]
-  before_filter :validate_feature_enabled
-
-  layout Tr8n::Config.site_info[:tr8n_layout]
-
-  def tr8n_current_user
-    Tr8n::Config.current_user
-  end
-  helper_method :tr8n_current_user
-
-  def tr8n_current_language
-    Tr8n::Config.current_language
-  end
-  helper_method :tr8n_current_language
-
-  def tr8n_default_language
-    Tr8n::Config.default_language
-  end
-  helper_method :tr8n_default_language
-
-  def tr8n_current_translator
-    Tr8n::Config.current_translator
-  end
-  helper_method :tr8n_current_translator
-
-  def tr8n_current_user_is_admin?
-    Tr8n::Config.current_user_is_admin?
-  end
-  helper_method :tr8n_current_user_is_admin?
-
-  def tr8n_current_user_is_translator?
-    Tr8n::Config.current_user_is_translator?
-  end
-  helper_method :tr8n_current_user_is_translator?
-
-  def tr8n_current_user_is_manager?
-    Tr8n::Config.current_user_is_manager?
-  end
-  helper_method :tr8n_current_user_is_manager?
-
-  def tr8n_current_user_is_guest?
-    Tr8n::Config.current_user_is_guest?
-  end
-  helper_method :tr8n_current_user_is_guest?
-
-  def vote_value(direction)
-    case direction
-    when "up"
-      1
-    when "report"
-      -1000
-    else
-      -1
-    end
-  end
-
-private
-
-  def redirect_to_source
-    return redirect_to(params[:source_url]) unless params[:source_url].blank?
-    return redirect_to(request.env['HTTP_REFERER']) unless request.env['HTTP_REFERER'].blank?
-    redirect_to_site_default_url
-  end
-
-  def redirect_to_site_default_url
-    redirect_to(Tr8n::Config.default_url)
-  end
-
-  def page
-    params[:page] || 1
-  end
-
-  def per_page
-    params[:per_page] || 30
-  end
-
-  def sanitize_label(label)
-#  do not double escape
-#  CGI::escapeHTML(label.strip)
-   ERB::Util.html_escape(label.strip)
-  end
-
-  # handle disabled state for tr8n
-  def validate_tr8n_enabled
-    if Tr8n::Config.disabled?
-      trfe("You don't have rights to access that section.")
-      return redirect_to(Tr8n::Config.default_url)
-    end
-  end
-
-  # guest users can still switch between languages outside of the site
-  def validate_guest_user
-    if tr8n_current_user_is_guest?
-      trfe("You must be a registered user in order to access this section of the site.")
-      return redirect_to(Tr8n::Config.default_url)
-    end
-  end
-
-  # make sure users have the rights to access this section
-  def validate_current_user
-    return if Tr8n::Config.current_user_is_translator?
-
-    unless Tr8n::Config.open_registration_mode?
-      trfe("You don't have rights to access that section.")
-      return redirect_to(Tr8n::Config.default_url)
+    if Tr8n::Config.tr8n_helpers.any?
+      helper *Tr8n::Config.tr8n_helpers
     end
 
-    if Tr8n::Config.enable_registration_disclaimer?
-      redirect_to("/tr8n/translator/registration")
-    end
-  end
-
-  # make sure that the current user is a translator
-  def validate_current_translator
-    if tr8n_current_user_is_translator? and tr8n_current_translator.blocked?
-      trfe("Your translation privileges have been revoked. Please contact the site administrator for more details.")
-      return redirect_to(Tr8n::Config.default_url)
-    end
-  end
-
-  # make sure that the current user is a language manager
-  def validate_language_management
-    # admins can do everything
-    return if tr8n_current_user_is_admin?
-
-    if tr8n_current_language.default?
-      trfe("Only administrators can modify this language")
-      return redirect_to(tr8n_features_tabs.first[:link])
+    if Tr8n::Config.skip_before_actions.any?
+      skip_before_action *Tr8n::Config.skip_before_actions
     end
 
-    unless tr8n_current_user_is_translator? and tr8n_current_translator.manager?
-      trfe("In order to manage a language you first must request to become a manager of that language. Please send your request to Geni support.")
-      return redirect_to(tr8n_features_tabs.first[:link])
+    if Tr8n::Config.before_actions.any?
+      before_action *Tr8n::Config.before_actions
     end
-  end
 
-  def validate_default_language
-    return if Tr8n::Config.multiple_base_languages?
-    redirect_to(tr8n_features_tabs.first[:link]) if tr8n_current_language.default?
-  end
+    if Tr8n::Config.after_filters.any?
+      after_filter *Tr8n::Config.after_filters
+    end
 
-  def validate_language
-    return unless params[:language]
-    return if params[:language][:fallback_language_id].blank? # default
+    before_action :validate_tr8n_enabled
+    before_action :validate_guest_user
+    before_action :validate_current_user
+    before_action :validate_feature_enabled
 
-    fallback_language = Tr8n::Language.find_by_id(params[:language][:fallback_language_id])
+    layout Tr8n::Config.site_info[:tr8n_layout]
 
-    while fallback_language do
-      if fallback_language == tr8n_current_language
-        return "You are creating an infinite loop with fallback languages. Please ensure that languages do not fall back onto each other."
+    def tr8n_current_user
+      Tr8n::Config.current_user
+    end
+    helper_method :tr8n_current_user
+
+    def tr8n_current_language
+      Tr8n::Config.current_language
+    end
+    helper_method :tr8n_current_language
+
+    def tr8n_default_language
+      Tr8n::Config.default_language
+    end
+    helper_method :tr8n_default_language
+
+    def tr8n_current_translator
+      Tr8n::Config.current_translator
+    end
+    helper_method :tr8n_current_translator
+
+    def tr8n_current_user_is_admin?
+      Tr8n::Config.current_user_is_admin?
+    end
+    helper_method :tr8n_current_user_is_admin?
+
+    def tr8n_current_user_is_translator?
+      Tr8n::Config.current_user_is_translator?
+    end
+    helper_method :tr8n_current_user_is_translator?
+
+    def tr8n_current_user_is_manager?
+      Tr8n::Config.current_user_is_manager?
+    end
+    helper_method :tr8n_current_user_is_manager?
+
+    def tr8n_current_user_is_guest?
+      Tr8n::Config.current_user_is_guest?
+    end
+    helper_method :tr8n_current_user_is_guest?
+
+    def vote_value(direction)
+      case direction
+      when "up"
+        1
+      when "report"
+        -1000
+      else
+        -1
       end
-      fallback_language = fallback_language.fallback_language
     end
-  end
 
-  def validate_admin
-    unless tr8n_current_user_is_admin?
-      trfe("You must be an admin in order to view this section of the site")
+  private
+
+    def redirect_to_source
+      return redirect_to(params[:source_url]) unless params[:source_url].blank?
+      return redirect_to(request.env['HTTP_REFERER']) unless request.env['HTTP_REFERER'].blank?
       redirect_to_site_default_url
     end
-  end
 
-  def self.set_tr8n_feature(feature)
-    @tr8n_feature = feature
-  end
+    def redirect_to_site_default_url
+      redirect_to(Tr8n::Config.default_url)
+    end
 
-  def self.tr8n_feature
-    @tr8n_feature
-  end
+    def page
+      params[:page] || 1
+    end
 
-  def tr8n_enabled_features
-    @tr8n_enabled_features ||= begin
-      enabled_features = []
-      Tr8n::Config.features.each do |key, defs|
-        defs[:key] = key
+    def per_page
+      params[:per_page] || 30
+    end
 
-        next unless defs[:enabled]
+    def sanitize_label(label)
+  #  do not double escape
+  #  CGI::escapeHTML(label.strip)
+    ERB::Util.html_escape(label.strip)
+    end
 
-        unless Tr8n::Config.multiple_base_languages?
-          next if tr8n_current_language.default? and defs[:default_language]
-        end
-
-        unless tr8n_current_user_is_translator? and tr8n_current_user_is_manager?
-          next if defs[:manager_only]
-        end
-
-        unless Tr8n::Config.enable_relationships?
-          next if key == 'relationships'
-        end
-
-        enabled_features << defs.clone
+    # handle disabled state for tr8n
+    def validate_tr8n_enabled
+      if Tr8n::Config.disabled?
+        trfe("You don't have rights to access that section.")
+        return redirect_to(Tr8n::Config.default_url)
       end
-      enabled_features
     end
-  end
-  helper_method :tr8n_enabled_features
 
-  def tr8n_features_tabs
-    @tabs ||= begin
-      tabs = tr8n_enabled_features.select{|feature| feature[:tab_position]}
-      tabs.sort_by{|tab| tab[:tab_position]}
+    # guest users can still switch between languages outside of the site
+    def validate_guest_user
+      if tr8n_current_user_is_guest?
+        trfe("You must be a registered user in order to access this section of the site.")
+        return redirect_to(Tr8n::Config.default_url)
+      end
     end
-  end
-  helper_method :tr8n_features_tabs
 
-  def validate_feature_enabled
-    return if self.class.tr8n_feature.blank?
+    # make sure users have the rights to access this section
+    def validate_current_user
+      return if Tr8n::Config.current_user_is_translator?
 
-    unless tr8n_enabled_features.collect{|feature| feature[:key]}.include?(self.class.tr8n_feature.to_s)
-      trfe("You do not have access to this section of Tr8n")
-      redirect_to_site_default_url
+      unless Tr8n::Config.open_registration_mode?
+        trfe("You don't have rights to access that section.")
+        return redirect_to(Tr8n::Config.default_url)
+      end
+
+      if Tr8n::Config.enable_registration_disclaimer?
+        redirect_to("/tr8n/translator/registration")
+      end
     end
-  end
 
-end
+    # make sure that the current user is a translator
+    def validate_current_translator
+      if tr8n_current_user_is_translator? and tr8n_current_translator.blocked?
+        trfe("Your translation privileges have been revoked. Please contact the site administrator for more details.")
+        return redirect_to(Tr8n::Config.default_url)
+      end
+    end
+
+    # make sure that the current user is a language manager
+    def validate_language_management
+      # admins can do everything
+      return if tr8n_current_user_is_admin?
+
+      if tr8n_current_language.default?
+        trfe("Only administrators can modify this language")
+        return redirect_to(tr8n_features_tabs.first[:link])
+      end
+
+      unless tr8n_current_user_is_translator? and tr8n_current_translator.manager?
+        trfe("In order to manage a language you first must request to become a manager of that language. Please send your request to Geni support.")
+        return redirect_to(tr8n_features_tabs.first[:link])
+      end
+    end
+
+    def validate_default_language
+      return if Tr8n::Config.multiple_base_languages?
+      redirect_to(tr8n_features_tabs.first[:link]) if tr8n_current_language.default?
+    end
+
+    def validate_language
+      return unless params[:language]
+      return if params[:language][:fallback_language_id].blank? # default
+
+      fallback_language = Tr8n::Language.find_by_id(params[:language][:fallback_language_id])
+
+      while fallback_language do
+        if fallback_language == tr8n_current_language
+          return "You are creating an infinite loop with fallback languages. Please ensure that languages do not fall back onto each other."
+        end
+        fallback_language = fallback_language.fallback_language
+      end
+    end
+
+    def validate_admin
+      unless tr8n_current_user_is_admin?
+        trfe("You must be an admin in order to view this section of the site")
+        redirect_to_site_default_url
+      end
+    end
+
+    def self.set_tr8n_feature(feature)
+      @tr8n_feature = feature
+    end
+
+    def self.tr8n_feature
+      @tr8n_feature
+    end
+
+    def tr8n_enabled_features
+      @tr8n_enabled_features ||= begin
+        enabled_features = []
+        Tr8n::Config.features.each do |key, defs|
+          defs[:key] = key
+
+          next unless defs[:enabled]
+
+          unless Tr8n::Config.multiple_base_languages?
+            next if tr8n_current_language.default? and defs[:default_language]
+          end
+
+          unless tr8n_current_user_is_translator? and tr8n_current_user_is_manager?
+            next if defs[:manager_only]
+          end
+
+          unless Tr8n::Config.enable_relationships?
+            next if key == 'relationships'
+          end
+
+          enabled_features << defs.clone
+        end
+        enabled_features
+      end
+    end
+    helper_method :tr8n_enabled_features
+
+    def tr8n_features_tabs
+      @tabs ||= begin
+        tabs = tr8n_enabled_features.select{|feature| feature[:tab_position]}
+        tabs.sort_by{|tab| tab[:tab_position]}
+      end
+    end
+    helper_method :tr8n_features_tabs
+
+    def validate_feature_enabled
+      return if self.class.tr8n_feature.blank?
+
+      unless tr8n_enabled_features.collect{|feature| feature[:key]}.include?(self.class.tr8n_feature.to_s)
+        trfe("You do not have access to this section of Tr8n")
+        redirect_to_site_default_url
+      end
+    end
+
+  end # class BaseController
+end # module Tr8n

@@ -22,12 +22,12 @@
 #++
 
 class Tr8n::Admin::ClientsdkController < Tr8n::Admin::BaseController
-  unloadable
+
 
   def index
-    
+
   end
-  
+
   def lb_samples
     render :layout => false
   end

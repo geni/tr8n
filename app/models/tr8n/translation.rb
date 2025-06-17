@@ -341,7 +341,7 @@ class Tr8n::Translation < ApplicationRecord
   end
 
   def self.search_conditions_for(params, language = Tr8n::Config.current_language)
-    conditions = ["language_id = ?", language.id]
+    conditions = [String.new('language_id = ?'), language.id]
 
     # ensure that only allowed translations are visible
     conditions[0] << " and translation_key_id in (select id from tr8n_translation_keys where level <= ? "

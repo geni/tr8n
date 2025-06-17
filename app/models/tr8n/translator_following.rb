@@ -22,6 +22,7 @@
 #++
 
 class Tr8n::TranslatorFollowing < ApplicationRecord
+  self.table_name = 'tr8n_translator_following'
 
   belongs_to :translator
   belongs_to :object, :polymorphic => true
@@ -31,7 +32,7 @@ class Tr8n::TranslatorFollowing < ApplicationRecord
   end
 
   def self.following_for(translator, object)
-    find(:first, :conditions => ["translator_id = ? and object_type = ? and object_id = ?", translator.id, object.class.name, object.id])
+    where(['translator_id = ? and object_type = ? and object_id = ?', translator.id, object.class.name, object.id]).first
   end
 
   def after_create

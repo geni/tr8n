@@ -22,21 +22,24 @@
 #++
 
 class Tr8n::LanguageCasesController < Tr8n::BaseController
-  unloadable
 
-  before_filter :validate_current_translator
-  before_filter :validate_language_management, :only => [:index]
+
+  before_action :validate_current_translator
+  before_action :validate_language_management, :only => [:index]
 
   # used by a client app
   def index
-    conditions = ["language_id = ? and (reported is null or reported = ?)", tr8n_current_language.id, false]
+    conditions = [String.new('language_id = ? and (reported is null or reported = ?)'), tr8n_current_language.id, false]
 
     unless params[:search].blank?
-      conditions[0] << " and keyword like ?"
+      conditions[0] << ' and keyword like ?'
       conditions << "%#{params[:search]}%"
     end
 
-    @maps = Tr8n::LanguageCaseValueMap.paginate(:per_page => per_page, :page => page, :conditions => conditions, :order => "updated_at desc")
+    @maps = Tr8n::LanguageCaseValueMap
+              .where(conditions)
+              .order('updated_at DESC')
+              .paginate(:per_page => per_page, :page => page)
   end
 
   def manager

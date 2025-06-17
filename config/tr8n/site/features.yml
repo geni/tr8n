@@ -2,8 +2,8 @@
 # Tr8n Features Configuration
 #
 # Default settings for all environments
-# 
-# You can overload any feature for any environment by changing the 
+#
+# You can overload any feature for any environment by changing the
 # environment settings at the bottom of the file
 #############################################################################
 
@@ -27,7 +27,7 @@ defaults: &defaults
     default_language: false
     manager_only:     false
     enabled:          true
-  
+
   phrases:
     tab_position:     3
     title:            Phrases
@@ -47,7 +47,7 @@ defaults: &defaults
     default_language: true
     manager_only:     true
     enabled:          true
-  
+
   translations:
     tab_position:     5
     title:            Translations
@@ -57,7 +57,7 @@ defaults: &defaults
     default_language: false
     manager_only:     false
     enabled:          true
-    
+
   awards:
     tab_position:     5
     title:            Awards
@@ -67,7 +67,7 @@ defaults: &defaults
     default_language: true
     manager_only:     false
     enabled:          true
-  
+
   forum:
     tab_position:     6
     title:            Discussions
@@ -77,7 +77,7 @@ defaults: &defaults
     default_language: true
     manager_only:     false
     enabled:          true
-  
+
   glossary:
     tab_position:     7
     title:            Glossary
@@ -86,8 +86,8 @@ defaults: &defaults
     actions:          [index]
     default_language: true
     manager_only:     false
-    enabled:          false
-  
+    enabled:          true
+
   help:
     tab_position:     8
     title:            Help
@@ -106,7 +106,7 @@ defaults: &defaults
     default_language: true
     manager_only:     true
     enabled:          true
-    
+
 #############################################################################
 # Environment Settings
 # You can overload any feature defined in the defaults for any environment
@@ -116,7 +116,7 @@ development:
 
 test:
   <<: *defaults
-      
+
 qa:
   <<: *defaults
 

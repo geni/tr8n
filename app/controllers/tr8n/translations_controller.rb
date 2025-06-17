@@ -22,10 +22,14 @@
 #++
 
 class Tr8n::TranslationsController < Tr8n::BaseController
-  unloadable
 
-  before_filter :validate_current_translator
-  before_filter :validate_default_language, :except => [:translate, :permutate, :vote]
+
+  before_action :validate_tr8n_enabled,     :except => [:translate]
+  before_action :validate_guest_user,       :except => [:translate]
+  before_action :validate_current_user,     :except => [:translate]
+
+  before_action :validate_current_translator
+  before_action :validate_default_language, :except => [:translate, :permutate, :vote]
 
   # for ssl access to the translator - using ssl_requirement plugin
   ssl_allowed :translate  if respond_to?(:ssl_allowed)
@@ -167,7 +171,10 @@ class Tr8n::TranslationsController < Tr8n::BaseController
       end
     end
 
-    @translations = Tr8n::Translation.paginate(:per_page => per_page, :page => page, :conditions => conditions, :order => "created_at desc, rank desc")
+    @translations = Tr8n::Translation
+                      .where(conditions)
+                      .order('created_at DESC, rank DESC')
+                      .paginate(:per_page => per_page, :page => page)
   end
 
   # ajax based method for updating individual translations

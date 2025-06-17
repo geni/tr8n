@@ -22,7 +22,7 @@
 #++
 
 class Tr8n::Admin::ApplicationsController < Tr8n::Admin::BaseController
-  unloadable
+
 
   def index
     @apps = Tr8n::Application.filter(:params => params, :filter => Tr8n::ApplicationFilter)

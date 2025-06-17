@@ -22,14 +22,14 @@
 #++
 
 class Tr8n::Admin::MetricsController < Tr8n::Admin::BaseController
-  unloadable
+
 
   def index
     @metrics = Tr8n::TranslationSourceMetric.filter(:params => params, :filter => Tr8n::TranslationSourceMetricFilter)
   end
 
   def charts
-    
+
   end
 
   def languages

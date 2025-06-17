@@ -53,7 +53,7 @@ class Tr8n::LanguageUser < ApplicationRecord
   # when users get promoted, they are automatically get associated with a language and marked as translators
 
   def self.find_or_create(user, language)
-    lu = find(:first, :conditions => ["user_id = ? and language_id = ?", user.id, language.id])
+    lu = where(["user_id = ? and language_id = ?", user.id, language.id]).first
     lu || create(:user => user, :language => language)
   end
 
@@ -64,7 +64,7 @@ class Tr8n::LanguageUser < ApplicationRecord
   def self.languages_for(user)
     return [] unless user.id
     check_default_language_for(user)
-    find(:all, :conditions => ["user_id = ?", user.id], :order => "updated_at desc")
+    where(['user_id = ?', user.id]).order('updated_at desc')
   end
 
   def self.create_or_touch(user, language)

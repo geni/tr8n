@@ -22,10 +22,12 @@
 #++
 
 class Tr8n::LanguageController < Tr8n::BaseController
-  unloadable
 
-  before_filter :validate_current_translator, :except => [:select, :switch]
-  before_filter :validate_language_management, :only => [:index]
+  before_action :validate_guest_user, :except => [:select, :switch, :table]
+  before_action :validate_current_user, :except => [:select, :switch, :table]
+
+  before_action :validate_current_translator, :except => [:select, :switch]
+  before_action :validate_language_management, :only => [:index]
 
   # for ssl access to the translator - using ssl_requirement plugin
   ssl_allowed :translator, :select, :lists, :switch, :remove  if respond_to?(:ssl_allowed)
