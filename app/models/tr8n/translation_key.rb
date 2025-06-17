@@ -759,7 +759,7 @@ class Tr8n::TranslationKey < ApplicationRecord
   end
 
   def self.search_conditions_for(params)
-    conditions = ["(tr8n_translation_keys.type is null or tr8n_translation_keys.type = 'Tr8n::TranslationKey' or tr8n_translation_keys.type = 'TranslationKey')"]
+    conditions = [String.new("(tr8n_translation_keys.type is null or tr8n_translation_keys.type = 'Tr8n::TranslationKey' or tr8n_translation_keys.type = 'TranslationKey')")]
     conditions[0] << " and tr8n_translation_keys.locale <> ? and (level is null or level <= ?) "
     conditions << Tr8n::Config.current_language.locale
     conditions << (Tr8n::Config.current_user_is_translator? ? Tr8n::Config.current_translator.level : 0)

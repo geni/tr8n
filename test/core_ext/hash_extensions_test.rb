@@ -1,4 +1,4 @@
-require_relative '../test_helper'
+require 'test_helper'
 
 class HashExtensionsTest < Tr8n::TestCase
   test 'combinations' do

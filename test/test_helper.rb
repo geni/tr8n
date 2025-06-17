@@ -26,11 +26,14 @@ module Tr8n
   # TODO: Rename to ModelTestCase?
   class TestCase < ActiveSupport::TestCase
 
-  SETUP = begin
-    # run once before all tests are executed and
-    # before any other SETUP= blocks in subclasses
-    Tr8n::Config.init(Tr8n::Language.for('en-US').locale, User.create!(:name => 'Mike'))
-  end
+    SETUP = begin
+      # run once before all tests are executed and
+      # before any other SETUP= blocks in subclasses
+    end
+
+    def setup
+      init_tr8n
+    end
 
   private
 

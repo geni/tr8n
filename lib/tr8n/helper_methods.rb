@@ -229,7 +229,7 @@ module Tr8n::HelperMethods
 
     rank ||= translator.rank || 0
 
-    html = "<span dir='ltr'>"
+    html = String.new("<span dir='ltr'>")
     1.upto(5) do |i|
       if rank > i * 20 - 10  and rank < i * 20
         html << image_tag( url_with_cache_version("/tr8n/images/rating_star05.png") )
