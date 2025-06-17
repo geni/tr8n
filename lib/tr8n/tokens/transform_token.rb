@@ -91,7 +91,7 @@ class Tr8n::Tokens::TransformToken < Tr8n::Token
   def prepare_label_for_translator(label)
     validate_language_rule
 
-    substitution_value = ""
+    substitution_value = String.new
     substitution_value << sanitized_name if allowed_in_translation?
     substitution_value << " " unless substitution_value.blank?
     substitution_value << language_rule.default_transform(*piped_params)
