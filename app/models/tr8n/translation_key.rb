@@ -604,6 +604,7 @@ class Tr8n::TranslationKey < ApplicationRecord
   end
 
   def add_translation(label, rules = nil, lang = Tr8n::Config.current_language, translator = Tr8n::Config.current_translator)
+    raise Tr8n::Exception.new("The translator is blocked and cannot submit translations") if translator.blocked?
     raise Tr8n::Exception.new("The sentence contains dirty words") unless lang.clean_sentence?(label)
 
     translation = Tr8n::Translation.create(:translation_key => self, :language => lang,

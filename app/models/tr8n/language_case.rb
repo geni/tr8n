@@ -46,7 +46,7 @@ class Tr8n::LanguageCase < ApplicationRecord
 
   belongs_to :language
   belongs_to :translator
-  has_many   :language_case_rules, Proc.new{order(:position => 'asc')}, :dependent => :destroy
+  has_many   :language_case_rules, Proc.new {order(:position => 'asc')}, :dependent => :destroy
 
   serialize :definition, :type => HashWithIndifferentAccess, :coder => YAML
 
@@ -58,6 +58,14 @@ class Tr8n::LanguageCase < ApplicationRecord
 
   def self.by_language(language)
     find(:all, :conditions => ["language_id = ?", language.id])
+  end
+
+  def add_rule(definition, opts = {})
+    opts[:position] ||= language_case_rules.count
+    opts[:translator] ||= Tr8n::Config.current_translator
+    Tr8n::LanguageCaseRule.create(:language_case => self,           :language => language,
+                                  :translator => opts[:translator], :position => opts[:position],
+                                  :definition => definition)
   end
 
   def rules

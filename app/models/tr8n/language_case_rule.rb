@@ -47,6 +47,11 @@ class Tr8n::LanguageCaseRule < ApplicationRecord
   belongs_to :translator
 
   serialize :definition, :type => HashWithIndifferentAccess, :coder => YAML
+  validates_presence_of :definition
+
+  def definition=(value)
+    write_attribute(:definition, HashWithIndifferentAccess.new(value || {}))
+  end
 
   def self.by_id(id)
     Tr8n::Cache.fetch("language_case_rule_#{id}") do
