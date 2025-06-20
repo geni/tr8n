@@ -21,7 +21,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::BaseFilter < Wf::Filter
+class Tr8n::BaseFilter < WillFilter::Filter
 
   def definition
     meta = super
@@ -54,13 +54,13 @@ class Tr8n::BaseFilter < Wf::Filter
     return [:created_at, :is_on, Date.today] if (key == "created_today")
     return [:updated_at, :is_on, Date.today] if (key == "updated_today")
   end
-  
+
   def default_order
     'created_at'
   end
-  
+
   def default_order_type
     'desc'
   end
-  
+
 end
