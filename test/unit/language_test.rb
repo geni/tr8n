@@ -53,4 +53,30 @@ class Tr8n::LanguageTest < Tr8n::TestCase
     assert_equal false, @spanish.translate("Hello World").tr8n_translation_successful?
   end
 
+  test "translation with 0 rank not considered translated" do
+    hello_world = Tr8n::TranslationKey.find_or_create('Hello World')
+
+    # reset if there is a translation for spanish
+    hello_world.translations.all(:conditions => {:language_id => @spanish.id}).map(&:destroy)
+
+    assert_equal "Hello World", @spanish.translate("Hello World")
+    assert_equal false, @spanish.translate("Hello World").tr8n_translation_successful?
+
+    # let's add a translation (automatically upvotes it)
+    hello_world.add_translation('Hola Mundo', nil, @spanish)
+    assert_equal "Hola Mundo", @spanish.translate("Hello World")
+
+    spanish_translation = hello_world.translations.filter{|t| t.language_id == @spanish.id}.first
+    spanish_translator  = spanish_translation.translator
+
+    # let's down vote so that it has 0 votes
+    spanish_translation.vote!(@user, -1)
+
+    # should now be considered not successfully translated
+    assert_equal 0, spanish_translation.rank
+    assert_equal false, @spanish.translate("Hello World").tr8n_translation_successful?
+
+
+  end
+
 end # class Tr8n::LanguageTest

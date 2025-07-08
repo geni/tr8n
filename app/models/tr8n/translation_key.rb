@@ -417,7 +417,15 @@ class Tr8n::TranslationKey < ActiveRecord::Base
 
     if translation
       translated_label = substitute_tokens(translation.label, token_values, options, language)
-      return decorate_translation(language, translated_label, translation != nil, options.merge(:fallback => (translation_language != language)))
+      result = decorate_translation(language, translated_label, translation != nil, options.merge(:fallback => (translation_language != language)))
+
+      # if the translation rank is zero, that means there is no translation for the language
+      # and will default back to English
+      if translation&.rank == 0
+        return result.tr8n_translation_not_found
+      else
+        return result
+      end
     end
 
     # no translation found
