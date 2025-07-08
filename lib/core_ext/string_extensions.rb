@@ -47,6 +47,15 @@ module Tr8n
       defined?(@tr8n_translated) ? @tr8n_translated : false
     end
 
+    def tr8n_translation_not_found
+      @tr8n_not_found = true
+      self
+    end
+
+    def tr8n_translation_successful?
+      defined?(@tr8n_not_found) ? false : true
+    end
+
     def html_safe
       @html_safe = true
       self

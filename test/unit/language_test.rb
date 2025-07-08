@@ -41,6 +41,16 @@ class Tr8n::LanguageTest < Tr8n::TestCase
 
   test "translate" do
     assert_equal "Hello World", @default_language.translate("Hello World")
+    assert_equal "Hello World", @spanish.translate("Hello World")
+  end
+
+  test "translations found" do
+    assert_equal "Hello World", @default_language.translate("Hello World")
+    assert_equal true, @default_language.translate("Hello World").tr8n_translation_successful?
+
+    # there is no translation for "Hello World" in Spanish
+    assert_equal "Hello World", @spanish.translate("Hello World")
+    assert_equal false, @spanish.translate("Hello World").tr8n_translation_successful?
   end
 
 end # class Tr8n::LanguageTest
