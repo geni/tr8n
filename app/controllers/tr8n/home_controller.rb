@@ -21,36 +21,38 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-class Tr8n::HomeController < ApplicationController
+module Tr8n
+  class HomeController < ApplicationController
 
+    layout Tr8n::Config.site_info[:tr8n_layout]
 
-  layout Tr8n::Config.site_info[:tr8n_layout]
+    def index
 
-  def index
+    end
 
-  end
+    def tokens
 
-  def tokens
+    end
 
-  end
+    def rules
 
-  def rules
+    end
 
-  end
+    def license
 
-  def license
+    end
 
-  end
+    def docs
 
-  def docs
+    end
 
-  end
+    def credits
 
-  def credits
+    end
 
-  end
+    def samples
 
-  def samples
+    end
 
-  end
-end
+  end # class HomeController
+end # module Tr8n
