@@ -25,15 +25,15 @@
 class CreateTestUsers < ActiveRecord::Migration[4.2]
   def self.up
     create_table :users do |t|
-      t.string  :name
-      t.string  :mugshot
-      t.boolean :admin
-      t.boolean :guest
-      t.string  :gender
-      t.string  :link
-      t.string  :locale
-
       t.timestamps
+      t.boolean :admin, :default => false
+      t.boolean :guest, :default => false
+      t.string  :locale, :default => 'en-US'
+      t.string  :name
+      t.string  :gender
+      t.string  :mugshot
+      t.string  :link
+
     end
   end
 
