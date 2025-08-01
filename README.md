@@ -43,7 +43,7 @@ bundle exec rails test
 ```sh
 # populate dummy app database
 bundle exec rails db:create
-bundle exec rails app:db:seed
+bundle exec rails db:seed
 
 # Spin up the server
 bundle exec rails server -b 0.0.0.0
