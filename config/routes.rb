@@ -1,6 +1,10 @@
 Tr8n::Engine.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
+  namespace :admin do
+    get '/applications', :to => 'applications#index'
+  end
+
   get '/awards', :to => 'awards#index'
 
   get '/forum',       :to => 'forum#index'
@@ -23,6 +27,8 @@ Tr8n::Engine.routes.draw do
   get '/help/site_map',               :to => 'help#site_map'
   get '/help/translations',           :to => 'help#translations'
   get '/help/voting_on_translations', :to => 'help#voting_on_translations'
+
+  get '/home', :to => 'home#index'
 
   get '/language',        :to => 'language#index'
   get '/language/manage', :to => 'language#manage'

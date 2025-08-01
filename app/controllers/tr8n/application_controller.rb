@@ -1,6 +1,6 @@
 module Tr8n
   class ApplicationController < ::ApplicationController
-    include Tr8n::CommonMethods
+    include Tr8n::ApplicationHelper
 
     append_before_action :init_tr8n
 
