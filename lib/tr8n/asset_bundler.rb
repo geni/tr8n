@@ -1,3 +1,7 @@
+#
+# Created by: GitHub Copilot using Claude Sonet 4
+# Updated by: Scott Steadman
+#
 require 'yaml'
 require 'fileutils'
 
