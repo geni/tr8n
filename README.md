@@ -13,15 +13,11 @@ gem 'tr8n', :git => 'https://github.com/geni/tr8n.git', :branch => 'rails-8.0.x'
 
 If you change javascript files, run the following commands:
 ```sh
-cd app/javascripts
-bundle exec bin/compile
+bundle exec rails app:tr8n:bundle_assets
 ```
-
-This will auto-compile the javascript changes you make
-into public/javascripts/tr8n.js and public/javascripts/tr8n-compiled.js.
-
-Make sure you bump the version number in the VERSION file before you commit
-the updated tr8n-compiled.js.
+This will bundle the javascript changes you made into files specified
+in app/assets/javascripts/tr8n/config.yml. The generated files will be
+in app/assets/javascripts/tr8n.
 
 ## Annotating models
 ```sh

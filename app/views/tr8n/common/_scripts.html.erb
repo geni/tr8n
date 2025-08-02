@@ -10,7 +10,7 @@
   <% end %>
 
   <%= stylesheet_link_tag('tr8n/tr8n.css' ) -%>
-  <%= javascript_include_tag('tr8n/tr8n-compiled.js', :nonce => true) -%>
+  <%= javascript_include_tag('tr8n/main.js', :nonce => true) -%>
 
   <% javascript_tag(nonce: true) do %>
      initializeTr8n();
