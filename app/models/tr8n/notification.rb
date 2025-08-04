@@ -25,8 +25,8 @@ class Tr8n::Notification < ApplicationRecord
 
   belongs_to :translator
 
-  belongs_to :actor
-  belongs_to :target
+  belongs_to :actor,  :class_name => 'Tr8n::Translator'
+  belongs_to :target, :class_name => 'Tr8n::Translator'
   belongs_to :object, :polymorphic => true
 
   def self.distribute(object)
@@ -73,7 +73,7 @@ class Tr8n::Notification < ApplicationRecord
     self.class.key(object)
   end
 
-  def valid?
+  def valid?(context=nil)
     return false unless object
     true
   end
