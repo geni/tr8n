@@ -11,11 +11,12 @@ module Tr8n
     ASSETS_PATH = Engine.root.join('app/assets/javascripts/tr8n')
 
     def self.config
-      @config ||= if File.exist?(CONFIG_PATH)
-                    YAML.load_file(CONFIG_PATH)
-                  else
-                    {}
-                  end
+      # do not cache. This file is not expected to change often, but it can change.
+      if File.exist?(CONFIG_PATH)
+        YAML.load_file(CONFIG_PATH)
+      else
+        {}
+      end
     end
 
     def self.bundle_assets!
@@ -29,19 +30,16 @@ module Tr8n
     end
 
     def self.bundle_group(group, files)
-      content = files.map do |file|
+      input_files = files.map do |file|
         file_path = ASSETS_PATH.join(file)
+        Rails.logger.warn "Tr8n: File not found: #{file_path}" unless File.exist?(file_path)
+        file_path.to_s
+      end
 
-        if File.exist?(file_path)
-          File.read(file_path)
-        else
-          Rails.logger.warn "Tr8n: File not found: #{file_path}"
-          "// Tr8n::AssetBundler File not found: #{file}"
-        end
-      end.join("\n\n")
+      output_file = ASSETS_PATH.join("#{group}-compiled.js")
 
-      output_file = ASSETS_PATH.join("#{group}.js")
-      File.write(output_file, content)
+      command = "java -jar #{Engine.root.join('bin/compressors/google/compiler.jar')} --js #{input_files.join(' ')} --js_output_file #{output_file}"
+      Kernel.spawn(command)
 
       Rails.logger.debug "Tr8n: Created bundle #{output_file}"
     end
@@ -53,7 +51,7 @@ module Tr8n
         require 'listen'
 
         only_regex   = /\.js$|config.yml/
-        ignore_regex = Regexp.new(config.keys.map { |k| "#{k}.js" }.map { |f| Regexp.escape(f) }.join('|'))
+        ignore_regex = Regexp.new(config.keys.map { |k| "#{k}-compiled.js" }.map { |f| Regexp.escape(f) }.join('|'))
         listener = Listen.to(ASSETS_PATH.to_s, only: only_regex, ignore: ignore_regex) do |modified, added, removed|
           changed_files = (modified + added + removed)
           Rails.logger.info "Tr8n: Files changed: #{changed_files.map { |f| File.basename(f) }.join(', ')}"

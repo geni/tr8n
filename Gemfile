@@ -6,7 +6,6 @@ gem 'will_filter', :git => 'https://github.com/geni/will_filter.git', :ref => 'r
 
 group :development, :test do
   gem 'annotaterb'
-  gem 'fssm', '~> 0.2.10'
   gem 'listen', :require => false
   gem 'mocha'
   gem 'nokogiri',  :force_ruby_platform => true
