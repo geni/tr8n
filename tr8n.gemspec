@@ -19,4 +19,5 @@ Gem::Specification.new do |gem|
   end
 
   gem.add_dependency 'rails', '~> 8.0.0'
+  gem.add_dependency 'sprockets-rails'
 end

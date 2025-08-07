@@ -562,7 +562,7 @@ class Tr8n::TranslationKey < ApplicationRecord
     html = "<tr8n class='#{classes.join(' ')}' translation_key_id='#{id}'>"
     html << translated_label
     html << "</tr8n>"
-    html
+    html.html_safe
   end
 
   def verify!(time = Time.now)

@@ -11,16 +11,21 @@
     return false;
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
+  registerEventListeners = function() {
     var elements = document.querySelectorAll('[data-select-locale]');
     elements.forEach(function(element) {
         element.addEventListener('click', function(event) {
-          selectLocale(event.target.getAttribute('data-select-locale'));
+          selectLocale(this.getAttribute('data-select-locale'));
           event.preventDefault();
           return false;
         });
     });
-});
+  };
+
+  // We don't know if we'll get a DOMContentLoaded event
+  // or if this was loaded via Ajax.
+  // So we're doing this immediately.
+  registerEventListeners();
 <% end %>
 
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
@@ -125,14 +130,14 @@
             </div>
             <% end %>
             <% end %>
-            <% form_tag({:controller => :language, :action => :switch}, :id => "language_selector_form", :style=>"padding:0px;margin:0px;") do %>
-            <%=hidden_field_tag(:source_url, @source_url) %>
-            <%=hidden_field_tag(:locale, tr8n_current_language.locale, :id => "language_selector_locale") %>
-            <%=hidden_field_tag(:language_action, "switch_language", :id => "language_selector_action") %>
+            <%= form_tag({:controller => :language, :action => :switch}, :id => "language_selector_form", :style=>"padding:0px;margin:0px;") do %>
+              <%=hidden_field_tag(:source_url, @source_url) %>
+              <%=hidden_field_tag(:locale, tr8n_current_language.locale, :id => "language_selector_locale") %>
+              <%=hidden_field_tag(:language_action, "switch_language", :id => "language_selector_action") %>
             <% end %>
         </div>
         <div class="ft" style="font-size:10px;height:10px;">
-            <%=tr8n_help_icon_tag %>
+            <%= tr8n_help_icon_tag %>
             &nbsp;<%=trla("Click this icon to view [link: translation help] in a new window.", "", :link => lambda{|txt| link_to(txt, {:controller => "tr8n/help", :action => :index}, :target => "new")}) %>
         </div>
     </div>

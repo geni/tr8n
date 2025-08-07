@@ -90,8 +90,8 @@ Tr8n.Translator.prototype = {
       html += splash_screen.innerHTML;
     } else {
       html += "<div style='font-size:18px;text-align:center; margin:5px; padding:10px; background-color:black;'>";
-      html += "  <img src='/tr8n/images/tr8n_logo.jpg?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='width:280px; vertical-align:middle;'>";
-      html += "  <img src='/tr8n/images/loading3.gif?" + (Tr8n ? Tr8n.url_cache_version : '') + "' style='width:200px; height:20px; vertical-align:middle;'>";
+      html += "  <img src='/assets/tr8n/tr8n_logo.jpg' style='width:280px; vertical-align:middle;'>";
+      html += "  <img src='/assets/tr8n/loading3.gif' style='width:200px; height:20px; vertical-align:middle;'>";
       html += "</div>"
     }
     this.container.innerHTML = html;
@@ -122,7 +122,7 @@ Tr8n.Translator.prototype = {
     this.translation_key_id       = translatable_node.getAttribute('translation_key_id');
 
     window.setTimeout(function() {
-      Tr8n.Utils.update('tr8n_translator', '/tr8n/language/translator', {
+      Tr8n.Utils.update('tr8n_translator', `${Tr8n.mountPoint}/language/translator`, {
         evalScripts: true,
         parameters: {
             translation_key_id: self.translation_key_id,
@@ -146,7 +146,7 @@ Tr8n.Translator.prototype = {
     // the long version updates and reorders translations - used in translator and phrase list
     // the short version only updates the total results - used everywhere else
     if (Tr8n.element('tr8n_translator_votes_for_' + key)) {
-      Tr8n.Utils.update('tr8n_translator_votes_for_' + key, '/tr8n/translations/vote', {
+      Tr8n.Utils.update('tr8n_translator_votes_for_' + key, `${Tr8n.mountPoint}/translations/vote`, {
         parameters: {
           translation_id: translation_id,
           vote: vote
@@ -154,7 +154,7 @@ Tr8n.Translator.prototype = {
         method: 'post'
       });
     } else {
-      Tr8n.Utils.update('tr8n_votes_for_' + translation_id, '/tr8n/translations/vote', {
+      Tr8n.Utils.update('tr8n_votes_for_' + translation_id, `${Tr8n.mountPoint}translations/vote`, {
         parameters: {
           translation_id: translation_id,
           vote: vote,
@@ -181,7 +181,7 @@ Tr8n.Translator.prototype = {
   },
 
   switchTranslatorMode: function(translation_key_id, mode, source_url) {
-    Tr8n.Utils.update('tr8n_translator_container', '/tr8n/language/translator', {
+    Tr8n.Utils.update('tr8n_translator_container', `${Tr8n.mountPoint}/language/translator`, {
       parameters: {translation_key_id: translation_key_id, mode: mode, source_url: source_url},
       evalScripts: true
     });
@@ -290,14 +290,14 @@ Tr8n.Translator.prototype = {
     Tr8n.Effects.hide('tr8n_translator_buttons_container');
     Tr8n.Effects.hide('tr8n_translator_dependencies_container');
     Tr8n.Effects.show('tr8n_translator_spinner');
-    Tr8n.element('tr8n_translator_form').action = '/tr8n/translations/permutate';
+    Tr8n.element('tr8n_translator_form').action = `${Tr8n.mountPoint}/translations/permutate`;
     Tr8n.Effects.submit('tr8n_translator_form');
     return false;
   },
 
   translate: function(label, callback, opts) {
     opts = opts || {}
-    Tr8n.Utils.ajax('/tr8n/language/translate', {
+    Tr8n.Utils.ajax(`${Tr8n.mountPoint}/language/translate`, {
       method: 'post',
       parameters: {
         label: label,
@@ -313,7 +313,7 @@ Tr8n.Translator.prototype = {
   },
 
   translateBatch: function(phrases, callback) {
-    Tr8n.Utils.ajax('/tr8n/language/translate', {
+    Tr8n.Utils.ajax(`${Tr8n.mountPoint}/language/translate`, {
       method: 'post',
       parameters: {phrases: phrases},
       onSuccess: function(r) {

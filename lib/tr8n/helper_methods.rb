@@ -151,9 +151,10 @@ module Tr8n::HelperMethods
 
   def tr8n_language_flag_tag(lang = Tr8n::Config.current_language, opts = {})
     return "" unless Tr8n::Config.enable_language_flags?
-    html = image_tag( url_with_cache_version("/tr8n/images/flags/#{lang.flag}.png"), :style => "vertical-align:middle;", :title => lang.native_name)
-    html << "&nbsp;"
-    html.html_safe
+    html = image_tag("tr8n/flags/#{lang.flag}.png", :style => "vertical-align:middle;", :title => lang.native_name)
+    html << '&nbsp;'.html_safe
+  rescue Sprockets::Rails::Helper::AssetNotFound
+    return lang.fallback_language ? tr8n_language_flag_tag(lang.fallback_language, opts) : ''
   end
 
   def tr8n_language_name_tag(lang = Tr8n::Config.current_language, opts = {})
@@ -232,11 +233,11 @@ module Tr8n::HelperMethods
     html = String.new("<span dir='ltr'>")
     1.upto(5) do |i|
       if rank > i * 20 - 10  and rank < i * 20
-        html << image_tag( url_with_cache_version("/tr8n/images/rating_star05.png") )
+        html << image_tag('tr8n/rating_star05.png')
       elsif rank < i * 20 - 10
-        html << image_tag( url_with_cache_version("/tr8n/images/rating_star0.png") )
+        html << image_tag('tr8n/rating_star0.png')
       else
-        html << image_tag( url_with_cache_version("/tr8n/images/rating_star1.png") )
+        html << image_tag('tr8n/rating_star1.png')
       end
     end
     html << "</span>"
@@ -244,18 +245,19 @@ module Tr8n::HelperMethods
   end
 
   def tr8n_help_icon_tag(filename = "index")
-    link_to(image_tag( url_with_cache_version("/tr8n/images/help.png"), :style => "border:0px; vertical-align:middle;", :title => trl("Help")), {:controller => "/tr8n/help", :action => filename}, :target => "_new").html_safe
+    image = image_tag('tr8n/help.png', :style => 'border:0px; vertical-align:middle;', :title => trl('Help'))
+    link_to(image, {:controller => 'tr8n/help', :action => filename}, :target => '_new')
   end
 
   def tr8n_help_link(text, opts = {})
     filename = opts[:filename].nil? ? text.downcase.gsub(' ', '_') : opts[:filename]
     classname = "tr8n_selected" if filename == action_name
-    link_to(text, { :controller => "/tr8n/help", :action => filename }, :class => classname).html_safe
+    link_to(text, { :controller => "tr8n/help", :action => filename }, :class => classname).html_safe
   end
 
   def tr8n_spinner_tag(id = "spinner", label = nil, cls='spinner')
     html = "<div id='#{id}' class='#{cls}' style='display:none'>"
-    html << image_tag( url_with_cache_version("/tr8n/images/spinner.gif"), :style => "vertical-align:middle;")
+    html << image_tag('tr8n/spinner.gif', :style => "vertical-align:middle;")
     html << " #{trl(label)}" if label
     html << "</div>"
     html.html_safe
@@ -265,18 +267,20 @@ module Tr8n::HelperMethods
     html = "<span id='#{content_id}_open' "
     html << "style='display:none'" unless open
     html << ">"
-    html << link_to_function("#{image_tag( url_with_cache_version("/tr8n/images/arrow_down.gif"), :style=>'text-align:center; vertical-align:middle')} #{label}", "tr8nToggleEffect('#{content_id}_open', '#{content_id}_closed', 'blindUp', '#{content_id}')", :style=> "text-decoration:none")
+    text = [image_tag('tr8n/arrow_down.gif', :style=>'text-align:center; vertical-align:middle'), label].join(' ').html_safe
+    html << link_to_function(text, "tr8nToggleEffect('#{content_id}_open', '#{content_id}_closed', 'blindUp', '#{content_id}')", :style=> "text-decoration:none")
     html << "</span>"
     html << "<span id='#{content_id}_closed' "
     html << "style='display:none'" if open
     html << ">"
-    html << link_to_function("#{image_tag( url_with_cache_version("/tr8n/images/arrow_right.gif"), :style=>'text-align:center; vertical-align:middle')} #{label}", "tr8nToggleEffect('#{content_id}_closed', '#{content_id}_open', 'blindDown', '#{content_id}')", :style=> "text-decoration:none")
+    text = [image_tag('tr8n/arrow_right.gif', :style=>'text-align:center; vertical-align:middle'), label].join(' ').html_safe
+    html << link_to_function(text, "tr8nToggleEffect('#{content_id}_closed', '#{content_id}_open', 'blindDown', '#{content_id}')", :style=> "text-decoration:none")
     html << "</span>"
     html.html_safe
   end
 
   def tr8n_lb_close_tag(html_opts={})
-    link_to_function( image_tag( url_with_cache_version("/tr8n/images/close.gif"), {:alt=>trla("Close")}.merge(html_opts) ), "tr8nLightbox.hide();")
+    link_to_function( image_tag('tr8n/close.gif', {:alt=>trla("Close")}.merge(html_opts) ), "tr8nLightbox.hide();")
   end
 
   def tr8n_sitemap(sections, splitters, options = {})
@@ -512,16 +516,8 @@ module Tr8n::HelperMethods
     elsif elapsed_seconds < 12.hours
       elapsed_hours = (elapsed_seconds / 1.hour).to_i
       tr("{hours||hour} ago", 'Time reference', :hours => elapsed_hours)
-    elsif time.today_in_time_zone?
-      display_time(time, :time_am_pm)
-    elsif time.yesterday_in_time_zone?
-      tr("Yesterday at {time}", 'Time reference', :time => time.tr(:time_am_pm).gsub('/ ', '/').sub(/^[0:]*/,""))
-    elsif elapsed_seconds < 5.days
-      time.tr(:day_time).gsub('/ ', '/').sub(/^[0:]*/,"")
-    elsif time.same_year_in_time_zone?
-      time.tr(:monthname_abbr_time).gsub('/ ', '/').sub(/^[0:]*/,"")
     else
-      time.tr(:monthname_abbr_year_time).gsub('/ ', '/').sub(/^[0:]*/,"")
+      time.tr(:verbose).gsub('/ ', '/').sub(/^[0:]*/,"")
     end
   end
 

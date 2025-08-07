@@ -1,5 +1,6 @@
 Tr8n::Engine.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  mount WillFilter::Engine => '/will_filter'
 
   namespace :admin do
     get '/applications', :to => 'applications#index'
@@ -30,24 +31,40 @@ Tr8n::Engine.routes.draw do
 
   get '/home', :to => 'home#index'
 
-  get '/language',        :to => 'language#index'
-  get '/language/manage', :to => 'language#manage'
-  get '/language/switch', :to => 'language#switch'
-  get '/language/table',  :to => 'language#table'
+  get  '/language',             :to => 'language#index'
+  get  '/language/manage',      :to => 'language#manage'
+  get  '/language/select',      :to => 'language#select'
+  post '/language/switch',      :to => 'language#switch'
+  get  '/language/table',       :to => 'language#table'
+  get  '/language/translator',  :to => 'language#translator'
 
   get '/language_cases', :to => 'language_cases#index'
 
-  get '/phrases', :to => 'phrases#index'
-  get '/phrases/map', :to => 'phrases#map'
+  get '/login',     :to => 'login#index'
+  get '/login/out', :to => 'login#out', :as => 'logout'
 
-  get '/translations', :to => 'translations#index'
+  get  '/phrases',                :to => 'phrases#index'
+  get  '/phrases/map',            :to => 'phrases#map'
+  post '/phrases/submit_comment', :to => 'phrases#submit_comment'
+  get  '/phrases/view',           :to => 'phrases#view'
 
-  get '/translator',                :to => 'translator#index'
-  get '/translator/assignments',    :to => 'translator#assignments'
-  get '/translator/following',      :to => 'translator#following'
-  get '/translator/notifications',  :to => 'translator#notifications'
-  get '/translator/settings',       :to => 'translator#settings'
+  get  '/translations',           :to => 'translations#index'
+  get  '/translations/permutate', :to => 'translations#permutate'
+  post '/translations/permutate', :to => 'translations#permutate'
+  get  '/translations/translate', :to => 'translations#translate'
+  post '/translations/translate', :to => 'translations#translate'
+  get  '/translations/vote',      :to => 'translations#vote'
+  post '/translations/vote',      :to => 'translations#vote'
 
+  get  '/translator',                :to => 'translator#index'
+  get  '/translator/assignments',    :to => 'translator#assignments'
+  post '/translator/follow',         :to => 'translator#follow'
+  get  '/translator/following',      :to => 'translator#following'
+  get  '/translator/notifications',  :to => 'translator#notifications'
+  get  '/translator/settings',       :to => 'translator#settings'
+  post '/translator/unfollow',       :to => 'translator#unfollow'
+
+  post '/translations/translate',   :to => 'translations#translate'
 
 #  [chart, :forum, :glossary, :help, :language_cases,
 #   :language, :phrases, :translations, :translator, :home, :login

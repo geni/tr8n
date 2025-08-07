@@ -83,7 +83,7 @@ class Tr8n::Translation < ApplicationRecord
   end
 
   def reset_votes!(translator)
-    Tr8n::TranslationVote.delete_all("translation_id = #{self.id}")
+    Tr8n::TranslationVote.where(:translation_id => id).delete_all
     vote!(translator, 1)
   end
 
@@ -95,10 +95,10 @@ class Tr8n::Translation < ApplicationRecord
   end
 
   def rank_label
-    return "<span style='color:grey'>0</span>" if rank.blank?
+    return "<span style='color:grey'>0</span>".html_safe if rank.blank?
 
     prefix = (rank > 0) ? "+" : ""
-    "<span style='#{rank_style(rank)}'>#{prefix}#{rank}</span>"
+    "<span style='#{rank_style(rank)}'>#{prefix}#{rank}</span>".html_safe
   end
 
   # populate language rules from the internal rules hash
@@ -175,9 +175,8 @@ class Tr8n::Translation < ApplicationRecord
   end
 
   def self.default_translation(translation_key, language, translator)
-    trans = find(:first,
-      :conditions => ["translation_key_id = ? and language_id = ? and translator_id = ? and rules is null",
-                       translation_key.id, language.id, translator.id], :order => "rank desc")
+    trans = where("translation_key_id = ? and language_id = ? and translator_id = ? and rules is null",
+                   translation_key.id, language.id, translator.id).order("rank desc").first
     return trans if trans
     label = translation_key.default_translation if translation_key.is_a?(Tr8n::RelationshipKey)
     new(:translation_key => translation_key, :language => language, :translator => translator, :label => label || translation_key.sanitized_label)

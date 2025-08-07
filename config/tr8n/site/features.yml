@@ -117,14 +117,5 @@ development:
 test:
   <<: *defaults
 
-qa:
-  <<: *defaults
-
-sandbox:
-  <<: *defaults
-
-stage:
-  <<: *defaults
-
 production:
   <<: *defaults

@@ -1,7 +1,7 @@
 
 Tr8n::Language.destroy_all
-Tr8n::Language.create!(:locale => 'en-US', :english_name => 'English', :native_name => 'English')
-Tr8n::Language.create!(:locale => 'en-PL', :english_name => 'Pig Latin', :native_name => 'Igpay Atinlay')
+en_US = Tr8n::Language.create!(:locale => 'en-US', :english_name => 'English', :native_name => 'English', :enabled => true)
+en_PL = Tr8n::Language.create!(:locale => 'en-PL', :english_name => 'Pig Latin', :native_name => 'Igpay Atinlay', :enabled => true, :fallback_language_id =>en_US.id)
 
 User.destroy_all
 guest = User.create!(:id => 0, :name => 'Guest', :guest => true)

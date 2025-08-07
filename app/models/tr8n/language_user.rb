@@ -43,7 +43,7 @@
 #
 class Tr8n::LanguageUser < ApplicationRecord
 
-  belongs_to :user, :class_name => Tr8n::Config.user_class_name, :foreign_key => :user_id
+  belongs_to :user, :class_name => Tr8n::Config.user_class_name
   belongs_to :language
   belongs_to :translator
 

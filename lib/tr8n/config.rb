@@ -252,7 +252,10 @@ class Tr8n::Config
   end
 
   def self.load_yml(file_path, for_env = env)
-    yml = YAML.load_file("#{root}#{file_path}", :aliases => true)
+    file = "#{Rails.root}/#{file_path}"
+    file = "#{WillFilter::Engine.root}/#{file_path}" unless File.exist?(file)
+
+    yml = YAML.load_file(file, :aliases => true)
     yml = yml[for_env] unless for_env.nil?
     HashWithIndifferentAccess.new(yml)
   end
@@ -262,11 +265,11 @@ class Tr8n::Config
   end
 
   def self.config
-    @config ||= load_yml("/config/tr8n/config.yml")
+    @config ||= load_yml("config/tr8n/config.yml")
   end
 
   def self.default_languages
-    @default_languages ||= load_yml("/config/tr8n/site/default_languages.yml", nil)
+    @default_languages ||= load_yml("config/tr8n/site/default_languages.yml", nil)
   end
 
   def self.format
@@ -278,21 +281,21 @@ class Tr8n::Config
   end
 
   def self.default_decoration_tokens
-    @default_decoration_tokens ||= load_yml("/config/tr8n/tokens/decorations.yml", nil)
+    @default_decoration_tokens ||= load_yml("config/tr8n/tokens/decorations.yml", nil)
     @default_decoration_tokens[format]
   end
 
   def self.default_data_tokens
-    @default_data_tokens ||= load_yml("/config/tr8n/tokens/data.yml", nil)
+    @default_data_tokens ||= load_yml("config/tr8n/tokens/data.yml", nil)
     @default_data_tokens[format]
   end
 
   def self.default_glossary
-    @default_glossary ||= load_yml("/config/tr8n/site/default_glossary.yml", nil)
+    @default_glossary ||= load_yml("config/tr8n/site/default_glossary.yml", nil)
   end
 
   def self.features
-    @features ||= load_yml("/config/tr8n/site/features.yml")
+    @features ||= load_yml("config/tr8n/site/features.yml")
   end
 
   def self.enabled?
@@ -312,7 +315,7 @@ class Tr8n::Config
   end
 
   def self.default_shortcuts
-    @default_shortcuts ||= load_yml("/config/tr8n/site/shortcuts.yml", nil)
+    @default_shortcuts ||= load_yml("config/tr8n/site/shortcuts.yml", nil)
   end
 
   def self.enable_inline_translations?
@@ -750,7 +753,7 @@ class Tr8n::Config
   # get rules for specified locale, or get default language rules
   def self.load_default_rules(rules_type, locale = default_locale)
     @default_rules ||= {}
-    @default_rules[rules_type] ||= load_yml("/config/tr8n/rules/default_#{rules_type}_rules.yml", nil)
+    @default_rules[rules_type] ||= load_yml("config/tr8n/rules/default_#{rules_type}_rules.yml", nil)
     rules_for_locale = @default_rules[rules_type][locale.to_s]
 
     return rules_for_locale.values unless rules_for_locale.nil?
@@ -783,7 +786,7 @@ class Tr8n::Config
   end
 
   def self.default_language_cases
-    @default_language_cases ||= load_yml("/config/tr8n/rules/default_language_cases.yml", nil)
+    @default_language_cases ||= load_yml("config/tr8n/rules/default_language_cases.yml", nil)
   end
 
   #########################################################
@@ -1004,7 +1007,7 @@ class Tr8n::Config
   end
 
   def self.default_relationship_keys
-    @default_relationship_keys ||= load_yml("/config/tr8n/data/default_relationship_keys.yml", nil)
+    @default_relationship_keys ||= load_yml("config/tr8n/data/default_relationship_keys.yml", nil)
   end
 
   def self.init_configuration_keys
@@ -1030,7 +1033,7 @@ class Tr8n::Config
   end
 
   def self.default_configuration_keys
-    @default_configuration_keys ||= load_yml("/config/tr8n/data/default_configuration_keys.yml", nil)
+    @default_configuration_keys ||= load_yml("config/tr8n/data/default_configuration_keys.yml", nil)
   end
 
   def self.guid

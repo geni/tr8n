@@ -1,4 +1,5 @@
-<% form_for(:translation, @translation, :url => {:controller => "/tr8n/translations", :action => :translate}, :html => {:id => :tr8n_translator_form, :method => :post}) do |f| %>
+<%= form_for(@translation, :as => :translation, :url => translations_translate_path, :html => {:id => :tr8n_translator_form, :method => :post}) do |ff| %>
+    <%= hidden_field_tag(request_forgery_protection_token,  form_authenticity_token) %>
     <%= hidden_field_tag(:translation_key_id, @translation_key.id, :id => :tr8n_translator_translation_key_id) %>
     <%= hidden_field_tag(:translation_id, @translation.id, :id => :tr8n_translator_translation_id) %>
     <%= hidden_field_tag(:source_url, @source_url, :id => :tr8n_translator_source_url) %>
@@ -10,7 +11,7 @@
 
         <div id="tr8n_translator_translation_container">
             <div class="strong small" style="padding-top:10px;"><%=tra("Enter {language} Translation:", nil, :language => tr8n_current_language.native_name)%></div>
-            <%= f.text_area(:label, :id => "tr8n_translator_translation_label", :class => "keyboardInput", :style=>"padding: 5px 0px; width:100%;") %>
+            <%= ff.text_area(:label, :id => "tr8n_translator_translation_label", :class => "keyboardInput", :style=>"padding: 5px 0px; width:100%;") %>
 
             <% if @translation_key.permutatable? %>
               <div style="float:<%=tr8n_current_language.align(:right)%>; font-size:10px;">
@@ -87,10 +88,10 @@
                 </div>
 
                 <div id="tr8n_google_suggestion_container_<%=@translation_key.id%>" style="" class="small_section">
-                    <%=image_tag( url_with_cache_version("/tr8n/images/left_quote.png"), :style=>"text-align:bottom;padding-bottom:5px;") %>
+                    <%=image_tag('tr8n/left_quote.png', :style=>"text-align:bottom;padding-bottom:5px;") %>
                     <%link_txt = "<span class='small' id='tr8n_translation_suggestion_#{@translation_key.id}' title='%{trla('Click to insert this suggested translation above')}'></span>" %>
                     <%=link_to_function(link_txt, "insertSuggestion('#{@translation_key.id}');") %>
-                    <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
+                    <%=image_tag('tr8n/right_quote.png', :style=>"text-align:bottom;padding-top:5px;") %>
 
                     <%= javascript_tag(nonce: true) do %>
                        tr8nTranslator.suggestTranslation("<%=@translation_key.id %>", "<%=@translation_key.suggestion_label %>", "<%=@translation_key.suggestion_tokens.join(',')%>", "<%=@translation_key.language.google_key%>", "<%=tr8n_current_language.google_key%>");
@@ -126,7 +127,7 @@
 <% end %>
 
 <div id="tr8n_translator_buttons_container" class="buttons_container">
-    <%= link_to_function("<span>#{tra('Translate')}</span>", "tr8nTranslator.submitTranslation()", :class => "button translator_btn translator_submit_btn") %>
+    <%= link_to_function("<span>#{tra('Translate')}</span>".html_safe, "tr8nTranslator.submitTranslation()", :class => "button translator_btn translator_submit_btn") %>
 </div>
 
 <% if Tr8n::Config.enable_software_keyboard? %>

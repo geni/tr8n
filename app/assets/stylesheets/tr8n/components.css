@@ -50,9 +50,9 @@
 
 /* Module Backgrounds */
 
-  .highlight_bevel                      {background:url('/images/highlight_bkgd.gif') repeat-x 0 bottom #fefff1}
-  .focus_bevel                          {background:url('/images/focus_bkgd.gif') repeat-x 0 bottom #edf2f8}
-  .success_bevel                        {background:url('/images/success_bkgd.gif') repeat-x 0 bottom #eefce7}
+  .highlight_bevel                      {background:url('tr8n/highlight_bkgd.gif') repeat-x 0 bottom #fefff1}
+  .focus_bevel                          {background:url('tr8n/focus_bkgd.gif') repeat-x 0 bottom #edf2f8}
+  .success_bevel                        {background:url('tr8n/success_bkgd.gif') repeat-x 0 bottom #eefce7}
 
 
 /* Module Headers */
@@ -118,18 +118,35 @@
 
 /* Buttons */
 
-  .btn                                  {position:relative;border:0;padding:0;margin:0 2px 0 -2px;cursor:pointer;overflow:visible;background:transparent url('/images/site_sprite.gif') no-repeat right -100px;font-size:11px;font-weight:bold;text-align:center;font-family:Arial}
-  .btn span                             {position:relative;display:block;white-space:nowrap;background:transparent url('/images/site_sprite.gif') no-repeat left top;}
+  .btn                                  {position:relative;border:0;padding:0;margin:0 2px 0 -2px;cursor:pointer;overflow:visible;background:transparent url('tr8n/site_sprite.gif') no-repeat right -100px;font-size:11px;font-weight:bold;text-align:center;font-family:Arial}
+  .btn span                             {position:relative;display:block;white-space:nowrap;background:transparent url('tr8n/site_sprite.gif') no-repeat left top;}
   button::-moz-focus-inner              {border:none;}
   @media screen and (-webkit-min-device-pixel-ratio:0) {
     .btn span                           {margin-top:-1px;}
   }
-  a.btn                                 {display:block;display:-moz-inline-box;display:inline-block;vertical-align:middle}
+  a.btn                                 {display:block;display:-moz-inline-box;display:inline-block}
   a.btn span                            {display:block;margin-top:0px}
 
 /* Button Skins */
 
-  .button {-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;-webkit-box-shadow: rgba(0, 0, 0, 0.246094) 0px 1px 3px;-moz-box-shadow: rgba(0, 0, 0, 0.246094) 0px 1px 3px;background-color: #222;border-bottom: 1px solid rgba(0, 0, 0, 0.246094);color: white !important;cursor: pointer;display: inline-block;font-size: 13px;font-weight: bold;line-height: 1;overflow: visible;padding: 5px 15px 6px;position: relative;text-decoration: none !important;width: auto;}
+  .button { background-color: #222;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.246094);
+            box-shadow: rgba(0, 0, 0, 0.246094) 0px 1px 3px;
+            color: white !important;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 13px;
+            font-weight: bold;
+            line-height: 1;
+            overflow: visible;
+            padding: 5px 15px 6px;
+            position: relative;
+            text-decoration: none !important;
+            width: auto;
+            -webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;
+            -webkit-box-shadow: rgba(0, 0, 0, 0.246094) 0px 1px 3px;
+            -moz-box-shadow: rgba(0, 0, 0, 0.246094) 0px 1px 3px;
+          }
 
   .super.button {background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAeCAYAAADtlXTHAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAABYSURBVHjaZM27EcAgDANQSzZZgP0XpKLh20BM7mjS6J7kwrrWEuScgZQS2HsXjjHEdaqytfZ4kLXWU81lruAK9wqWUuBVvni3n+4Pc9nRnFOUZFQAcQswAI/sUZSGPd0tAAAAAElFTkSuQmCC) repeat-x 0 bottom;background-position:0 bottom;border: 1px solid rgba(0, 0, 0, 0.246094);font-size: 12px;padding: 0px;}
   .super.button span {border-top: 1px solid rgba(255, 255, 255, 0.199219);display: block;line-height: 1;padding: 4px 15px 6px;}
@@ -145,7 +162,7 @@
 
 /* Icons */
 
-  .icn                                  {background:url(/images/icon_sprite.gif) no-repeat 0 0;}
+  .icn                                  {background:url(tr8n/icon_sprite.gif) no-repeat 0 0;}
 
 
 
@@ -196,7 +213,7 @@
 
 /* Home */
 
-.home_banner {background:url('/images/bubbles_bkgd.jpg');-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0;padding:50px 25px 0px 25px;height:220px;border-bottom:solid 10px #c2d6eb}
+.home_banner {background:url('tr8n/bubbles_bkgd.jpg');-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0;padding:50px 25px 0px 25px;height:220px;border-bottom:solid 10px #c2d6eb}
 .home_banner h1 {font:normal bold 45px Arial, Helvetica, sans-serif;color:#fff;text-shadow:0 -1px 1px #000;letter-spacing:-2px}
 .home_banner h2 {font:normal normal 24px Arial, Helvetica, sans-serif;color:#ccc;text-shadow:0 -1px 1px #000;width:520px;}
 

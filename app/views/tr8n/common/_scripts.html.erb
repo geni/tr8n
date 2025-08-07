@@ -9,8 +9,9 @@
     <%= stylesheet_link_tag('tr8n/keyboard_1_49.css') -%>
   <% end %>
 
+  <%= stylesheet_link_tag("tr8n/components.css") %>
   <%= stylesheet_link_tag('tr8n/tr8n.css' ) -%>
-  <%= javascript_include_tag('tr8n/main-compiled.js', :nonce => true) -%>
+  <%= javascript_include_tag('tr8n/main.js', :nonce => true) -%>
 
   <%= javascript_tag(nonce: true) do %>
      initializeTr8n();
@@ -18,6 +19,7 @@
      Tr8n.url_cache_version = "<%= Tr8n::Config.url_cache_version -%>";
      Tr8n.allow_invalid_tokens = "<%= Tr8n::Config.rules_engine['allow_invalid_tokens'] -%>";
      Tr8n.allow_unused_tokens = "<%=  Tr8n::Config.rules_engine['allow_unused_tokens'] -%>";
+     Tr8n.mountPoint = "<%= Tr8n::Engine.mount_point %>"
      Tr8n.csrfParam = "<%=  request_forgery_protection_token -%>";
      Tr8n.csrfToken = "<%=  form_authenticity_token -%>";
   <% end %>

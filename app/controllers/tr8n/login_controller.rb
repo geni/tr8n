@@ -1,6 +1,5 @@
 class Tr8n::LoginController < ApplicationController
 
-
   layout Tr8n::Config.site_info[:tr8n_layout]
 
   def index
@@ -32,7 +31,7 @@ class Tr8n::LoginController < ApplicationController
 
   def out
     logout!
-    redirect_to("/tr8n")
+    redirect_to home_path
   end
 
 private

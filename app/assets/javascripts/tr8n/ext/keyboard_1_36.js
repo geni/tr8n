@@ -58,7 +58,7 @@ var VKI_attach, VKI_close;
     this.VKI_altgr = this.VKI_altgrlock = false;
     this.VKI_dead = false;
     this.VKI_deadkeysOn = false;
-		
+
     this.VKI_kts = this.VKI_kt = VKI_default_layout;  // Default keyboard layout
     this.VKI_langAdapt = true;  // Use lang attribute of input to select keyboard
     this.VKI_size = 2;  // Default keyboard size (1-5)
