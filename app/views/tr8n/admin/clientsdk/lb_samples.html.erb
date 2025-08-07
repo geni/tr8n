@@ -20,23 +20,23 @@
 	<div class="hd">
 	 <span style="float:right;">
 	 	 <%= tr8n_lb_close_tag %>
-	 </span>	  
+	 </span>
 	 Tr8n Client SDK JavaScript Examples
   </div>
 
   <div class="bd">
 	  <div style="font-size:12px; color:grey; padding-bottom:5px;">
 	    Click on the example to use it in the test tool.
-	  </div> 
-	
+	  </div>
+
 		<% form_tag("", :class => "tr8n") do %>
 			<div style="height:370px; overflow:auto;">
 				<table class="admin_table">
 					<tr>
 						<th>Label</th>
 						<th>Tokens</th>
-					</tr>	
-					
+					</tr>
+
 					<% examples.each_with_index do |ex, index| %>
 						<tr style='cursor:pointer;' data-select-example='<%=index%>' title="<%=ex[:alt]%>">
 							<td>
@@ -49,14 +49,14 @@
 							</td>
 						</tr>
 					<% end %>
-		
+
 				</table>
-			</div>	
+			</div>
 		<% end %>
   </div>
 </div>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   document.addEventListener('DOMContentLoaded', function() {
     var elements = document.querySelectorAll('[data-select-example]');
     elements.forEach(function(element) {

@@ -35,7 +35,7 @@
   ['Remove From Component', 'removeFromComponent()']
 ]) %>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function removeFromComponent() {
     if (!confirm('Are you sure you want to remove selected languages from this component?'))
        return;

@@ -29,7 +29,7 @@
             <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
 
             <% sanitized_label = @translation_key.tokenless_label.gsub('"', '\"') %>
-            <% javascript_tag(nonce: true) do %>
+            <%= javascript_tag(nonce: true) do %>
               window.setTimeout(function() {
                 if (tr8nTranslator) {
                   tr8nTranslator.suggestTranslation("<%= @translation_key.id -%>", "<%= sanitized_label -%>", "<%= @translation_key.suggestion_tokens.join(',') -%>", "<%= @translation_key.language.google_key -%>", "<%= tr8n_current_language.google_key -%>");
@@ -100,7 +100,7 @@
   <% end %>
 </div>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function acceptSuggestion(translation_key_id) {
     Tr8n.element("tr8n_translation_label_" + translation_key_id).value = Tr8n.element("tr8n_translation_suggestion_link_" + translation_key_id).innerHTML;
     return false;

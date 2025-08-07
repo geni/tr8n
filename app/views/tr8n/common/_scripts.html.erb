@@ -3,7 +3,7 @@
 	<%= tr8n_splash_screen_tag %>
 
   <% if Tr8n::Config.enable_software_keyboard? %>
-    <% javascript_tag(nonce: true) do %>
+    <%= javascript_tag(nonce: true) do %>
       VKI_default_layout = "<%= Tr8n::KeyboardMapping.current_1_49 -%>";
     <% end %>
     <%= stylesheet_link_tag('tr8n/keyboard_1_49.css') -%>
@@ -12,7 +12,7 @@
   <%= stylesheet_link_tag('tr8n/tr8n.css' ) -%>
   <%= javascript_include_tag('tr8n/main-compiled.js', :nonce => true) -%>
 
-  <% javascript_tag(nonce: true) do %>
+  <%= javascript_tag(nonce: true) do %>
      initializeTr8n();
      Tr8n.source = "<%= Tr8n::Config.current_source ? h(Tr8n::Config.current_source.source) : "" -%>";
      Tr8n.url_cache_version = "<%= Tr8n::Config.url_cache_version -%>";
@@ -32,13 +32,13 @@
   <% end %>
 
   <% if Tr8n::Config.enable_google_suggestions? and Tr8n::Config.current_user_is_translator? %>
-    <% javascript_tag(nonce: true) do %>
+    <%= javascript_tag(nonce: true) do %>
 			Tr8n.google_api_key = "<%= Tr8n::Config.google_api_key.html_safe -%>";
     <% end %>
   <% end %>
 
   <% if Tr8n::Config.enable_keyboard_shortcuts? %>
-    <% javascript_tag(nonce: true) do %>
+    <%= javascript_tag(nonce: true) do %>
       <% Tr8n::Config.default_shortcuts.each do |key, data| %>
         shortcut.add("<%= key -%>", function() {
           <%= data["script"].html_safe %>

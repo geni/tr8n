@@ -26,7 +26,7 @@
     <%=render(:partial => "relationships", :locals => {:mode => :view}) %>
   <% end %>
 
-	<% javascript_tag(nonce: true) do %>
+	<%= javascript_tag(nonce: true) do %>
 	  function switchSectionMode(section, mode) {
 	    Tr8n.Utils.update(section + '_container', '/tr8n/language/update_language_section', {
 	        parameters: {section:section, mode:mode}

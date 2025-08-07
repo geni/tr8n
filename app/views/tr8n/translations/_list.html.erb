@@ -30,7 +30,7 @@
 <% end %>
 
 <% if [:edit, :view].include?(mode) %>
-  <% javascript_tag(nonce: true) do %>
+  <%= javascript_tag(nonce: true) do %>
     function editTranslationRow(translation_id, section_key) {
       Tr8n.Effects.hide('tr8n_votes_for_' + translation_id);
       Tr8n.Effects.show('tr8n_spinner_for_' + translation_id);

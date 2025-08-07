@@ -13,7 +13,7 @@
 		<% end %>
 <% end %>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
 document.addEventListener('DOMContentLoaded', function() {
 	var elements = document.querySelectorAll('[data-toggle-language-selector]');
 	elements.forEach(function(element) {

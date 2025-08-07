@@ -75,7 +75,7 @@
 	['Add To Component', 'addSelectedLanguagesToComponent()'],
 ]) %>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
 	function calculateCompleteness() {
 		if (!confirm('Are you sure you want to run this opperation?'))
 		   return;

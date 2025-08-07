@@ -36,7 +36,7 @@
   ['Add To Another Source', 'addSelectedKeysToSource()'],
 ]) %>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function getSelectedKeyIds() {
     var i=0;
     var checkbox = Tr8n.element('wf_check_' + i);

@@ -28,7 +28,7 @@
   ['Delete Selected Comments', 'deleteSelectedComments()']
 ]) %>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function deleteSelectedComments() {
     if (!confirm('Are you sure you want to run this opperation?'))
        return;

@@ -60,7 +60,7 @@
   </ul>
 </div>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   selectLocale = function(locale) {
     Tr8n.element('language_selector_locale').value = locale;
     Tr8n.element('language_selector_form').submit();

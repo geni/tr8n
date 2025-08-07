@@ -59,7 +59,7 @@
 <% end %>
 
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function etpsKeyUp(event) {
      if (event.key == 'Enter') {
          evaluateRelationshipPath();

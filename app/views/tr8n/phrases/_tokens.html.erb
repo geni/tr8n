@@ -57,7 +57,7 @@
     </div>
   <% end %>
 
-  <% javascript_tag(nonce: true) do %>
+  <%= javascript_tag(nonce: true) do %>
     tr8nSetHasRules = function(value) {
       if (value) {
         Tr8n.element('has_rules').value='true';
