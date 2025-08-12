@@ -47,7 +47,7 @@
 #
 class Tr8n::Language < ApplicationRecord
 
-  has_one  :fallback_language, :class_name => 'Tr8n::Language', :foreign_key => :fallback_language_id
+  belongs_to  :fallback_language, :class_name => 'Tr8n::Language', :optional => true
 
   has_many :language_rules,         Proc.new { order(:type => 'asc') }, :dependent => :destroy
   has_many :language_cases,         Proc.new { order(:id  => 'asc') },  :dependent => :destroy

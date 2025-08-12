@@ -72,7 +72,7 @@ class Tr8n::Translator < ApplicationRecord
   has_many  :language_forum_abuse_reports,  :dependent => :destroy
   has_many  :languages,                     :through => :language_users
 
-  has_one   :fallback_language, :class_name => 'Tr8n::Language', :foreign_key => :fallback_language_id
+  belongs_to :fallback_language, :class_name => 'Tr8n::Language', :optional => true
 
   after_update  :invalidate_cache
   after_destroy :invalidate_cache

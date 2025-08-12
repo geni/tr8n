@@ -42,7 +42,7 @@
 #
 class Tr8n::TranslationSource < ApplicationRecord
 
-  has_one   :translation_domain
+  belongs_to :translation_domain, :optional => true
 
   has_many  :translation_key_sources,       :dependent => :destroy
   has_many  :translation_keys,              :through => :translation_key_sources
