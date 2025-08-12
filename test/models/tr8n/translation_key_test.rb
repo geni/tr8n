@@ -21,12 +21,15 @@ class TranslationKeyTest < Tr8n::TestCase
   test 'translate simple strings in default language' do
     key = Tr8n::TranslationKey.find_or_create('Hello World')
     assert_equal 'Hello World', key.translate(english)
+    assert key.translate(english).html_safe?, 'Translation should be html_safe'
 
     key = Tr8n::TranslationKey.find_or_create('Hello {world}')
     assert_equal 'Hello World', key.translate(english, :world => 'World')
+    assert key.translate(english, :world => 'World').html_safe?, 'Translation should be html_safe'
 
     key = Tr8n::TranslationKey.find_or_create('{hello_world}')
     assert_equal 'Hello World', key.translate(english, :hello_world => 'Hello World')
+    assert key.translate(english, :hello_world => 'Hello World').html_safe?, 'Translation should be html_safe'
 
     key = Tr8n::TranslationKey.find_or_create('Dear {user:gender}')
     assert_equal 'Dear Mike', key.translate(english, :user => mike)
@@ -34,10 +37,12 @@ class TranslationKeyTest < Tr8n::TestCase
     assert_equal 'Dear Mike', key.translate(english, :user => [mike, :name])
     assert_equal 'Dear Mike', key.translate(english, :user => [mike, lambda{|user| user.name}])
     assert_equal 'Dear Mike and Tom', key.translate(english, :user => [mike, lambda{|user, tom| "#{user.name} and #{tom}"}, 'Tom'])
+    assert key.translate(english, :user => [mike, lambda{|user, tom| "#{user.name} and #{tom}"}, 'Tom']).html_safe?, 'Translation should be html_safe'
 
     key = Tr8n::TranslationKey.find_or_create('{user:gender} updated {user:gender|his,her} profile')
     assert_equal 'Mike updated his profile', key.translate(english, :user => mike)
     assert_equal 'Anna updated her profile', key.translate(english, :user => anna)
+    assert key.translate(english, :user => anna).html_safe?, 'Translation should be html_safe'
   end
 
   test 'translation with no rules' do

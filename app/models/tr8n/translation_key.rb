@@ -484,7 +484,7 @@ class Tr8n::TranslationKey < ApplicationRecord
       processed_label = token.substitute(processed_label, token_values, options, language)
     end
 
-    processed_label
+    processed_label.html_safe
   end
 
   def default_decoration(language = Tr8n::Config.current_language, options = {})
