@@ -35,8 +35,6 @@ class Tr8n::ForumController < Tr8n::BaseController
 
   def topic
     if request.post?
-      verify_authenticity_token
-
       if params[:topic_id]
         topic = Tr8n::LanguageForumTopic.find_by_id(params[:topic_id])
       else
@@ -60,7 +58,6 @@ class Tr8n::ForumController < Tr8n::BaseController
 
   def delete_topic
     if request.post?
-      verify_authenticity_token
       topic = Tr8n::LanguageForumTopic.find_by_id(params[:topic_id])
 
       if topic.translator != tr8n_current_translator
@@ -77,8 +74,6 @@ class Tr8n::ForumController < Tr8n::BaseController
 
   def delete_message
     if request.post?
-      verify_authenticity_token
-
       message = Tr8n::LanguageForumMessage.find_by_id(params[:message_id])
 
       unless message
@@ -100,8 +95,6 @@ class Tr8n::ForumController < Tr8n::BaseController
 
   def report_message
     if request.post?
-      verify_authenticity_token
-
       message = Tr8n::LanguageForumMessage.find_by_id(params[:message_id])
 
       unless message

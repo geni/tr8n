@@ -109,8 +109,6 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
 
   def update_lock
     if request.post?
-      verify_authenticity_token
-
       lock = Tr8n::TranslationKeyLock.find_by_id(params[:lock_id])
 
       if params[:locked] == "true"
@@ -171,8 +169,6 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
 
   def delete_comment
     if request.post?
-      verify_authenticity_token
-
       params[:comments] = [params[:comment_id]] if params[:comment_id]
       if params[:comments]
         params[:comments].each do |comment_id|
@@ -191,8 +187,6 @@ class Tr8n::Admin::TranslationKeyController < Tr8n::Admin::BaseController
 
   def delete_lock
     if request.post?
-      verify_authenticity_token
-
       params[:locks] = [params[:lock_id]] if params[:lock_id]
       if params[:locks]
         params[:locks].each do |lock_id|

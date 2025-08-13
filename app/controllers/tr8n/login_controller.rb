@@ -5,8 +5,6 @@ class Tr8n::LoginController < ApplicationController
 
   def index
     if request.post?
-      verify_authenticity_token
-
       translator = Tr8n::Translator.find_by_email_and_password(params[:email], params[:password])
 
       if translator
@@ -20,8 +18,6 @@ class Tr8n::LoginController < ApplicationController
 
   def register
     if request.post?
-      verify_authenticity_token
-
       unless validate_registration
         translator = Tr8n::Translator.create(:user_id => 0, :email => params[:email],
                   :password => params[:password], :name => params[:name], :gender => params[:gender],

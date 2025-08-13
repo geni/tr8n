@@ -61,8 +61,6 @@ class Tr8n::LanguageCasesController < Tr8n::BaseController
 
   def update_value_map
     if request.post?
-      verify_authenticity_token
-
       map = Tr8n::LanguageCaseValueMap.find_by_id(params[:map_id]) unless params[:map_id].blank?
       map ||= Tr8n::LanguageCaseValueMap.new(:language => tr8n_current_language, :reported => false)
       map.keyword = params[:case_key]
@@ -75,8 +73,6 @@ class Tr8n::LanguageCasesController < Tr8n::BaseController
 
   def delete_value_map
     if request.post?
-      verify_authenticity_token
-
       map = Tr8n::LanguageCaseValueMap.find_by_id(params[:map_id]) if params[:map_id]
       map.destroy_with_log!(tr8n_current_translator) if map
     end
@@ -86,8 +82,6 @@ class Tr8n::LanguageCasesController < Tr8n::BaseController
 
   def report_value_map
     if request.post?
-      verify_authenticity_token
-
       map = Tr8n::LanguageCaseValueMap.find_by_id(params[:map_id]) unless params[:map_id].blank?
       map.report_with_log!(tr8n_current_translator) if map
     end

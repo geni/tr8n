@@ -128,8 +128,6 @@ class Tr8n::PhrasesController < Tr8n::BaseController
       return redirect_to(@source_url)
     end
 
-    verify_authenticity_token
-
     if params[:translation_has_dependencies] == "true" # comes from inline translator only
       @translation_key.generate_rule_permutations(tr8n_current_language, tr8n_current_translator, params[:dependencies])
       trfn("We have created all possible combinations of the values for the tokens. Please provide a translation for each combination.")
@@ -185,8 +183,6 @@ class Tr8n::PhrasesController < Tr8n::BaseController
     mode = params[:mode] || :view
 
     if request.post?
-      verify_authenticity_token
-
       mode = :view
       unless params[:label].strip.blank?
         @translation.label = sanitize_label(params[:label])
@@ -251,8 +247,6 @@ class Tr8n::PhrasesController < Tr8n::BaseController
 
   def submit_comment
     if request.post?
-      verify_authenticity_token
-
       @translation_key = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
       Tr8n::TranslationKeyComment.create(:language => tr8n_current_language,
                                          :translator => tr8n_current_translator,
@@ -267,8 +261,6 @@ class Tr8n::PhrasesController < Tr8n::BaseController
 
   def delete_comment
     if request.post?
-      verify_authenticity_token
-
       comment = Tr8n::TranslationKeyComment.find_by_id(params[:comment_id]) unless params[:comment_id].blank?
 
       if comment

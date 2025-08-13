@@ -39,13 +39,6 @@ class Tr8n::TranslationsController < Tr8n::BaseController
     @translation_key = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
     @source_url = params[:source_url] || request.env['HTTP_REFERER']
 
-    unless request.post?
-      trfe("Please use a translator window for submitting translations")
-      return redirect_to(@source_url)
-    end
-
-    verify_authenticity_token
-
     if params[:lock] == "true"
       if tr8n_current_translator.manager?
         if @translation_key.locked?
@@ -110,8 +103,6 @@ class Tr8n::TranslationsController < Tr8n::BaseController
       return redirect_to(source_url)
     end
 
-    verify_authenticity_token
-
     new_translations = translation_key.generate_rule_permutations(tr8n_current_language, tr8n_current_translator, params[:dependencies])
     if params[:dependencies].blank?
       trfe("You did not specified any context rules for this phrase.")
@@ -129,8 +120,6 @@ class Tr8n::TranslationsController < Tr8n::BaseController
     translation = Tr8n::Translation.find_by_id(params[:translation_id])
 
     if request.post?
-      verify_authenticity_token
-
       translation.vote!(tr8n_current_translator, vote_value(params[:vote]))
     end
 
@@ -183,8 +172,6 @@ class Tr8n::TranslationsController < Tr8n::BaseController
     mode = params[:mode] || :view
 
     if request.post?
-      verify_authenticity_token
-
       mode = :view
       unless params[:label]&.strip.blank?
         @translation.label = params[:label]
@@ -223,8 +210,6 @@ class Tr8n::TranslationsController < Tr8n::BaseController
     translator = translation.translator
 
     if request.post?
-      verify_authenticity_token
-
       unless translation.can_be_deleted_by?(tr8n_current_translator)
         tr8n_current_translator.tried_to_perform_unauthorized_action!("tried to delete translation that is not his")
         trfe("You are not authorized to delete this translation as you were not it's creator")

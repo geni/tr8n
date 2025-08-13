@@ -47,8 +47,6 @@ class Tr8n::LanguageController < Tr8n::BaseController
       return render(:partial => params[:section], :locals => {:mode => params[:mode].to_sym})
     end
 
-    verify_authenticity_token
-
     @error_msg = validate_language
     if @error_msg
       return render(:partial => params[:section], :locals => {:mode => params[:mode].to_sym})
@@ -106,7 +104,6 @@ class Tr8n::LanguageController < Tr8n::BaseController
     end
 
     if request.post?
-      verify_authenticity_token
 
       if params[:rule_action].index("add_at")
         position = params[:rule_action].split("_").last.to_i
@@ -131,7 +128,6 @@ class Tr8n::LanguageController < Tr8n::BaseController
     end
 
     if request.post?
-      verify_authenticity_token
 
       if params[:case_action].index("add_at")
         position = params[:case_action].split("_").last.to_i
@@ -154,7 +150,6 @@ class Tr8n::LanguageController < Tr8n::BaseController
     lcase = cases[case_index]
 
     if request.post?
-      verify_authenticity_token
 
       if params[:case_action].index("add_rule_at")
         position = params[:case_action].split("_").last.to_i
@@ -224,8 +219,6 @@ class Tr8n::LanguageController < Tr8n::BaseController
   # language selector management functions
   def lists
     if request.post?
-      verify_authenticity_token
-
       if params[:language_action] == "remove"
         lu = Tr8n::LanguageUser
               .where(["language_id = ? and user_id = ?", params[:language_id], tr8n_current_user.id])
@@ -241,8 +234,6 @@ class Tr8n::LanguageController < Tr8n::BaseController
 
   def remove
     if request.post?
-      verify_authenticity_token
-
       lu = Tr8n::LanguageUser
             .where(["language_id = ? and user_id = ?", params[:language_id], tr8n_current_user.id])
             .first

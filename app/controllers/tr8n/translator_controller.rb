@@ -34,8 +34,6 @@ class Tr8n::TranslatorController < Tr8n::BaseController
 
   def registration
     if request.post? && params[:agree] == 'yes'
-      verify_authenticity_token
-
       Tr8n::Config.current_translator # this will register a translator
       trfn('Thank you! You have been register as a translator')
       return redirect_to('/tr8n/phrases')
@@ -46,8 +44,6 @@ class Tr8n::TranslatorController < Tr8n::BaseController
     @fallback_language = (tr8n_current_translator.fallback_language || tr8n_default_language)
 
     if request.post?
-      verify_authenticity_token
-
       tr8n_current_translator.update(params[:translator])
       tr8n_current_translator.reload
 
@@ -58,8 +54,6 @@ class Tr8n::TranslatorController < Tr8n::BaseController
 
   def generate_access_key
     if request.post?
-      verify_authenticity_token
-
       Tr8n::Config.current_translator.generate_access_key!
       trfn('New access key has be generated')
     end
@@ -69,8 +63,6 @@ class Tr8n::TranslatorController < Tr8n::BaseController
 
   def follow
     if request.post?
-      verify_authenticity_token
-
       if params[:translation_key_id]
         object = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
         trfn('You are now following this translation key') if object
@@ -89,8 +81,6 @@ class Tr8n::TranslatorController < Tr8n::BaseController
 
   def unfollow
     if request.post?
-      verify_authenticity_token
-
       if params[:translation_key_id]
         object = Tr8n::TranslationKey.find_by_id(params[:translation_key_id])
       elsif params[:translator_id]
@@ -118,8 +108,6 @@ class Tr8n::TranslatorController < Tr8n::BaseController
 
   def submit_report
     if request.post?
-      verify_authenticity_token
-
       reported_object = params[:object_type].constantize.find_by_id(params[:object_id])
       Tr8n::TranslatorReport.submit(Tr8n::Config.current_translator, reported_object, params[:reason], params[:comment])
       trfn('Thank you for submitting your report.')
