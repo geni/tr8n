@@ -12,13 +12,7 @@ module Tr8n
 
     # executed after all classes are loaded
     config.to_prepare do
-      # Start AssetBundler in development
-      if Rails.env.development?
-        Rails.application.config.after_initialize do
-          Tr8n::AssetBundler.bundle_assets!
-          Tr8n::AssetBundler.watch_and_rebuild!
-        end
-      end
+      ::ApplicationController.include Tr8n::Concerns::ControllerMethods
     end
 
   end # class Engine
