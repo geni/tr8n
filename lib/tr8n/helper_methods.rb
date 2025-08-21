@@ -347,7 +347,7 @@ module Tr8n::HelperMethods
     return "Deleted Translator" unless translator
 
     if options[:linked]
-      link_to(h(translator.name), translator.url).html_safe
+      link_to(h(translator.name), translator.url)
     else
       h(translator.name)
     end
@@ -360,7 +360,7 @@ module Tr8n::HelperMethods
       img_url = Tr8n::Config.silhouette_image
     end
 
-    img_tag = "<img src='#{img_url}' style='width:48px'>"
+    img_tag = "<img src='#{img_url}' style='width:48px'>".html_safe
 
     if translator and options[:linked]
       link_to(img_tag, translator.url)
@@ -518,7 +518,7 @@ module Tr8n::HelperMethods
       tr("{hours||hour} ago", 'Time reference', :hours => elapsed_hours)
     else
       time.tr(:verbose).gsub('/ ', '/').sub(/^[0:]*/,"")
-    end
+    end.html_safe
   end
 
 private

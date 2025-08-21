@@ -23,7 +23,7 @@
     </table>
 
     <div style="padding-top:20px; padding-bottom:10px;text-align:center">
-      <%= link_to_function("<span>#{tra('Submit Comment')}</span>", "Tr8n.Effects.submit('translation_key_comments_form')", :class => "button translator_btn translator_submit_btn") %>
+      <%= link_to_function("<span>#{tra('Submit Comment')}</span>".html_safe, "Tr8n.Effects.submit('translation_key_comments_form')", :class => "button translator_btn translator_submit_btn") %>
     </div>
   <% end %>
 

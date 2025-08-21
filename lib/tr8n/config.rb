@@ -659,11 +659,11 @@ class Tr8n::Config
   end
 
   def self.silhouette_image
-    "/tr8n/images/photo_silhouette.gif"
+    '/assets/tr8n/photo_silhouette.gif'
   end
 
   def self.system_image
-    "/tr8n/images/photo_system.gif"
+    '/assets/tr8n/photo_system.gif'
   end
 
   #########################################################
