@@ -13,9 +13,9 @@
 	  			links = []
 	  			links << link_to(tra("view profile", 'Translator action link'), @translator.link)
 	  			if Tr8n::TranslatorFollowing.following_for(tr8n_current_translator, @translator)
-		  			links << link_to(tra("unfollow", 'Translator action link'), {:controller => "/tr8n/translator", :action => :unfollow, :translator_id => @translator.id}, {:method => :post})
+		  			links << link_to(tra("unfollow", 'Translator action link'), translator_unfollow_path(:translator_id => @translator.id), {:method => :post})
 		  		else
-		  			links << link_to(tra("follow", 'Translator action link'), {:controller => "/tr8n/translator", :action => :follow, :translator_id => @translator.id}, {:method => :post})
+		  			links << link_to(tra("follow", 'Translator action link'), translator_follow_path(:translator_id => @translator.id), {:method => :post})
 		  		end
 	  		%>
 	  		<%=links.join(" | ")%>
@@ -67,9 +67,9 @@
 			                  <% langs = [] %>
 			                  <% @translator.languages.each do |lang|
 			                      next if lang.default?
-			                      langs << link_to(lang.english_name, params.merge(:anchor => lang.locale))
+			                      langs << link_to(lang.english_name, params.permit!.merge(:anchor => lang.locale))
 			                     end %>
-			                  <%= langs.join(" | ") %>
+			                  <%= langs.join(' | ').html_safe %>
 	                    </td>
 	                  </tr>
 									</table>
@@ -96,25 +96,25 @@
 		  	<%
 		  		links = []
 		  		links << link_to(tra("select", "Language action link"), :locale => lang.locale)
-		  		links << link_to(tra("site map", "Language action link"), "/tr8n/phrases/map?locale=#{lang.locale}")
-		  		links << link_to(tra("phrases", "Language action link"), "/tr8n/phrases?locale=#{lang.locale}")
-		  		links << link_to(tra("translations", "Language action link"), "/tr8n/translations?locale=#{lang.locale}")
-		  		links << link_to(tra("awards", "Language action link"), "/tr8n/awards?locale=#{lang.locale}")
-		  		links << link_to(tra("discussions", "Language action link"), "/tr8n/forum?locale=#{lang.locale}")
+		  		links << link_to(tra("site map", "Language action link"), phrases_map_path(:locale => lang.locale))
+		  		links << link_to(tra("phrases", "Language action link"), phrases_path(:locale => lang.locale))
+		  		links << link_to(tra("translations", "Language action link"), translations_path(:locale => lang.locale))
+		  		links << link_to(tra("awards", "Language action link"), awards_path(:locale => lang.locale))
+		  		links << link_to(tra("discussions", "Language action link"), forum_path(:locale => lang.locale))
 
 	      	if @translator == tr8n_current_translator
 		      	if @translator.manager?
-		         links << link_to(tra("manage", "Language action link"), "/tr8n/language/index?locale=#{lang.locale}")
-		      	end
-		      	links << link_to(tra("remove", "Language action link"), "/tr8n/language/remove?language_id=#{lang.id}")
-		    	end
+		         links << link_to(tra("manage", "Language action link"), language_path(:locale => lang.locale))
+		       end
+		       links << link_to(tra("remove", "Language action link"), language_remove_path(:language_id => lang.id))
+		     end
 		  	%>
-	      <%= links.join(" | ")%>
+	      <%= links.join(" | ").html_safe %>
 		  </div>
 
 	    <%=tr8n_toggler_tag("lang_content_#{lang.id}")%>
 
-	    <%=image_tag( url_with_cache_version("/tr8n/images/flags/#{lang.flag}.png"), :title=>lang.native_name) if Tr8n::Config.enable_language_flags? %>&nbsp;
+	    <%= tr8n_language_flag_tag(lang) if Tr8n::Config.enable_language_flags? %>&nbsp;
 
 	    <span dir="ltr">
 	    	<a name="<%=lang.locale%>" style="text-decoration:none;color:black;"><%=lang.native_name%></a>

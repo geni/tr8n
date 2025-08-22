@@ -33,6 +33,7 @@ Tr8n::Engine.routes.draw do
 
   get  '/language',             :to => 'language#index'
   get  '/language/manage',      :to => 'language#manage'
+  post '/language/remove',      :to => 'language#remove'
   get  '/language/select',      :to => 'language#select'
   post '/language/switch',      :to => 'language#switch'
   get  '/language/table',       :to => 'language#table'

@@ -4,11 +4,11 @@
    - <%=tra("{language} Language", nil, :language => tr8n_current_language.native_name)%>
 	 <% if tr8n_current_language.default? %>
        <% if tr8n_current_user_is_admin? %>
-         <%=link_to(tra("manage", "Link to management section"), "/tr8n/language", :style => "font-size:12px;")%>
+         <%=link_to(tra("manage", "Link to management section"), language_path, :style => "font-size:12px;")%>
        <% end %>
 	 <% else %>
 			 <% if tr8n_current_user_is_manager? %>
-			   <%=link_to(tra("manage", "Link to management section"), "/tr8n/language", :style => "font-size:12px;")%>
+			   <%=link_to(tra("manage", "Link to management section"), language_path, :style => "font-size:12px;")%>
 			 <% end %>
 	 <% end %>
 	</div>
