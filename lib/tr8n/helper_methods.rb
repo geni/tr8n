@@ -527,8 +527,8 @@ private
     html = "<ul class='section_list'>"
     sections.each do |section|
       html << "<li class='section_list_item'>"
-      html << "<a href='/tr8n/phrases/index?section_key=#{section.key}'>" << tr(section.label, section.description) << "</a>"
-      html << "<a href='" << section.data[:link] << "' target='_new'><img src='" << url_with_cache_version('/tr8n/images/bullet_go.png') << "' style='border:0px; vertical-align:middle'></a>" if section.data[:link]
+      html << link_to(tr(section.label, section.description), phrases_path(:section_key => section.key))
+      html << link_to(image_tag('tr8n/bullet_go.png', :style => 'border:0px; vertical-align:middle'), section.data[:link]) if section.data[:link]
 
       if section.children.size > 0
         html << generate_sitemap(section.children, options)

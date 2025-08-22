@@ -307,7 +307,7 @@ private
     sources = Tr8n::TranslationSource.where(["source in (?)", sources])
     if sources.empty?
       conditions = ["1=2"]
-      return Tr8n::TranslationKey.paginate(:per_page => per_page, :page => page, :conditions => conditions, :order => "created_at desc")
+      return Tr8n::TranslationKey.where(conditions).order('created_at desc').paginate(:per_page => per_page, :page => page)
     end
 
     source_ids = []
@@ -332,7 +332,7 @@ private
       conditions = ["1=2"]
     end
 
-    Tr8n::TranslationKey.paginate(:per_page => per_page, :page => page, :conditions => conditions, :order => "created_at desc")
+    Tr8n::TranslationKey.where(conditions).order('created_at desc').paginate(:per_page => per_page, :page => page)
   end
 
   def init_sitemap_section
