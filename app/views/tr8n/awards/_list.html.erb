@@ -12,14 +12,14 @@
       <td>
         <% if show_medals %>
           <% if index == 0 %>
-            <%=image_tag( url_with_cache_version("/tr8n/images/medals/gold.png"), :style => "height:60px", :title => trla('Gold Medal', 'Awards section header'))%>
+            <%=image_tag('tr8n/medals/gold.png', :style => "height:60px", :title => trla('Gold Medal', 'Awards section header'))%>
           <% elsif index == 1 %>
-            <%=image_tag( url_with_cache_version("/tr8n/images/medals/silver.png"), :style => "height:60px", :title => trla('Silver Medal', 'Awards section header'))%>
+            <%=image_tag('tr8n/medals/silver.png', :style => "height:60px", :title => trla('Silver Medal', 'Awards section header'))%>
           <% elsif index == 2 %>
-            <%=image_tag( url_with_cache_version("/tr8n/images/medals/bronze.png"), :style => "height:60px", :title => trla('Bronze Medal', 'Awards section header'))%>
+            <%=image_tag('tr8n/medals/bronze.png', :style => "height:60px", :title => trla('Bronze Medal', 'Awards section header'))%>
           <% end %>
         <% else %>
-            <%=image_tag( url_with_cache_version("/tr8n/images/medals/runner.png"), :style => "height:60px", :title => trla('Runner-Up', 'Awards section header'))%>
+            <%=image_tag('tr8n/medals/runner.png', :style => "height:60px", :title => trla('Runner-Up', 'Awards section header'))%>
         <% end %>
       </td>
       <td>
