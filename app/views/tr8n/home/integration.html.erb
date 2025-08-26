@@ -365,7 +365,7 @@ end
     elsif !current_user.guest? and current_user.locale != nil
       session[:locale] = current_user.locale
     elsif session[:locale] == nil
-      session[:locale] = tr8n_user_preffered_locale
+      session[:locale] = tr8n_user_preferred_locale
       session[:save_locale] = (session[:locale] != Tr8n::Config.default_locale)
     end
 
@@ -379,7 +379,7 @@ end
       </pre>
     </div>
 
-		 <strong>tr8n_user_preffered_locale</strong> returns back the first available locale supported by Tr8n that the browser has requested in the order of the browser's language preferences.
+		 <strong>tr8n_user_preferred_locale</strong> returns back the first available locale supported by Tr8n that the browser has requested in the order of the browser's language preferences.
 
 		 <br><br>
 		 There are a few other settings in config.yml that you may want to review. Those settings will be covered in the later sections.

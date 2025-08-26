@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     elsif !current_user.guest? and current_user.locale != nil
       session[:locale] = current_user.locale
     elsif (session[:locale] == nil) || (!current_user.guest? and current_user.locale.nil?)
-      session[:locale] = tr8n_user_preffered_locale
+      session[:locale] = tr8n_user_preferred_locale
       save_locale = (session[:locale] != Tr8n::Config.default_locale)
     end
 
