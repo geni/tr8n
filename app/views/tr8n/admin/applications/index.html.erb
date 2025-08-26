@@ -2,7 +2,7 @@
 <%= render :partial => "tabs" %>
 <%= tr8n_will_filter(@apps.results) %>
 
-<%=link_to_function("+ Register New Application", "tr8nLightbox.show('/tr8n/admin/applications/lb_update', {'height':350})")%>
+<%= link_to_function("+ Register New Application", "tr8nLightbox.show('#{admin_applications_lb_update_path}', {'height':350})") %>
 
 <% form_tag("", :id => "apps_form") do %>
   <%= will_filter_table_tag(@apps, :columns => [
@@ -15,7 +15,7 @@
     }],
     :description,
     [:component_count, lambda{|app|
-      link_to(app.components.size, "/tr8n/admin/applications/components?wf_c0=application_id&wf_o0=is&wf_v0_0=#{app.id}")
+      link_to(app.components.size, admin_applications_components_path(:wf_c0 => 'application_id', :wf_o0 => 'is', :wf_v0_0 => app.id))
     }, 'text-align:right'],
     [:actions, lambda{|app|
       html = []
