@@ -67,6 +67,38 @@ module Tr8n
         end
       end # def init_tr8n
 
+      def tr8n_user_preferred_locale
+        tr8n_browser_accepted_locales.each do |locale|
+          lang = Tr8n::Language.for(locale)
+          return locale if lang and lang.enabled?
+        end
+        Tr8n::Config.default_locale
+      end
+
+      ######################################################################
+      # Author: Iain Hecker
+      # reference: http://github.com/iain/http_accept_language
+      ######################################################################
+      def tr8n_browser_accepted_locales
+        @accepted_languages ||= request.env['HTTP_ACCEPT_LANGUAGE'].split(/\s*,\s*/).collect do |l|
+          l += ';q=1.0' unless l =~ /;q=\d+\.\d+$/
+          l.split(';q=')
+        end.sort do |x,y|
+          raise Tr8n::Exception.new("Not correctly formatted") unless x.first =~ /^[a-z\-]+$/i
+          y.last.to_f <=> x.last.to_f
+        end.collect do |l|
+          l.first.downcase.gsub(/-[a-z]+$/i) { |x| x.upcase }
+        end
+      rescue
+        []
+      end # def tr8n_browser_accepted_locales
+
+      def tr8n_source
+        "#{self.class.name.underscore.gsub("_controller", "")}/#{self.action_name}"
+      rescue
+        self.class.name
+      end
+
     end # module ControllerMethods
   end # module Concerns
 end # module Tr8n
