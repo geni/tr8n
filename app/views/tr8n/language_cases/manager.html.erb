@@ -36,7 +36,7 @@
     <% end %>
 
     <div id="tr8n_language_case_exception_container" style="border: 1px dotted #ccc; padding:5px; <%='display:none' unless @map.id %>">
-      <% form_for(:map, @map, :url => {:action => :update_value_map}, :html => {:id => 'tr8n_language_case_form', :method => :post}) do |form| %>
+      <%= form_for(@map, :as => 'map', :url => translator_update_value_map_path, :html => {:id => 'tr8n_language_case_form', :method => :post}) do |form| %>
         <%= hidden_field_tag :map_id, @map.id %>
         <%= hidden_field_tag :case_key, @map.keyword %>
 

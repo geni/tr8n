@@ -3,13 +3,28 @@ Tr8n::Engine.routes.draw do
   mount WillFilter::Engine => '/will_filter'
 
   namespace :admin do
-    get  '/applications',              :to => 'applications#index'
-    get  '/applications/components',   :to => 'applications#components'
-    get  '/applications/key_sources',  :to => 'applications#key_sources'
-    get  '/applications/lb_update',    :to => 'applications#lb_update'
-    get  '/applications/sources',      :to => 'applications#sources'
-    post '/applications/update',       :to => 'applications#update'
-    get  '/language',                  :to => 'language#index'
+    get    '/applications',                     :to => 'applications#index'
+    get    '/applications/components',          :to => 'applications#components'
+    delete '/applications/delete',              :to => 'applications#delete'
+    get    '/applications/key_sources',         :to => 'applications#key_sources'
+    post   '/applications/lb_add_to_component', :to => 'applications#lb_add_to_component'
+    get    '/applications/lb_update',           :to => 'applications#lb_update'
+    get    '/applications/sources',             :to => 'applications#sources'
+    post   '/applications/update',              :to => 'applications#update'
+    post   '/applications/update_component',    :to => 'applications#update_component'
+    post   '/applications/update_source',       :to => 'applications#update_source'
+
+    post   '/glossary/update', :to => 'glossary#update'
+
+    get    '/language',                   :to => 'language#index'
+    post   '/language/update',            :to => 'language#update'
+    post   '/language/update_value_map',  :to => 'language#update_value_map'
+
+    post   '/translation_key/lb_add_to_source', :to => 'translation_key#lb_add_to_source'
+    post   '/translation_key/merge',            :to => 'translation_key#merge'
+    post   '/translation_key/update',           :to => 'translation_key#update'
+
+    post   '/translator/register', :to => 'translator#register'
   end
 
   get '/awards', :to => 'awards#index'
@@ -39,6 +54,7 @@ Tr8n::Engine.routes.draw do
 
   get  '/language',             :to => 'language#index'
   get  '/language/manage',      :to => 'language#manage'
+  post '/language/manage',      :to => 'language#manage'
   post '/language/remove',      :to => 'language#remove'
   get  '/language/select',      :to => 'language#select'
   post '/language/switch',      :to => 'language#switch'
@@ -63,13 +79,15 @@ Tr8n::Engine.routes.draw do
   get  '/translations/vote',      :to => 'translations#vote'
   post '/translations/vote',      :to => 'translations#vote'
 
-  get  '/translator',                :to => 'translator#index'
-  get  '/translator/assignments',    :to => 'translator#assignments'
-  post '/translator/follow',         :to => 'translator#follow'
-  get  '/translator/following',      :to => 'translator#following'
-  get  '/translator/notifications',  :to => 'translator#notifications'
-  get  '/translator/settings',       :to => 'translator#settings'
-  post '/translator/unfollow',       :to => 'translator#unfollow'
+  get  '/translator',                   :to => 'translator#index'
+  get  '/translator/assignments',       :to => 'translator#assignments'
+  post '/translator/follow',            :to => 'translator#follow'
+  get  '/translator/following',         :to => 'translator#following'
+  get  '/translator/notifications',     :to => 'translator#notifications'
+  get  '/translator/settings',          :to => 'translator#settings'
+  post '/translator/settings',          :to => 'translator#settings'
+  post '/translator/unfollow',          :to => 'translator#unfollow'
+  post '/translator/update_value_map',  :to => 'translator#update_value_map'
 
   post '/translations/translate',   :to => 'translations#translate'
 

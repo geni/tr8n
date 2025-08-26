@@ -6,7 +6,7 @@
         Adding To Component
     </div>
     <div class="bd">
-        <% form_for(:comp, @comp, :url => {:action => :lb_add_to_component}, :html => {:id => 'tr8n_form', :method => :post, :class => "tr8n"}) do |form| %>
+        <%= form_for(@comp, :as => 'comp', :url => admin_applications_lb_add_to_component_path, :html => {:id => 'tr8n_form', :method => :post, :class => "tr8n"}) do |form| %>
         <%= hidden_field_tag :source_url, request.env['HTTP_REFERER'] %>
         <%= hidden_field_tag :sources, params[:sources] %>
         <%= hidden_field_tag :translators, params[:translators] %>

@@ -6,7 +6,7 @@
         User Translator Registration
     </div>
     <div class="bd">
-        <% form_for(:translator, @translator, :url => {:action => :register}, :html => {:id => 'tr8n_form', :method => :post, :class => "tr8n"}) do |form| %>
+        <%= form_for(@translator, :as => 'translator', :url => admin_translator_register_path, :html => {:id => 'tr8n_form', :method => :post, :class => "tr8n"}) do |form| %>
         <%= form.hidden_field :id %>
         <%= hidden_field_tag :source_url, request.env['HTTP_REFERER'] %>
         <table class="admin_table">
@@ -22,6 +22,6 @@
         <% end %>
     </div>
     <div class="ft">
-      <%= render :partial => "/tr8n/admin/common/lightbox_buttons" %>     
+      <%= render :partial => "/tr8n/admin/common/lightbox_buttons" %>
     </div>
 </div>

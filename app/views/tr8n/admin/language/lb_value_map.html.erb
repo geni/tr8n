@@ -6,7 +6,7 @@
         Language Case Values
     </div>
     <div class="bd">
-        <% form_for(:map, @map, :url => {:action => :update_value_map}, :html => {:id => 'tr8n_form', :method => :post, :class => "tr8n"}) do |form| %>
+        <%= form_for(@map, :as => 'map', :url => admin_language_update_value_map_path, :html => {:id => 'tr8n_form', :method => :post, :class => "tr8n"}) do |form| %>
         <%= hidden_field_tag :map_id, @map.id %>
         <table cellpadding="0" celspacing="0">
             <tr style="border:1px dotted #ccc; background-color:#FDFFF0;">
