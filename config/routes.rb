@@ -3,7 +3,10 @@ Tr8n::Engine.routes.draw do
   mount WillFilter::Engine => '/will_filter'
 
   namespace :admin do
-    get '/applications', :to => 'applications#index'
+    get '/applications',             :to => 'applications#index'
+    get '/applications/components',  :to => 'applications#components'
+    get '/applications/key_sources', :to => 'applications#key_sources'
+    get '/applications/sources',     :to => 'applications#sources'
   end
 
   get '/awards', :to => 'awards#index'

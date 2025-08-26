@@ -26,6 +26,10 @@ module Tr8n
     #
     config.to_prepare do
       ::ApplicationController.include Tr8n::Concerns::ControllerMethods
+
+      WillFilter.configure do |config|
+        config.table_name_prefix = 'wf' unless Rails.env.test?
+      end
     end
 
   end # class Engine
