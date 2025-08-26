@@ -44,15 +44,15 @@ private
 
   def tr8n_admin_tabs
     [
-        {"title" => "Applications", "description" => "Admin tab", "controller" => "applications"},
-        {"title" => "Languages", "description" => "Admin tab", "controller" => "language"},
-        {"title" => "Translation Keys", "description" => "Admin tab", "controller" => "translation_key"},
-        {"title" => "Translations", "description" => "Admin tab", "controller" => "translation"},
-        {"title" => "Translators", "description" => "Admin tab", "controller" => "translator"},
-        {"title" => "Glossary", "description" => "Admin tab", "controller" => "glossary"},
-        {"title" => "Forum", "description" => "Admin tab", "controller" => "forum"},
-        {"title" => "Metrics", "description" => "Metrics tab", "controller" => "metrics"},
-        {"title" => "Client SDK", "description" => "Admin tab", "controller" => "clientsdk"}
+        {'title' => 'Applications', 'description' => 'Admin tab', 'link' => admin_applications_path},
+        {'title' => 'Languages', 'description' => 'Admin tab', 'link' => admin_language_path},
+        {'title' => 'Translation Keys', 'description' => 'Admin tab', 'link' => admin_translation_key_path},
+        {'title' => 'Translations', 'description' => 'Admin tab', 'link' => admin_translation_path},
+        {'title' => 'Translators', 'description' => 'Admin tab', 'link' => admin_translator_path},
+        {'title' => 'Glossary', 'description' => 'Admin tab', 'link' => admin_glossary_path},
+        {'title' => 'Forum', 'description' => 'Admin tab', 'link' => admin_forum_path},
+        {'title' => 'Metrics', 'description' => 'Metrics tab', 'link' => admin_metrics_path},
+        {'title' => 'Client SDK', 'description' => 'Admin tab', 'link' => admin_clientsdk_path}
     ]
   end
   helper_method :tr8n_admin_tabs

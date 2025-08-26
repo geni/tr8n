@@ -1,13 +1,14 @@
 <%
   links = []
-  current_tab ||= ""
-  [ ["Languages", {:action => :index}],
-    ["Users", {:action => :users}],
-    ["Context Rules", {:action => :rules}],
-    ["Cases", {:action => :cases}],
-    ["Case Rules", {:action => :case_rules}],
-    ["Case Exceptions", {:action => :case_values}]].each do |link|
-      if action_name == link.last[:action].to_s
+  current_tab ||= ''
+  [ ['Languages', admin_language_path],
+    ['Users', admin_language_users_path],
+    ['Context Rules', admin_language_rules_path],
+    ['Cases', admin_language_cases_path],
+    ['Case Rules', admin_language_case_rules_path],
+    ['Case Exceptions', admin_language_case_values_path]
+  ].each do |link|
+      if current_page?(link.last)
         current_tab = link.first if current_tab.blank?
         links << link.first
       else
@@ -18,8 +19,8 @@
 
 <div class="section_title">
   <span style="font-size:12px; float:right; padding-top:5px;">
-    <%=links.join(" | ")%>
+    <%= links.join(" | ").html_safe %>
   </span>
-  <%=current_tab %>
+  <%= current_tab %>
 </div>
 

@@ -14,16 +14,38 @@ Tr8n::Engine.routes.draw do
     post   '/applications/update_component',    :to => 'applications#update_component'
     post   '/applications/update_source',       :to => 'applications#update_source'
 
+    get    '/clientsdk', :to => 'clientsdk#index'
+
+    get    '/forum', :to => 'forum#index'
+
+    get    '/glossary',        :to => 'glossary#index'
     post   '/glossary/update', :to => 'glossary#update'
 
-    get    '/language',                   :to => 'language#index'
-    post   '/language/update',            :to => 'language#update'
-    post   '/language/update_value_map',  :to => 'language#update_value_map'
+    get    '/language',                         :to => 'language#index'
+    get    '/language/lb_add_to_component',     :to => 'language#lb_add_to_component'
+    get    '/language/calculate_total_metrics', :to => 'language#calculate_total_metrics'
+    get    '/language/cases',                   :to => 'language#cases'
+    get    '/language/case_rules',              :to => 'language#case_rules'
+    get    '/language/case_values',             :to => 'language#case_values'
+    post   '/language/disable',                 :to => 'language#disable'
+    post   '/language/enable',                  :to => 'language#enable'
+    get    '/language/lb_update',               :to => 'language#lb_update'
+    get    '/language/rules',                   :to => 'language#rules'
+    post   '/language/update',                  :to => 'language#update'
+    post   '/language/update_value_map',        :to => 'language#update_value_map'
+    get    '/language/users',                   :to => 'language#users'
+    get    '/language/view',                    :to => 'language#view'
 
+    get    '/metrics', :to => 'metrics#index'
+
+    get    '/translation',  :to => 'translation#index'
+
+    get    '/translation_key',                  :to => 'translation_key#index'
     post   '/translation_key/lb_add_to_source', :to => 'translation_key#lb_add_to_source'
     post   '/translation_key/merge',            :to => 'translation_key#merge'
     post   '/translation_key/update',           :to => 'translation_key#update'
 
+    get    '/translator',          :to => 'translator#index'
     post   '/translator/register', :to => 'translator#register'
   end
 
