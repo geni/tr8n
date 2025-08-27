@@ -1,15 +1,15 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@users) %>
+<%= tr8n_will_filter(@users.results) %>
 
 <% form_tag("", :id => "language_users_form") do %>
   <%= will_filter_table_tag(@users, :columns => [
     [:language_id, lambda{|language_user|
       if language_user.language
-        link_to(language_user.language.english_name, :controller => "/tr8n/admin/language", :action => :view, :lang_id => language_user.language.id)
+        link_to(language_user.language.english_name, admin_language_view_path(:lang_id => language_user.language.id))
       else
-         "Deleted Language"    
-      end  
+         "Deleted Language"
+      end
     }],
     [:user_id, lambda{|language_user|
       if language_user.user
@@ -20,12 +20,12 @@
     }],
     [:translator_id, lambda{|language_user|
       if language_user.translator
-        link_to("#{language_user.translator.name} (#{language_user.translator.id})", :controller => "/tr8n/admin/translator", :action => :view, :translator_id => language_user.translator.id)
+        link_to("#{language_user.translator.name} (#{language_user.translator.id})", admin_translator_view_path(:translator_id => language_user.translator.id))
       else
-        "Not Translator" 
-      end  
+        "Not Translator"
+      end
     }], :created_at
   ]) %>
-<% end %>   
+<% end %>
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
