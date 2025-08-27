@@ -49,7 +49,9 @@ Tr8n::Engine.routes.draw do
 
     get    '/metrics', :to => 'metrics#index'
 
-    get    '/translation',  :to => 'translation#index'
+    get    '/translation',        :to => 'translation#index'
+    delete '/translation/delete', :to => 'translation#delete'
+    get    '/translation/votes',  :to => 'translation#votes'
 
     get    '/translation_key',                            :to => 'translation_key#index'
     get    '/translation_key/comments',                   :to => 'translation_key#comments'
