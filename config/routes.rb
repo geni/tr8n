@@ -64,8 +64,9 @@ Tr8n::Engine.routes.draw do
     get    '/translation_key/update_translation_counts',  :to => 'translation_key#update_translation_counts'
     get    '/translation_key/view',                       :to => 'translation_key#view'
 
-    get    '/translator',          :to => 'translator#index'
-    post   '/translator/register', :to => 'translator#register'
+    get    '/translator',                 :to => 'translator#index'
+    delete '/translator/delete_comment',  :to => 'translator#delete_comment'
+    post   '/translator/register',        :to => 'translator#register'
   end
 
   get '/awards', :to => 'awards#index'
