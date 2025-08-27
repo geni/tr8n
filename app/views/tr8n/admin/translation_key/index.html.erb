@@ -1,6 +1,6 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@keys) %>
+<%= tr8n_will_filter(@keys.results) %>
 
 <!--
 <%=link_to_function("Import Translation Keys", "tr8nLightbox.show('/tr8n/admin/translation_key/lb_import', {'height':280})") %>
@@ -23,13 +23,13 @@
     :locale,
     [:admin, lambda{|key| key.admin}, 'padding:5px;text-align:right;'],
     [:level, lambda{|key| key.level}, 'padding:5px;text-align:right;'],
-	  [:translation_count, lambda{|key| link_to(key.translation_count || 0, "/tr8n/admin/translation/index?wf_c0=translation_key_id&wf_o0=is&wf_v0_0=#{key.id}")}, 'padding:5px;text-align:right;'],
+	  [:translation_count, lambda{|key| link_to(key.translation_count || 0, admin_translation_path(:wf_c0 => 'translation_key_id', :wf_o0 => 'is', :wf_v0_0 => key.id))}, 'padding:5px;text-align:right;'],
 	  [:created_at, lambda{|key| key.created_at}, 'padding:5px;text-align:right;'],
 	  [:verified_at, lambda{|key| key.verified_at}, 'padding:5px;text-align:right;'],
 	  [:actions, lambda{|key|
 	    html = []
-	    html << link_to_function("Update", "tr8nLightbox.show('/tr8n/admin/translation_key/lb_update?key_id=#{key.id}', {'height':450})")
-	    html << link_to("Delete", {:action => :delete, :key_id => key.id}, {:confirm => "Are you sure you want to delete this key?"})
+	    html << link_to_function("Update", "tr8nLightbox.show('#{admin_translation_key_lb_update_path(:key_id => key.id)}', {'height':450})")
+	    html << link_to("Delete", admin_translation_key_delete_path(:key_id => key.id), {:confirm => "Are you sure you want to delete this key?"})
 	    html.join(' | ')
 	  }, 'padding:5px;text-align:right;white-space:nowrap;']
 	]) %>
@@ -63,26 +63,26 @@
 			alert('At least two keys must be selected.');
 			return;
 		}
-		tr8nLightbox.show('/tr8n/admin/translation_key/lb_merge?keys=' + keys, {height:350});
+		tr8nLightbox.show('<%= admin_translation_key_lb_merge_path %>?keys=' + keys, {height:350});
 	}
 
   function deleteSelectedKeys() {
     if (!confirm('Are you sure you want to delete all selected keys?'))
        return;
-    Tr8n.element('keys_form').action = "/tr8n/admin/translation_key/delete";
+    Tr8n.element('keys_form').action = "<%= admin_translation_key_delete_path %>";
     Tr8n.element('keys_form').submit();
   }
 
   function resetVerificationFlags() {
     if (!confirm('Are you sure you want to run this opperation?'))
        return;
-    location = '/tr8n/admin/translation_key/reset_verification_flags'
+    location = "<%= admin_translation_key_reset_verification_flags_path %>"
   }
 
   function updateTranslationCounts() {
     if (!confirm('Are you sure you want to run this opperation?'))
        return;
-    location = '/tr8n/admin/translation_key/update_translation_counts'
+    location = "<%= admin_translation_key_update_translation_counts_path %>"
   }
 
   function addSelectedKeysToSource() {
@@ -91,6 +91,6 @@
       alert('At least one key must be selected.');
       return;
     }
-    tr8nLightbox.show('/tr8n/admin/translation_key/lb_add_to_source?keys=' + keys, {height:350});
+    tr8nLightbox.show('<%= admin_translation_key_lb_add_to_source_path %>?keys=' + keys, {height:350});
   }
 <% end %>
