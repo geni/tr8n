@@ -69,8 +69,16 @@ Tr8n::Engine.routes.draw do
     get    '/translation_key/view',                       :to => 'translation_key#view'
 
     get    '/translator',                 :to => 'translator#index'
+    delete '/translator/delete',          :to => 'translator#delete'
     delete '/translator/delete_comment',  :to => 'translator#delete_comment'
+    get    '/translator/following',       :to => 'translator#following'
+    get    '/translator/ip_locations',    :to => 'translator#ip_locations'
+    get    '/translator/log',             :to => 'translator#log'
+    get    '/translator/lb_register',     :to => 'translator#lb_register'
     post   '/translator/register',        :to => 'translator#register'
+    get    '/translator/reports',         :to => 'translator#reports'
+    get    '/translator/update_stats',    :to => 'translator#update_stats'
+    get    '/translator/view',            :to => 'translator#view'
   end
 
   get '/awards', :to => 'awards#index'
@@ -131,7 +139,10 @@ Tr8n::Engine.routes.draw do
   get  '/translator/assignments',       :to => 'translator#assignments'
   post '/translator/follow',            :to => 'translator#follow'
   get  '/translator/following',         :to => 'translator#following'
+  get  '/translator/ip_locations',      :to => 'translator#ip_locations'
+  get  '/translator/log',               :to => 'translator#log'
   get  '/translator/notifications',     :to => 'translator#notifications'
+  get  '/translator/reports',           :to => 'translator#reports'
   get  '/translator/settings',          :to => 'translator#settings'
   post '/translator/settings',          :to => 'translator#settings'
   post '/translator/unfollow',          :to => 'translator#unfollow'
