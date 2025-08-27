@@ -1,20 +1,20 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@locks) %>
+<%= tr8n_will_filter(@locks.results) %>
 
 <% form_tag("", :id => "locks_form") do %>
   <%= will_filter_table_tag(@locks, :columns => [
 		[:checkbox, :locks],
 		[:language_id, lambda{|lock|
       if lock.language
-        link_to(lock.language.english_name, :controller => "/tr8n/admin/language", :action => :view, :lang_id => lock.language.id)
+        link_to(lock.language.english_name, admin_language_view_path(:lang_id => lock.language.id))
       else
          "Deleted Language"
       end
     }],
     [:translation_key_id, lambda{|lock|
       if lock.translation_key
-	      html = link_to(lock.translation_key.label, :action => :view, :key_id => lock.translation_key.id)
+	      html = link_to(lock.translation_key.label, admin_translation_key_view_path(:key_id => lock.translation_key.id))
 	      html << '<div style="color:grey; font-size:10px;">'
 	      html << lock.translation_key.description.to_s
 	      html << '</div>'
@@ -24,7 +24,7 @@
     }],
     [:translator_id, lambda{|lock|
       if lock.translator
-        link_to(lock.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => lock.translator.id)
+        link_to(lock.translator.name, admin_translator_view_path(:translator_id => lock.translator.id))
       else
          "Deleted Translator"
       end
@@ -43,7 +43,7 @@
   function deleteSelectedLocks() {
     if (!confirm('Are you sure you want to run this operation?'))
        return;
-    Tr8n.element('locks_form').action = "/tr8n/admin/translation_key/delete_lock";
+    Tr8n.element('locks_form').action = "<%= admin_translation_key_delete_lock_path %>";
     Tr8n.element('locks_form').submit();
   }
 <% end %>

@@ -54,6 +54,7 @@ Tr8n::Engine.routes.draw do
     get    '/translation_key',                            :to => 'translation_key#index'
     get    '/translation_key/comments',                   :to => 'translation_key#comments'
     delete '/translation_key/delete',                     :to => 'translation_key#delete'
+    delete '/translation_key/delete_lock',                :to => 'translation_key#delete_lock'
     post   '/translation_key/lb_add_to_source',           :to => 'translation_key#lb_add_to_source'
     post   '/translation_key/lb_merge',                   :to => 'translation_key#lb_merge'
     post   '/translation_key/lb_update',                  :to => 'translation_key#lb_update'
