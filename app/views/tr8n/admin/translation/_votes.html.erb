@@ -33,7 +33,7 @@
 
 <%= javascript_tag(nonce: true) do %>
   function deleteSelectedVotes() {
-    if (!confirm('Are you sure you want to run this opperation?'))
+    if (!confirm('Are you sure you want to run this operation?'))
        return;
     Tr8n.element('votes_form').action = "/tr8n/admin/translation/delete_vote";
     Tr8n.element('votes_form').submit();

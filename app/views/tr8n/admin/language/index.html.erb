@@ -77,7 +77,7 @@
 
 <%= javascript_tag(nonce: true) do %>
 	function calculateCompleteness() {
-		if (!confirm('Are you sure you want to run this opperation?'))
+		if (!confirm('Are you sure you want to run this operation?'))
 		   return;
 
 	  location = '<%= admin_language_calculate_total_metrics_path %>'
