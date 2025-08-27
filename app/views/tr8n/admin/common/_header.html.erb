@@ -6,7 +6,7 @@
   <ul class="translations_tab_nav translations_tabs">
       <% tr8n_admin_tabs.each do |tab| %>
         <%  classes = []
-            current = current_page?(tab['link'])
+            current = tab['link'].ends_with?(controller.controller_name)
 
             classes << 'current' if current
             if tr8n_admin_tabs.first == tab
