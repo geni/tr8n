@@ -96,7 +96,9 @@ Tr8n::Engine.routes.draw do
   get '/help/translations',           :to => 'help#translations'
   get '/help/voting_on_translations', :to => 'help#voting_on_translations'
 
-  get '/home', :to => 'home#index'
+  get '/home',         :to => 'home#index'
+  get '/home/credits', :to => 'home#credits'
+  get '/home/license', :to => 'home#license'
 
   get  '/language',             :to => 'language#index'
   get  '/language/manage',      :to => 'language#manage'
