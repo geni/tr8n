@@ -37,7 +37,7 @@
   }
 </style>
 <div style="text-align:center; margin:15px;">
- <%=image_tag( url_with_cache_version("/tr8n/images/tr8n_logo2.png"), :style => "height:120px;")%>
+ <%= image_tag('tr8n/tr8n_logo2.png', :style => "height:120px;")%>
 </div>
 
 <h2 class="underscore content_hd">
@@ -149,13 +149,13 @@
         <li>Press Ctrl+Shift+I to enable the inline translations or choose that options from the language selector.</li>
 				<li>Right-mouse-click on any one of the highlighted rows above to open the translator window</li>
 				<li>Click on the "generate context rules for this phrase" link:<br><br>
-				    <%=image_tag( url_with_cache_version("/tr8n/images/examples/numeric_rules_1.png") ) %><br><br>
+				    <%= image_tag('/tr8n/examples/numeric_rules_1.png') %><br><br>
 				</li>
 				<li>Check the number dependency checkbox in the count token row:<br><br>
-		        <%=image_tag( url_with_cache_version("/tr8n/images/examples/numeric_rules_2.png") ) %><br><br>
+		        <%= image_tag('tr8n/examples/numeric_rules_2.png') %><br><br>
 				</li>
 				<li>Click "Continue..." button to see the translation option for each context rule available for the language:<br><br>
-            <%=image_tag( url_with_cache_version("/tr8n/images/examples/numeric_rules_3.png"), :style => "width:800px; border:1px solid #ccc;")%><br><br>
+            <%= image_tag('tr8n/examples/numeric_rules_3.png', :style => "width:800px; border:1px solid #ccc;") %><br><br>
 				</li>
       </ul>
     </div>
@@ -164,7 +164,7 @@
 		In the above example, we chose the Russian language, which like some Slavic languages, has three rules for number dependent tokens.
     <br><br>
     If you followed the instructions above and chose Russian language, you should see the above block looking something like this:<br><br>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/numeric_rules_4.png"), :style => "width:800px;")%><br><br>
+    <%= image_tag('tr8n/examples/numeric_rules_4.png', :style => "width:800px;") %><br><br>
 
     Good job! By this point you pretty much have an idea of how the rules engine works.<br><br>
 
@@ -190,14 +190,14 @@
     <br><br>
 
     If you are a language manager for any particular language, then you have access to the following interface of that language:<br><br>
-		<%=image_tag( url_with_cache_version("/tr8n/images/examples/language_manager_1.png"), :style => "width:800px; border:1px solid #ccc;")%><br><br>
+		<%= image_tag('tr8n/examples/language_manager_1.png', :style => "width:800px; border:1px solid #ccc;")%><br><br>
 
 		There are a few different tools that language managers can use to change each language behavior. In our case, let's concentrate on the Context Rules section.<br><br>
 
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/context_rules_1.png"), :style => "width:800px; border:1px solid #ccc;")%><br><br>
+    <%= image_tag('tr8n/examples/context_rules_1.png', :style => "width:800px; border:1px solid #ccc;")%><br><br>
 
 		If you click on the edit button on the top right corner, you will enter the edit mode of the context rules:<br><br>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/context_rules_2.png"), :style => "width:800px; border:1px solid #ccc;")%><br><br>
+    <%= image_tag('tr8n/examples/context_rules_2.png', :style => "width:800px; border:1px solid #ccc;")%><br><br>
 
 		In that screen language managers can change rule definitions for each rule type. As it was mentioned earlier, in English language the rules would simply be:
 
@@ -316,11 +316,11 @@
 
     Let's take the second example and look at what it would be translated to in Russian:
     <br><br>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/gender_rules_1.png"), :style =>"vertical-align:top; padding-right:15px;")%>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/gender_rules_2.png"), :style =>"vertical-align:top")%><br><br>
+    <%=image_tag('tr8n/examples/gender_rules_1.png', :style =>"vertical-align:top; padding-right:15px;")%>
+    <%=image_tag('tr8n/examples/gender_rules_2.png', :style =>"vertical-align:top")%><br><br>
 
     Translating the above sentece into Russian will require setting up a dependency on the {user} token. Russian language was configured to have 3 rules to hande male, female and unknown gender cases.<br><br>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/gender_rules_3.png"), :style => "width:800px; border:1px solid #ccc;")%><br><br>
+    <%=image_tag('tr8n/examples/gender_rules_3.png', :style => "width:800px; border:1px solid #ccc;")%><br><br>
 
 		Some languages can treat unknown genders as male genders. The gender rules for that language can simply state:
     <div style="padding-left:20px; padding-bottom:10px;">
@@ -408,12 +408,12 @@ rules_engine:
 
     Let's take the first example and look at what it would be translated to in Russian:
     <br><br>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/list_rules_1.png"), :style =>"vertical-align:top; padding-right:15px;")%>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/list_rules_2.png"), :style =>"vertical-align:top")%><br><br>
+    <%= image_tag('tr8n/examples/list_rules_1.png', :style =>"vertical-align:top; padding-right:15px;")%>
+    <%= image_tag('tr8n/examples/list_rules_2.png', :style =>"vertical-align:top")%><br><br>
 
     Translating the above sentece into Russian will require setting up a dependency on the {user_list} token.
 		Russian language was configured to have 4 rules to hande male, female, unknown gender cases for a single element in the list and one rule for plural case.<br><br>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/list_rules_3.png"), :style => "width:800px; border:1px solid #ccc;")%><br><br>
+    <%= image_tag('tr8n/examples/list_rules_3.png', :style => "width:800px; border:1px solid #ccc;")%><br><br>
 
     Some languages, like Hebrew, can specify the genders for the plural cases as well:
     <div style="padding-left:20px; padding-bottom:10px;">
@@ -568,12 +568,12 @@ rules_engine:
 
     All those variations have only created a single translation key in the default language. But transling them into other languages is a whole different story.
 		<br><br>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/date_rules_1.png"), :style =>"vertical-align:top; padding-right:15px;")%>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/date_rules_2.png"), :style =>"vertical-align:top")%><br><br>
+    <%= image_tag('tr8n/examples/date_rules_1.png', :style =>"vertical-align:top; padding-right:15px;")%>
+    <%= image_tag('tr8n/examples/date_rules_2.png', :style =>"vertical-align:top")%><br><br>
 
     Translating the above sentece into Russian will require setting up a dependency on the {user} token, as well as {date} token. Both of the tokens have 3 rules
     and will result in the total of 9 translations.<br><br>
-    <%=image_tag( url_with_cache_version("/tr8n/images/examples/date_rules_3.png"), :style => "width:800px; border:1px solid #ccc;")%><br><br>
+    <%= image_tag('tr8n/examples/date_rules_3.png', :style => "width:800px; border:1px solid #ccc;")%><br><br>
 
     <br>
     <strong>Date Rule Definition</strong><br><br>

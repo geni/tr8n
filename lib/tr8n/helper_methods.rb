@@ -24,12 +24,6 @@
 module Tr8n::HelperMethods
   include Tr8n::CommonMethods
 
-  def url_with_cache_version(url, cache_version=Tr8n::Config.url_cache_version)
-    return url if cache_version.blank?
-
-    [url, cache_version].join( url.index('?') ? '&' : '?' )
-  end
-
   def tr8n_scripts_tag(opts = {})
     render(:partial => '/tr8n/common/scripts', :locals => {:opts => opts})
   end
@@ -125,7 +119,7 @@ module Tr8n::HelperMethods
     return unless Tr8n::Config.current_user_is_translator?
     return unless Tr8n::Config.current_translator.enable_inline_translations?
 
-    link_to(image_tag( url_with_cache_version("/tr8n/images/translate_icn.gif"), :style => "vertical-align:middle; border: 0px;", :title => search),
+    link_to(image_tag('tr8n/translate_icn.gif', :style => "vertical-align:middle; border: 0px;", :title => search),
            :controller => "/tr8n/phrases", :action => :index,
            :search => search, :phrase_type => phrase_type, :phrase_status => phrase_status).html_safe
   end

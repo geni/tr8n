@@ -14,7 +14,7 @@
 	<p>For example, 2,2 is a valid TPS coordinate that describes the relationship between me and my cousin. To get from me to my cousin in our family tree, I have to ascend two generations to our grandparents (our nearest common ancestors) and then descend two generations. Of course there are other paths between us that involve ascending past our grandparents, but this is the shortest path between us.</p>
 
 	<p>
-	 <%=image_tag( url_with_cache_version("/tr8n/images/help/cousin.png") ) %>
+	 <%= image_tag('tr8n/help/cousin.png') %>
 	</p>
 
 	<h2>Simple Relationships</h2>
@@ -86,7 +86,7 @@
   </div>
 
   <p>
-   <%=image_tag( url_with_cache_version("/tr8n/images/help/half-cousin.png") ) %>
+   <%= image_tag('tr8n/help/half-cousin.png') %>
   </p>
 
   <h2>Genders in Relationships</h2>
@@ -115,7 +115,7 @@
 	</p>
 
 	<p>
-	 <%=image_tag( url_with_cache_version("/tr8n/images/help/hindu_family_tree.jpg"), :style=>"width:700px;")%>
+	 <%= image_tag('tr8n/help/hindu_family_tree.jpg', :style=>"width:700px;") %>
 
 	 <div style="font-size:10px;">
 	 Source: <%=link_to("http://en.wikipedia.org/wiki/Hindu_Family_Tree", "http://en.wikipedia.org/wiki/Hindu_Family_Tree")%>

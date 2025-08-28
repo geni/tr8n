@@ -3,7 +3,7 @@
 <%= will_filter_table_tag(@results, :columns => [
     [:checkbox, 'component_objects'],
     [:id, lambda{|ulang| ulang.language ?  ulang.language.id : ''}, 'width:60px;'],
-    [:flag, lambda{|ulang| ulang.language ? image_tag( url_with_cache_version("/tr8n/images/flags/#{ulang.language.flag}.png") ) : ''}, 'width:30px;'],
+    [:flag, lambda{|ulang| ulang.language ? tr8n_language_flag_tag(ulang.language) : ''}, 'width:30px;'],
     [:locale, lambda{|ulang|
       lang = ulang.language
       html = []

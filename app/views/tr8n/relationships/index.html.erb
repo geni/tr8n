@@ -53,7 +53,7 @@
           <% color = rk.can_be_translated? ? "#FDFDDF" : "#ECFFEF"%>
           <td style="padding:5px; background: <%=color%>; ">
             <% unless rk.can_be_translated? %>
-              <div style="float:right"><%=image_tag( url_with_cache_version("/tr8n/images/lock.png"), :style=>"width:12px", :title => trla("This relationship is locked"))%></div>
+              <div style="float:right"><%=image_tag('tr8n/lock.png', :style=>"width:12px", :title => trla("This relationship is locked"))%></div>
             <% end %>
             <div style="font-size:18px;font-family:Arial;" dir="ltr">
              <%=link_to(rk.label, :controller => '/tr8n/phrases', :action => :view, :translation_key_id => rk.id)%>

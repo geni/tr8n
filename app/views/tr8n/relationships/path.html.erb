@@ -32,7 +32,7 @@
           <% color = rk.locked? ? "#ECFFEF" : "#FDFDDF" %>
           <td style="padding:5px; background: <%=color%>; ">
             <% if rk.locked? %>
-              <div style="float:right"><%=image_tag( url_with_cache_version("/tr8n/images/lock.png"), :style=>"width:12px", :title => trla("This relationship is locked"))%></div>
+              <div style="float:right"><%=image_tag('tr8n/lock.png', :style=>"width:12px", :title => trla("This relationship is locked"))%></div>
             <% end %>
             <div style="font-size:18px;font-family:Arial;">
              <%=link_to_function(rk.label, "Tr8n.element('etps').value='#{rk.label}';")%>

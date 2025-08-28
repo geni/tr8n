@@ -44,7 +44,7 @@
 	        <% color = tk.can_be_translated? ? "#FDFDDF" : "#ECFFEF" %>
 	        <td style="padding:5px; background: <%=color%>; " dir="ltr">
 	          <% unless tk.can_be_translated? %>
-	            <div style="<%=tr8n_style_attribute_tag('float', 'right')%>"><%=image_tag( url_with_cache_version("/tr8n/images/lock.png"), :style=>"width:12px", :title => trla("This phrase is locked"))%></div>
+	            <div style="<%=tr8n_style_attribute_tag('float', 'right')%>"><%=image_tag('tr8n/lock.png', :style=>"width:12px", :title => trla("This phrase is locked"))%></div>
 	          <% end %>
 	          <%=link_to(tk.default_decoration, :action => :view, :translation_key_id => tk.id, :section_key => @section_key)%>
 	          <div style="color:grey;font-size:10px;padding-top:3px;" dir="ltr"><%=tk.description%></div>
