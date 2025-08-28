@@ -68,8 +68,8 @@
   }
 
   function evaluateRelationshipPath() {
-    Tr8n.element("translation").innerHTML = "<div style='text-align:left;'><img src='/tr8n/images/spinner.gif?" + Tr8n.url_cache_version + "' style='vertical-align:bottom'> Loading...</div>";
-    Tr8n.Utils.update('translation', "/tr8n/relationships/eval_path", {
+    Tr8n.element("translation").innerHTML = "<div style='text-align:left;'><%= image_tag('tr8n/spinner.gif', :style =>'vertical-align:bottom') %> Loading...</div>";
+    Tr8n.Utils.update('translation', "<%= relationships_eval_path_path %>", {
       parameters: {etps:Tr8n.value("etps")}
     });
     return false;

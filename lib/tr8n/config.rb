@@ -456,9 +456,6 @@ class Tr8n::Config
     caching[:version]
   end
 
-  def self.url_cache_version
-    @url_cache_version ||= tr8n_gem_version.gsub(/\./, '_')
-  end
   #########################################################
 
   #########################################################
