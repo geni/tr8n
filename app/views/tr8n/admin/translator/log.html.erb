@@ -1,25 +1,25 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@logs) %>
+<%= tr8n_will_filter(@logs.results) %>
 
 <% form_tag("", :id => "sources_form") do %>
   <%= will_filter_table_tag(@logs, :columns => [
-    :created_at, 
+    :created_at,
     [:translator_id, lambda{|log|
       if log.translator
-        link_to(log.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => log.translator.id)
+        link_to(log.translator.name, admin_translator_view_path(:translator_id => log.translator.id))
       else
-        "Unknown" 
-      end  
+        "Unknown"
+      end
     }],
-    :action, 
+    :action,
     :reference,
     [:description, lambda{|log|
       html = []
       html << "<div style='#{log.decoration}'>"
       html << log.describe
       html << "</div>"
-      html.join("")
+      html.join("").html_safe
     }]
   ]) %>
 <% end %>
