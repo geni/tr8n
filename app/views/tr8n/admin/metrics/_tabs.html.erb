@@ -2,13 +2,13 @@
   links = []
   current_tab ||= ""
   [
-    ["Sources", {:action => :index}],
-    ["Languages", {:action => :languages}],
-    ["Translators", {:action => :translators}],
-		["Top Translators", {:action => :top_translators}],
-    ["Charts", {:action => :charts}],
+    ["Sources", admin_metrics_path],
+    ["Languages", admin_metrics_languages_path],
+    ["Translators", admin_metrics_translators_path],
+		["Top Translators", admin_metrics_top_translators_path],
+    ["Charts", admin_metrics_charts_path],
 	].each do |link|
-      if action_name == link.last[:action].to_s
+      if current_page?(link.last)
         current_tab = link.first if current_tab.blank?
         links << link.first
       else

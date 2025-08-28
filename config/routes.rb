@@ -54,7 +54,12 @@ Tr8n::Engine.routes.draw do
     get    '/language/users',                   :to => 'language#users'
     get    '/language/view',                    :to => 'language#view'
 
-    get    '/metrics', :to => 'metrics#index'
+    get    '/metrics',                    :to => 'metrics#index'
+    get    '/metrics/charts',             :to => 'metrics#charts'
+    get    '/metrics/languages',          :to => 'metrics#languages'
+    get    '/metrics/recalculate_metric', :to => 'metrics#recalculate_metric'
+    get    '/metrics/translators',        :to => 'metrics#translators'
+    get    '/metrics/top_translators',    :to => 'metrics#top_translators'
 
     get    '/translation',             :to => 'translation#index'
     delete '/translation/delete',      :to => 'translation#delete'
