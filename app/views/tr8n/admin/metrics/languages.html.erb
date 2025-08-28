@@ -1,9 +1,9 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@metrics) %>
-<%=link_to("Calculate daily metrics", {:action => :calculate_metrics}, :confirm => "Are you sure you want to run this operation?")%>
+<%= tr8n_will_filter(@metrics.results) %>
+<%=link_to("Calculate daily metrics", admin_language_calculate_metrics_path, :confirm => "Are you sure you want to run this operation?")%>
  |
-<%=link_to("Calculate total metrics", {:action => :calculate_total_metrics}, :confirm => "Are you sure you want to run this operation?")%>
+<%=link_to("Calculate total metrics", admin_language_calculate_total_metrics_path, :confirm => "Are you sure you want to run this operation?")%>
 <br>
 
 <%= will_filter_table_tag(@metrics, :columns => [
