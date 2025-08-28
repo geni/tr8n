@@ -715,7 +715,7 @@ class Tr8n::TranslationKey < ApplicationRecord
   end
 
   def self.help_url
-    '/tr8n/help'
+    help_path
   end
 
   def suggestion_label

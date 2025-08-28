@@ -24,8 +24,8 @@
 Tr8n.Proxy = function(options) {
   var self = this;
   this.options = options;
-  this.options['url'] = this.options['url'] || '/tr8n/api/v1/language/translate'; 
-  this.options['scheduler_interval'] = this.options['scheduler_interval'] || 20000; 
+  this.options['url'] = this.options['url'] || `${Tr8n.mount_point}/api/v1/language/translate`;
+  this.options['scheduler_interval'] = this.options['scheduler_interval'] || 20000;
   this.logger_enabled = false;
   this.missing_translations_locked = false;
   this.inline_translations_enabled = this.options['enable_inline_translations'];
@@ -33,11 +33,11 @@ Tr8n.Proxy = function(options) {
     'proxy': self,
     'element_id': options['logger_element_id'] || 'tr8n_debugger'
   });
-        
+
   this.language = new Tr8n.Proxy.Language({
     'proxy': self
   });
-  
+
   this.initTranslations();
   this.runScheduledTasks();
 }
@@ -105,19 +105,19 @@ Tr8n.Proxy.prototype = {
     if (rule_type == 'date')          return 'Tr8n.Proxy.DateRule';
     if (rule_type == 'list')          return 'Tr8n.Proxy.ListRule';
     if (rule_type == 'gender_list')   return 'Tr8n.Proxy.GenderListRule';
-    return null;    
+    return null;
   },
   getLanguageRuleForTokenSuffix: function(token_suffix) {
     if (!this.options['rules']) return null;
-    
+
     for (rule_type in this.options['rules']) {
       var suffixes = this.options['rules'][rule_type]['token_suffixes'];
       if (!suffixes) continue;
-      
+
       if (Tr8n.Utils.indexOf(suffixes, token_suffix) != -1 )
-         return this.getLanguageRuleForType(rule_type);     
+         return this.getLanguageRuleForType(rule_type);
     }
-    return null;    
+    return null;
   },
 
   registerTranslationKeys: function(translations) {
@@ -140,12 +140,12 @@ Tr8n.Proxy.prototype = {
         self.log(response.responseText);
         self.updateTranslations(eval("[" + response.responseText + "]")[0]['phrases']);
       }
-    }); 
+    });
   },
 
   initTranslations: function(forced) {
     if (!forced && this.translations) return;
-    
+
     this.translations = {};
 
     // Check for page variable to load translations from, if variable was provided
@@ -165,7 +165,7 @@ Tr8n.Proxy.prototype = {
     this.log("Updating page translations...");
     this.registerTranslationKeys(new_translations);
   },
-    
+
   registerMissingTranslationKey: function(translation_key, token_values, options) {
     this.missing_translation_keys = this.missing_translation_keys || {};
     if (!this.missing_translation_keys[translation_key.key]) {
@@ -178,9 +178,9 @@ Tr8n.Proxy.prototype = {
       this.log('Missing translations are being processed, postponding registration task.');
       return;
     }
-      
+
     this.missing_translation_keys = this.missing_translation_keys || {};
-    
+
     var phrases = "[";
     for (var key in this.missing_translation_keys) {
       var translation_key = this.missing_translation_keys[key].translation_key;
@@ -192,12 +192,12 @@ Tr8n.Proxy.prototype = {
       phrases = phrases + "}";
     }
     phrases = phrases + "]";
-    
+
     if (phrases == '[]') {
 //      this.log('No missing translation keys to submit...');
       return;
     }
-    
+
     var self = this;
     this.debug('Submitting missing translation keys: ' + phrases);
     Tr8n.Utils.ajax(this.options['url'], {
@@ -208,7 +208,7 @@ Tr8n.Proxy.prototype = {
         self.log(response.responseText);
         self.updateMissingTranslationKeys(eval("[" + response.responseText + "]")[0]['phrases']);
       }
-    }); 
+    });
   },
 
   updateMissingTranslationKeys: function(translations) {
@@ -216,7 +216,7 @@ Tr8n.Proxy.prototype = {
     this.log("Received " + translations.length + " registered phrases...");
     for (i = 0; i < translations.length; i++) {
        var translation_key_data = translations[i];
-       
+
        this.log("Registering new key " + translation_key_data.key);
        this.translations[translation_key_data.key] = translation_key_data;
        var missing_key_data = this.missing_translation_keys[translation_key_data.key];
@@ -233,14 +233,14 @@ Tr8n.Proxy.prototype = {
        }
     }
     this.missing_translations_locked = false;
-  },  
+  },
 
   runScheduledTasks: function() {
     var self = this;
-    
+
 //    this.log("Running scheduled tasks...");
     this.submitMissingTranslationKeys();
-    
+
     window.setTimeout(function() {
       self.runScheduledTasks();
     }, this.options['scheduler_interval']);

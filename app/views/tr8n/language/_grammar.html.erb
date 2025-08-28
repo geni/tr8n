@@ -75,7 +75,7 @@
   }
 
   function performLanguageRulesOperation(params){
-    Tr8n.Utils.update('language_rules', '/tr8n/language/update_rules', {
+    Tr8n.Utils.update('language_rules', '<%= language_update_rules_path %>', {
       parameters: params,
       method: 'post'
     });

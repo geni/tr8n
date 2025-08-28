@@ -124,7 +124,7 @@
             <% end %>
             <% if tr8n_current_user_is_admin? %>
             <div style="padding-top:5px;font-size: 11px; font-weight:bold;">
-                <%=link_to(trla("Configure tr8n"), "/tr8n/admin/language") %>
+                <%=link_to(trla("Configure tr8n"), admin_language_path) %>
                 <span style="color: grey; font-size: 10px; padding-left:0.5em; font-style:italic;">tr8n admins only</span>
                 <div style="font-weight:normal; color:grey;"><%=trla("Manage translators, languages and translations.") %></div>
             </div>

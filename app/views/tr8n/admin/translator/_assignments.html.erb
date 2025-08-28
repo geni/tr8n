@@ -6,11 +6,11 @@
       ctran.component.id
     }],
     [:component, lambda{|ctran|
-       link_to(ctran.component.name, :controller => "/tr8n/admin/applications", :action => :component, :comp_id => ctran.component.id)
+       link_to(ctran.component.name, admin_applications_component_path(comp_id: ctran.component.id))
     }],
     [:actions, lambda{|ctran|
       html = []
-      html << link_to("Remove", {:controller => "/tr8n/admin/applications", :action => :remove_objects_from_component, :component_object_id => ctran.id, :type => :translator}, :confirm => "Are you sure you want to do that?")
+      html << link_to("Remove", admin_applications_remove_objects_from_component_path(component_object_id: ctran.id, type: :translator), confirm: "Are you sure you want to do that?")
       html.join(' | ')
     }, 'text-align:right;white-space:nowrap;']
 
@@ -25,7 +25,7 @@
   function removeAllSelected() {
     if (!confirm('Are you sure you want to remove all selected translators from this component?'))
        return;
-    Tr8n.element('translators_form').action = "/tr8n/admin/applications/remove_objects_from_component";
+    Tr8n.element('translators_form').action = "<%= admin_applications_remove_objects_from_component_path %>";
     Tr8n.element('translators_form').submit();
   }
 <% end %>

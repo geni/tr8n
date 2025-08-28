@@ -154,7 +154,7 @@ module Tr8n
       end
 
       if Tr8n::Config.enable_registration_disclaimer?
-        redirect_to("/tr8n/translator/registration")
+        redirect_to(translator_registration_path)
       end
     end
 

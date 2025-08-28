@@ -38,7 +38,7 @@
 
     [:actions, lambda{|metric|
       html = []
-      html << link_to("Recalculate", admin_metrics_recalculate_metric_path(:metric_id => metric.id), {:confirm => "Are you sure you want to recaluclate this metric?"})
+      html << link_to("Recalculate", admin_applications_recalculate_metric_path(:metric_id => metric.id), {:confirm => "Are you sure you want to recaluclate this metric?"})
       html.join(' | ')
     }, 'padding:5px;text-align:right;white-space:nowrap;']
   ]) %>

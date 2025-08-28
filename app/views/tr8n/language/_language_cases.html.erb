@@ -64,7 +64,7 @@
 					  <% end %>
 
 			      <div style="padding-top:15px;">
-			          <%=link_to(tra("Click here to view the exceptional case values submitted by translators"), :controller => "/tr8n/language_cases", :action => :index) %>
+			          <%= link_to(tra("Click here to view the exceptional case values submitted by translators"), language_cases_path) %>
 			      </div>
 
 					<% end %>
@@ -108,7 +108,7 @@
   }
 
   function performLanguageCasesOperation(params){
-    Tr8n.Utils.update('language_cases', '/tr8n/language/update_language_cases', {
+    Tr8n.Utils.update('language_cases', '<%= language_update_language_cases_path %>', {
       parameters: params,
       method: 'post'
     });
@@ -129,7 +129,7 @@
 		edit_rule_index = position;
 		edit_case_action = form_hash['case_action'];
 
-    tr8nLightbox.show('/tr8n/language/lb_language_case_rule?' + Tr8n.Utils.toQueryParams(form_hash), {width:600, height:270});
+    tr8nLightbox.show('<%= language_lb_language_case_rule_path %>?' + Tr8n.Utils.toQueryParams(form_hash), {width:600, height:270});
   }
 
   function editLanguageCaseRule(case_index, position) {
@@ -156,7 +156,7 @@
     edit_rule_index = position;
     edit_case_action = form_hash['case_action'];
 
-    tr8nLightbox.show('/tr8n/language/lb_language_case_rule?' + Tr8n.Utils.toQueryParams(form_hash), {width:600, height:300});
+    tr8nLightbox.show('<%= language_lb_language_case_rule_path %>?' + Tr8n.Utils.toQueryParams(form_hash), {width:600, height:300});
   }
 
   function updateLanguageCaseRule() {
@@ -188,7 +188,7 @@
   }
 
   function performLanguageCaseRuleOperation(case_index, params){
-    Tr8n.Utils.update('language_case_rules_' + case_index, '/tr8n/language/update_language_case_rules', {
+    Tr8n.Utils.update('language_case_rules_' + case_index, '<%= language_update_language_case_rules_path %>', {
       parameters: params,
       method: 'post'
     });

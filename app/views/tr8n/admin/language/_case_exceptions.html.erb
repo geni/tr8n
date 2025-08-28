@@ -1,10 +1,10 @@
 <%= will_filter_table_tag(@results, :columns => [
-  :id, :keyword, :map, :reported, 
+  :id, :keyword, :map, :reported,
   [:translator_id, lambda{|lcase|
     if lcase.translator
-      link_to(lcase.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => lcase.translator.id)
+      link_to(lcase.translator.name, admin_translator_view_path(translator_id: lcase.translator.id))
     else
-      "System Generated" 
-    end  
+      "System Generated"
+    end
   }], :created_at
  ]) %>

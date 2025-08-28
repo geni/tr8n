@@ -1,6 +1,6 @@
 <style>
 	.translations_table {
-		width:100%; background-color:white; 
+		width:100%; background-color:white;
 	  border-radius: 10px;
 	  -moz-border-radius: 10px;
 	  -webkit-border-radius: 10px;
@@ -9,23 +9,23 @@
 	}
 	.translations_table td {
     padding:3px;
-  } 
+  }
 </style>
 
 <% unless lang.recently_updated_translations.empty? %>
 	<div style="padding-top:10px; font-size:14px; border-bottom:1px solid #ccc; margin-bottom:5px;">
     <div style="<%=tr8n_style_attribute_tag('float', 'right')%>; font-size:12px;">
-       <%=link_to(tra("view all"), :controller => "/tr8n/translations", :action => :index, :locale => lang.locale)%>
+       <%= link_to(tra("view all"), translations_path(:locale => lang.locale)) %>
     </div>
 
     <%=tr8n_toggler_tag("trans_content_#{lang.id}", "", false)%>
 	  <%=tra("Recent Translations")%>
 		<span style="color:#ccc; font-size:12px;"><%=tra("last {count}", nil, :count => 5)%></span>
 	</div>
-	
+
 	<div id="trans_content_<%=lang.id%>" class="translations_table" style="display:none;">
 		<div style="margin:10px;">
     <%= render :partial => "/tr8n/translations/list", :locals => {:language => lang, :translations => lang.recently_updated_translations, :mode => :short_list} %>
 		</div>
-	</div>	
-<% end %>	
+	</div>
+<% end %>

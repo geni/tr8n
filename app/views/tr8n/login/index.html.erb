@@ -3,7 +3,7 @@
 	  <%=tr('Login to Tr8n Translation Engine') %>
 	</h2>
 	<div class="content_bd">
-	
+
 	  <div class="page_form">
 	    <% form_tag(:controller=>:login, :action=>:index) do %>
 	      <div class="field">
@@ -23,11 +23,11 @@
 	        <div class="field_bd">
 	          <button class="button super blue xlarge"><span><%=tr('Login') %></span></button>
 						<%= tr("or") %>
-						<%=link_to(tr("Register for Tr8n Translator Account"), "/tr8n/login/register")%>
+						<%=link_to(tr("Register for Tr8n Translator Account"), login_register_path)%>
 	        </div>
 	      </div>
 	    <% end %>
 	  </div>
-	
+
 	</div>
 <% end %>

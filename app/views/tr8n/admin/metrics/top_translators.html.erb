@@ -48,7 +48,7 @@
 					<%=tm.translator.manager? if tm.translator %>
 				</td>
 				<td>
-	        <%=link_to(tm.total_translations || 0, "/tr8n/admin/translation?wf_c0=translator_id&wf_o0=is&wf_v0_0=#{tm.translator.id}")%>
+	        <%= link_to(tm.total_translations || 0, admin_translation_path(:wf_c0 => "translator_id", :wf_o0 => "is", :wf_v0_0 => tm.translator.id)) %>
 				</td>
 				<td>
 	        <%=tm.total_votes%>

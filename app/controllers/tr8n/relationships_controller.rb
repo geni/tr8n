@@ -55,7 +55,7 @@ class Tr8n::RelationshipsController < Tr8n::BaseController
         trfn("Relationship key {key} already exist. Your translation has been added to the key.", "", :key => @relationship_key.key)
       end
 
-      return redirect_to(:controller => "/tr8n/phrases", :action => :view, :translation_key_id => @relationship_key.id)
+      return redirect_to(phrases_view_path(:translation_key_id => @relationship_key.id))
     end
 
     @relationship_key = Tr8n::RelationshipKey.new
@@ -63,7 +63,7 @@ class Tr8n::RelationshipsController < Tr8n::BaseController
     if ex.is_a?(Tr8n::Exception)
       trfe(ex.message)
     else
-      trfe("The relationship key you provided is invalid. Please refer to the [link: help section] to see the proper syntax for relationship keys.", "", :link => ["/tr8n/help/relationship_keys"])
+      trfe("The relationship key you provided is invalid. Please refer to the [link: help section] to see the proper syntax for relationship keys.", "", :link => help_relationship_keys_path)
     end
   end
 

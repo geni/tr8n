@@ -5,13 +5,13 @@
     </th>
     <th>
       Site Administrator
-    </th>  
+    </th>
     <th>
       Manages Languages
-    </th>  
+    </th>
     <th>
       Blocked
-    </th>  
+    </th>
     <th style="text-align:right">
       Translations Count
     </th>
@@ -19,28 +19,28 @@
       Votes Count
     </th>
     <th></th>
-  </tr>  
+  </tr>
   <% translators.each_with_index do |translator, index| %>
     <tr>
       <td>
         <%=link_to(translator.name, :action => :view, :translator_id => translator.id)%>
-      </td>  
+      </td>
       <td>
         <%=translator.admin?%>
-      </td>  
+      </td>
       <td>
         <%=translator.manager?%>
-      </td>  
+      </td>
       <td>
         <%=translator.blocked?%>
-      </td>  
+      </td>
       <td style="text-align:right">
-        <%= link_to(translator.total_metric.total_translations || 0, "/tr8n/admin/translation?wf_c0=translator_id&wf_o0=is&wf_v0_0=#{translator.id}") %>
-      </td>  
+        <%= link_to(translator.total_metric.total_translations || 0, admin_translation_path(wf_c0: 'translator_id', wf_o0: 'is', wf_v0_0: translator.id)) %>
+      </td>
       <td style="text-align:right">
         <%=translator.total_metric.total_votes || 0 %>
         (<span style="color:green"><%=translator.total_metric.positive_votes || 0 %></span>/<span style="color:red"><%=translator.total_metric.negative_votes || 0 %></span>)
-      </td>  
+      </td>
       <td style="text-align:right">
         <%=link_to("View", :action => :view, :translator_id => translator.id)%>
         |

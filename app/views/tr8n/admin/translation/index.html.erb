@@ -70,7 +70,7 @@
   function deleteSelectedTranslations() {
     if (!confirm('Are you sure you want to run this operation?'))
        return;
-    Tr8n.element('translations_form').action = "/tr8n/admin/translation/delete";
+    Tr8n.element('translations_form').action = "<%= admin_translation_delete_path %>";
     Tr8n.element('translations_form').submit();
   }
 <% end %>

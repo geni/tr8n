@@ -93,13 +93,13 @@
   }
 
   function searchPhrase() {
-    url = "/tr8n/phrases/index?search=" + encodeURI(Tr8n.value('label'));
+    url = "<%= phrases_path %>?search=" + encodeURI(Tr8n.value('label'));
     window.open(url,'translation_key');
     return false;
   }
 
   function showExamples() {
-    tr8nLightbox.show('/tr8n/admin/clientsdk/lb_samples', {height:500});
+    tr8nLightbox.show('<%= admin_clientsdk_lb_samples_path %>', {height:500});
     return false;
   }
 

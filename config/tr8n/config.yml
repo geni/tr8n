@@ -75,7 +75,7 @@ defaults: &defaults
   #############################################################################
   open_registration_mode:           true
   enable_registration_disclaimer:   true
-  registration_disclaimer_path:     "/tr8n/common/terms_of_use"
+  registration_disclaimer_path:     "common/terms_of_use"
 
   #############################################################################
   # Tr8n best run with caching enabled

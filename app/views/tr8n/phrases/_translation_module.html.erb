@@ -119,7 +119,7 @@
   function downloadDictionaryDefinitions() {
     Tr8n.Effects.hide('tr8n_dictionary_opener');
     Tr8n.Effects.show('tr8n_dictionary_spinner');
-    Tr8n.Utils.update('tr8n_dictionary', '/tr8n/phrases/dictionary', {
+    Tr8n.Utils.update('tr8n_dictionary', '<%= phrases_dictionary_path %>', {
       parameters: {translation_key_id:"<%= @translation_key.id -%>"},
       onComplete: function(response) {
         Tr8n.Effects.hide('tr8n_dictionary_spinner');

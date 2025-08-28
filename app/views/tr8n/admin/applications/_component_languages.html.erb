@@ -39,7 +39,7 @@
   function removeFromComponent() {
     if (!confirm('Are you sure you want to remove selected languages from this component?'))
        return;
-    Tr8n.element('lang_form').action = "/tr8n/admin/applications/remove_objects_from_component";
+    Tr8n.element('lang_form').action = "<%= admin_applications_remove_objects_from_component_path %>";
     Tr8n.element('lang_form').submit();
   }
 <% end %>

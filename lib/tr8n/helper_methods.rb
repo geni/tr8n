@@ -50,7 +50,7 @@ module Tr8n::HelperMethods
       opts[:sources].each do |source_name|
         source = Tr8n::TranslationSource.find_or_create(source_name, request.url)
         locale = Tr8n::Config.current_language.locale
-        js_source = "/tr8n/api/v1/language/translate?cache=true&sdk_jsvar=#{client_sdk_var_name}&source=#{CGI.escape(source_name)}&locale=#{locale}&t=#{source.updated_at.to_i}"
+        js_source = "#{Tr8n::Engine.mount_point}/api/v1/language/translate?cache=true&sdk_jsvar=#{client_sdk_var_name}&source=#{CGI.escape(source_name)}&locale=#{locale}&t=#{source.updated_at.to_i}"
         html << "<script type='text/javascript' src='#{js_source}'></script>"
       end
 
@@ -120,8 +120,7 @@ module Tr8n::HelperMethods
     return unless Tr8n::Config.current_translator.enable_inline_translations?
 
     link_to(image_tag('tr8n/translate_icn.gif', :style => "vertical-align:middle; border: 0px;", :title => search),
-           :controller => "/tr8n/phrases", :action => :index,
-           :search => search, :phrase_type => phrase_type, :phrase_status => phrase_status).html_safe
+           phrases_path(:search => search, :phrase_type => phrase_type, :phrase_status => phrase_status)).html_safe
   end
 
   def tr8n_style_attribute_tag(attr_name = 'float', default = 'right', lang = Tr8n::Config.current_language)
@@ -169,12 +168,11 @@ module Tr8n::HelperMethods
 
     if linked
       html << link_to(name,
-                      { :controller => "/tr8n/language",
-                        :action => :switch,
+                      language_switch_path(
                         :language_action => :switch_language,
                         :locale => lang.locale,
                         :source_url => opts[:source_url]
-                      }, {
+                      ), {
                         :confirm => trl('Are you sure you want to change your language to {name}', nil, :name => name),
                         :method => :post
                       }

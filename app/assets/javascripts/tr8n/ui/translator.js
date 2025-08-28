@@ -58,7 +58,7 @@ Tr8n.Translator = function(options) {
     if (e.altKey) {
       var key_id = translatable_node.getAttribute('translation_key_id');
       if (key_id) {
-        var url = "/tr8n/admin/translation_key/view?key_id=" + key_id;
+        var url = `${Tr8n.mountPoint}/admin/translation_key/view?key_id=${key_id}`;
         var win=window.open(url, '_blank');
         win.focus();
       }

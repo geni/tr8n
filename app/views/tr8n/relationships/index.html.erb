@@ -56,7 +56,7 @@
               <div style="float:right"><%=image_tag('tr8n/lock.png', :style=>"width:12px", :title => trla("This relationship is locked"))%></div>
             <% end %>
             <div style="font-size:18px;font-family:Arial;" dir="ltr">
-             <%=link_to(rk.label, :controller => '/tr8n/phrases', :action => :view, :translation_key_id => rk.id)%>
+             <%=link_to(rk.label, phrases_view_path(:translation_key_id => rk.id)%>
             </div>
             <% unless rk.default_translation.blank? %>
               <div style="color:grey;font-size:12px;padding-top:3px;font-weight:bold;" dir="ltr"><%=rk.default_translation%></div>
@@ -72,7 +72,7 @@
               <%= tra("There are no translations for this relationship.") %>
               <% if rk.can_be_translated? %>
                 <%= tra("[link: Be the first one to translate it], but only if it does exist in your language.", "",
-                        :link => lambda{|str| link_to(str, :controller => "/tr8n/phrases", :action => :view, :translation_key_id => rk.id)}  ) %>
+                        :link => lambda{|str| link_to(str, phrases_view_path(:translation_key_id => rk.id))} ) %>
               <% end %>
             <% else %>
               <%= render :partial => "/tr8n/common/translation_votes", :locals => {:translation_key => rk, :translations => translations[0..4]} %>

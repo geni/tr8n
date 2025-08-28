@@ -44,7 +44,7 @@
 				<%=tra("When relationship has a single phrase translation, like [bold: 'mother', 'grandfather' or 'brother-in-law'] and the relationship is evaluated towards the viewing user, we will substitute the {rel} token with a translation derived from the following translation key: '[bold: {key}]'. ", "", :rel => "{rel}", :key => "your {rel}")%>
 				<%=tra("For example, if the user is [bold: your mother] and the phrase is '[bold: {example}]', then using the above key we will get: [bold: 'MOM is your mother.'], where MOM is your mom's name.", "", :example => "{user} is {rel}.")%>
 				<br><br>
-        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("rel_second_person").label), :controller => "/tr8n/phrases", :action => :view, :translation_key_id => Tr8n::ConfigurationKey.for_key("rel_second_person")) %>
+        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("rel_second_person").label), phrases_view_path(:translation_key_id => Tr8n::ConfigurationKey.for_key("rel_second_person"))) %>
       </div>
 
       <div style="font-weight:bold;padding-top:10px;border-bottom:1px dotted #ccc;font-size:12px;">
@@ -62,14 +62,14 @@
 				<%=tra("To reduce realtionships in the opposite direction, you can translate the phrase [bold: {key1}] to be: [bold: {key2}] and optionally make the translations be gender dependent on either rel token.", "", :key1 => "your {rel1} {rel2}", :key2 => "{rel2} your {rel1::pos}")%>
 
 				<br><br>
-        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("combined_rel_second_person").label), :controller => "/tr8n/phrases", :action => :view, :translation_key_id => Tr8n::ConfigurationKey.for_key("combined_rel_second_person")) %>
+        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("combined_rel_second_person").label), phrases_view_path(:translation_key_id => Tr8n::ConfigurationKey.for_key("combined_rel_second_person"))) %>
 				<br><br>
 
 				<%=tra("For longer relationship chains, where there are numerous steps/phrases in the path, we need one more special key to be translated into your language: [bold: key].", "", :key => "{rel1:gender} {rel2:gender}")%>
 				<%=tra("This key is very similar to one above, but it does not contain the 'your' word.")%> <%=tra("Ultimately we will use this key to reduce all of the steps in the relationship up until the last step, where we will use the key above.")%>
 
         <br><br>
-        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("combined_rel").label), :controller => "/tr8n/phrases", :action => :view, :translation_key_id => Tr8n::ConfigurationKey.for_key("combined_rel")) %>
+        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("combined_rel").label), phrases_view_path(:translation_key_id => Tr8n::ConfigurationKey.for_key("combined_rel"))) %>
       </div>
 
       <div style="font-weight:bold;padding-top:10px;border-bottom:1px dotted #ccc;font-size:12px;">
@@ -81,7 +81,7 @@
         <%=tra("For example, if the user we are refferring to is a male and relationship is [bold: his mother] and the phrase is '[bold: {example}]', then using the above key we will get: [bold: 'MOM is his mother.'], where MOM is his mom's name.", "", :example => "{actor} is {rel}.")%>
 				<%=tra("This key has an implied user object that you can use to translate the phrase using gender context rules.")%>
         <br><br>
-        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("rel_third_person").label), :controller => "/tr8n/phrases", :action => :view, :translation_key_id => Tr8n::ConfigurationKey.for_key("rel_third_person")) %>
+        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("rel_third_person").label), phrases_view_path(:translation_key_id => Tr8n::ConfigurationKey.for_key("rel_third_person"))) %>
       </div>
 
       <div style="font-weight:bold;padding-top:10px;border-bottom:1px dotted #ccc;font-size:12px;">
@@ -91,11 +91,11 @@
       <div style="padding-top:10px;">
         <%=tra("This is again very similar to the second person relationship translation for chained relationships, but instead of [bold: {key1}] we use [bold: {key2}].", "", :key1 => "your {rel}", :key2 => "{user|his,her} {rel1:gender::pos} {rel2:gender}")%>
         <br><br>
-        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("combined_rel_third_person").label), :controller => "/tr8n/phrases", :action => :view, :translation_key_id => Tr8n::ConfigurationKey.for_key("combined_rel_third_person")) %>
+        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("combined_rel_third_person").label), phrases_view_path(:translation_key_id => Tr8n::ConfigurationKey.for_key("combined_rel_third_person"))) %>
         <br><br>
         <%=tra("Similarly to the previous examples, all relationship in the chain up until the last two steps will be evaluated by the following key: {key}.", "", :key => "{rel1:gender} {rel2:gender}")%>
         <br><br>
-        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("combined_rel").label), :controller => "/tr8n/phrases", :action => :view, :translation_key_id => Tr8n::ConfigurationKey.for_key("combined_rel")) %>
+        <%= link_to(tra("Click here to translate the phrase '[bold: {key}]' into your language.", "", :key => Tr8n::ConfigurationKey.for_key("combined_rel").label), phrases_view_path(:translation_key_id => Tr8n::ConfigurationKey.for_key("combined_rel"))) %>
       </div>
 
       <div style="font-weight:bold;padding-top:10px;border-bottom:1px dotted #ccc;font-size:12px;">

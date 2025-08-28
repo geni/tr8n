@@ -20,10 +20,10 @@
 <% if languages.empty? or sources.empty? %>
   <div style="padding:10px 0px;">
     In order to track translation progress of this component, you must
-    <%= link_to_function("assign at least one language", "tr8nLightbox.show('/tr8n/admin/applications/lb_add_objects_to_component?type=language&comp_id=#{@comp.id}', {'height':350})") %>
+    <%= link_to_function("assign at least one language", "tr8nLightbox.show('#{admin_applications_lb_add_objects_to_component_path(type: 'language', comp_id: @comp.id)}'), {'height':350})") %>
 
     and
-    <%= link_to_function("add at least one source", "tr8nLightbox.show('/tr8n/admin/applications/lb_add_objects_to_component?type=source&comp_id=#{@comp.id}', {'height':350})") %>
+    <%= link_to_function("add at least one source", "tr8nLightbox.show('#{admin_applications_lb_add_objects_to_component_path(type: 'source', comp_id: @comp.id)}'), {'height':350})") %>
 
     to this component.
   </div>
@@ -125,7 +125,7 @@
                 <%= link_to(source.name_and_source, :action => :source, :source_id => source.id) %>
               </td>
               <td>
-                <%= link_to(metrics[index].key_count, "/tr8n/admin/applications/source?mode=translation_keys&source_id=#{source.id}") %>
+                <%= link_to(metrics[index].key_count, admin_applications_source_path(mode: 'translation_keys', source_id: source.id)) %>
               </td>
               <td>
                 <%=metrics[index].translated_key_count %>

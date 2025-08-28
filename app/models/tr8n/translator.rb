@@ -355,7 +355,7 @@ class Tr8n::Translator < ApplicationRecord
   end
 
   def url
-    "/tr8n/translator/index/#{id}"
+    translator_path(:id => id)
   end
 
   def admin?

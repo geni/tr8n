@@ -2,9 +2,9 @@
 
 <div class="section_title">
   <span style="font-size:12px; float:right; padding-top:5px;">
-    <%=link_to("View Translations", {:action => :index})%> 
-    | <%=link_to("View Translation Votes", {:action => :votes})%> 
-  </span> 
+    <%=link_to("View Translations", {:action => :index})%>
+    | <%=link_to("View Translation Votes", {:action => :votes})%>
+  </span>
 	Translation Details
 </div>
 
@@ -14,10 +14,10 @@
             Language
         </th>
         <td>
-            <%=link_to(@translation.language.english_name, "/tr8n/admin/language/view?key_id=#{@translation.language.id}") %>
+            <%=link_to(@translation.language.english_name, admin_language_view_path(key_id: @translation.language.id)) %>
         </td>
     </tr>
- 
+
      <tr>
         <th>
             Translated Label
@@ -25,7 +25,7 @@
         <td>
             <%=@translation.label %>
         </td>
-    </tr>    
+    </tr>
     <tr>
         <th>
             Context
@@ -33,7 +33,7 @@
         <td>
             <%=@translation.context %>
         </td>
-    </tr>   
+    </tr>
 
     <tr>
         <th width="160">
@@ -48,7 +48,7 @@
             Translation Key Label
         </th>
         <td>
-            <%=link_to(@translation.translation_key.label, "/tr8n/admin/translation_key/view?key_id=#{@translation.translation_key.id}") %>
+            <%= link_to(@translation.translation_key.label, admin_translation_key_view_path(key_id: @translation.translation_key.id)) %>
         </td>
     </tr>
     <tr>
@@ -59,7 +59,7 @@
             <%=@translation.translation_key.description %>
         </td>
     </tr>
- 
+
     <tr>
         <th>
             Rank
@@ -74,10 +74,10 @@
         </th>
         <td>
 	        <% if @translation.translator %>
-	          <%=link_to(@translation.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => @translation.translator.id)%>
+	          <%= link_to(@translation.translator.name, admin_translator_view_path(translator_id: @translation.translator.id)) %>
 	        <% else %>
-	          Unknown  
-	        <% end %>  
+	          Unknown
+	        <% end %>
         </td>
     </tr>
     <tr>
@@ -87,7 +87,7 @@
         <td>
             <%=@translation.created_at %>
         </td>
-    </tr>    
+    </tr>
     <tr>
         <th>
             Updated At
@@ -95,19 +95,19 @@
         <td>
             <%=@translation.updated_at %>
         </td>
-    </tr>    
+    </tr>
     <tr>
         <th>
-            
+
         </th>
         <td>
-          <%=link_to("View Translation Key", "/tr8n/admin/translation_key/view?key_id=#{@translation.translation_key.id}") %>
-          |          
-          <%=link_to("View Translation Votes", "/tr8n/admin/translation/votes?wf_c0=translation_id&wf_o0=is&wf_v0_0=#{@translation.id}") %>
-          |          
-          <%=link_to("Delete", {:action => :delete, :translation_id => @translation.id, :source => :translation}, {:confirm => "Are you sure you want to delete this translation?"}) %>
+          <%= link_to("View Translation Key", admin_translation_key_view_path(key_id: @translation.translation_key.id)) %>
+          |
+          <%= link_to("View Translation Votes", admin_translation_votes_path(wf_c0: "translation_id", wf_o0: "is", wf_v0_0: @translation.id)) %>
+          |
+          <%= link_to("Delete", admin_translation_delete_path(translation_id: @translation.id, source: :translation), {confirm: "Are you sure you want to delete this translation?"}) %>
         </td>
-    </tr>    
+    </tr>
 </table>
 
 <%=  tr8n_sections_tag(:modes => [

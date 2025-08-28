@@ -13,7 +13,7 @@
       Created At
     </th>
     <th style="width:50px"> </th>
-  </tr>  
+  </tr>
   <% users.each_with_index do |language_user, index| %>
     <tr>
       <td><%=link_to(language_user.language.english_name, :action => :view, :lang_id => language_user.language.id)%></td>
@@ -32,7 +32,7 @@
       </td>
       <td style="text-align:right">
         <% if language_user.translator? %>
-          <%=link_to("View", "/tr8n/admin/translator/view?translator_id=#{language_user.translator.id}")%>
+          <%=link_to("View", admin_translator_view_path(translator_id: language_user.translator.id))%>
         <% end %>
       </td>
     </tr>

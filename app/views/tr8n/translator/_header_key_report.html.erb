@@ -5,7 +5,7 @@
   <% end %>
 
   <%=trl("Original Phrase:", "Translation section header")%>
-  <%=link_to(@reported_object.key.sanitized_label, :controller => "/tr8n/phrases", :action => :view, :locale => @reported_object.language.locale, :translation_key_id => @reported_object.key.id) %>
+  <%= link_to(@reported_object.key.sanitized_label, phrases_view_path(:locale => @reported_object.language.locale, :translation_key_id => @reported_object.key.id)) %>
   <% unless @reported_object.key.description.blank? %>
     <div style="padding-top:2px;"><%= @reported_object.key.description %></div>
   <% end %>
