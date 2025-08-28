@@ -29,8 +29,10 @@ Tr8n::Engine.routes.draw do
 
     get    '/forum', :to => 'forum#index'
 
-    get    '/glossary',        :to => 'glossary#index'
-    post   '/glossary/update', :to => 'glossary#update'
+    get    '/glossary',           :to => 'glossary#index'
+    delete '/glossary/delete',    :to => 'glossary#delete'
+    get    '/glossary/lb_update', :to => 'glossary#lb_update'
+    post   '/glossary/update',    :to => 'glossary#update'
 
     get    '/language',                         :to => 'language#index'
     get    '/language/lb_add_to_component',     :to => 'language#lb_add_to_component'
