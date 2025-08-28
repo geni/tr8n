@@ -28,8 +28,9 @@ Tr8n::Engine.routes.draw do
     get    '/clientsdk', :to => 'clientsdk#index'
 
     get    '/forum',                :to => 'forum#index'
-    delete '/forum/delete_topic',   :to => 'forum#delete_topic'
     delete '/forum/delete_message', :to => 'forum#delete_message'
+    delete '/forum/delete_report', :to => 'forum#delete_report'
+    delete '/forum/delete_topic',   :to => 'forum#delete_topic'
     get    '/forum/messages',       :to => 'forum#messages'
     get    '/forum/reports',        :to => 'forum#reports'
 

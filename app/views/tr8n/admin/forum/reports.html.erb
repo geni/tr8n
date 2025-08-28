@@ -1,12 +1,12 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@reports) %>
+<%= tr8n_will_filter(@reports.results) %>
 
 <% form_tag("", :id => "reports_form") do %>
   <%= will_filter_table_tag(@reports, :columns => [:created_at,
     [:language_id, lambda{|report|
       if report.language
-        link_to(report.language.english_name, :controller => "/tr8n/admin/language", :action => :view, :lang_id => report.language.id)
+        link_to(report.language.english_name, admin_language_view_path(lang_id: report.language.id))
       else
          "Deleted Language"
       end
@@ -14,7 +14,7 @@
 
     [:translator_id, lambda{|report|
       if report.translator
-        link_to(report.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => report.translator.id)
+        link_to(report.translator.name, admin_translator_view_path(translator_id: report.translator.id))
       else
          "Deleted Translator"
       end
@@ -24,7 +24,7 @@
 
     [:author, lambda{|report|
       if report.message and report.message.translator
-        link_to(report.message.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => report.message.translator.id)
+        link_to(report.message.translator.name, admin_translator_view_path(translator_id: report.message.translator.id))
       else
          "Deleted Message"
       end
@@ -40,8 +40,8 @@
 
     [:actions, lambda{|report|
         actions = []
-        actions << link_to("Delete Message", {:action => :delete_message, :msg_id => report.message.id}, {:method => :post, :confirm => "Are you sure you want to delete this message?"}) if report.message
-        actions << link_to("Delete Report", {:action => :delete_report, :report_id => report.id}, {:method => :post, :confirm => "Are you sure you want to delete this report?"})
+        actions << link_to("Delete Message", admin_forum_delete_message_path(msg_id: report.message.id), {confirm: "Are you sure you want to delete this message?"}) if report.message
+        actions << link_to("Delete Report", admin_forum_delete_report_path(report_id: report.id), {confirm: "Are you sure you want to delete this report?"})
         actions.join(" | ")
     }, 'white-space: nowrap']
   ]) %>
