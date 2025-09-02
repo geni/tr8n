@@ -29,7 +29,6 @@
 
 /* Page Template */
 
-  .page_fixed                 {width:1000px;margin:0 auto;}
   .page_elastic               {width:auto;margin:0;}
   .page_fluid                 {max-width:1100px;min-width:925px;_width:960px;margin:0 auto;padding:0 25px;}
 
