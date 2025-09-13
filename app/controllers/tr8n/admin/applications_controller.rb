@@ -429,11 +429,13 @@ class Tr8n::Admin::ApplicationsController < Tr8n::Admin::BaseController
 
   def update_source
     source = Tr8n::TranslationSource.find_by_id(params[:source][:id]) unless params[:source][:id].blank?
-    
-    if source
-      source.update_attributes(params[:source])
-    else
-      source = Tr8n::TranslationSource.create(params[:source])
+
+    if request.post?
+      if source
+        source.update_attributes(params[:source])
+      else
+        source = Tr8n::TranslationSource.create(params[:source])
+      end
     end
     
     redirect_to_source
