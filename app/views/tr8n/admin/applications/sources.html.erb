@@ -11,7 +11,7 @@
       link_to(source.id, :action => :source, :source_id => source.id)
     }],
     [:source, lambda{|source|
-      link_to(source.source, :action => :source, :source_id => source.id)
+      link_to(h(source.source), :action => :source, :source_id => source.id)
     }],
     :name, :description,
     [:keys, lambda{|source|

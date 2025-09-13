@@ -16,7 +16,7 @@
             Source Key
         </th>
         <td>
-            <%=@source.source %>
+            <%= h(@source.source) %>
         </td>
     </tr>
     <tr>
@@ -24,7 +24,7 @@
             Name
         </th>
         <td>
-            <%=@source.name %>
+            <%= h(@source.name) %>
         </td>
     </tr>
     <tr>
@@ -32,7 +32,7 @@
             Description
         </th>
         <td>
-            <%=@source.description %>
+            <%= h(@source.description) %>
         </td>
     </tr>
     <tr>
@@ -53,7 +53,7 @@
     </tr>
     <tr>
         <th>
-            
+
         </th>
         <td>
         <%
@@ -64,7 +64,7 @@
         %>
         <%= html.join(' | ') %>
         </td>
-    </tr>    
+    </tr>
 </table>
 
 <%=  tr8n_sections_tag(:modes => [
@@ -81,11 +81,11 @@
           if mode.last[:mode] == :metrics
             if params[:charts]
               html << "<span style='font-size:12px;'>"
-              html << link_to("view as table", params.merge(:charts => false)) 
+              html << link_to("view as table", params.merge(:charts => false))
               html << "</span>"
             else
               html << "<span style='font-size:12px;'>"
-              html << link_to("view as charts", params.merge(:charts => true)) 
+              html << link_to("view as charts", params.merge(:charts => true))
               html << "</span>"
             end
           end

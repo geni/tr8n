@@ -3,7 +3,7 @@
         <div style="float:right;">
             <%= tr8n_lb_close_tag %>
         </div>
-        Add Sources To <%=@comp.name%>
+        Add Sources To <%= h(@comp.name) %>
     </div>
     <div class="bd">
         <% form_tag({:action => :add_objects_to_component}, {:id => 'tr8n_form', :method => :post, :class => "tr8n"}) do %>
@@ -13,7 +13,7 @@
         <div style="max-height:340px;overflow:auto;font-size:12px;">
             <% @sources.each do |source| %>
                 <div style="padding:5px; border-bottom:1px dotted #eee">
-                    <%= check_box_tag("ids[]", source.id) %> &nbsp; <%= source.name_and_source %>
+                    <%= check_box_tag("ids[]", source.id) %> &nbsp; <%= h(source.name_and_source) %>
                 </div>
             <% end %>
         </div>
