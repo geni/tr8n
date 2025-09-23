@@ -253,7 +253,7 @@ class Tr8n::Config
 
   def self.load_yml(file_path, for_env = env)
     file = "#{Rails.root}/#{file_path}"
-    file = "#{WillFilter::Engine.root}/#{file_path}" unless File.exist?(file)
+    file = "#{Tr8n::Engine.root}/#{file_path}" unless File.exist?(file)
 
     yml = YAML.load_file(file, :aliases => true)
     yml = yml[for_env] unless for_env.nil?
