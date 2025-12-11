@@ -57,6 +57,8 @@ module Tr8n
     end
 
     def html_safe
+      return dup.html_safe.freeze if frozen?
+
       @html_safe = true
       self
     end

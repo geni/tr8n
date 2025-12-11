@@ -14,6 +14,10 @@ class StringExtensionsTest < Tr8n::TestCase
     string = '<b>foo</b>'
     assert !string.html_safe?
     assert string.html_safe.html_safe?
+
+    string = '<b>foo</b>'.freeze
+    assert !string.html_safe?
+    assert string.html_safe.html_safe?
   end
 
 end # class StringExtensionsTest
