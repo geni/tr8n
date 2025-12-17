@@ -22,7 +22,6 @@
 ****************************************************************************/
 
 Tr8n.Translator = function(options) {
-  var self = this;
   this.options = options;
   this.translation_key_id = null;
   this.suggestion_tokens = null;
@@ -32,45 +31,56 @@ Tr8n.Translator = function(options) {
   this.container.id             = 'tr8n_translator';
   this.container.style.display  = "none";
 
-  document.body.appendChild(this.container);
-
-
-  var event_type = Tr8n.Utils.isOpera() ? 'click' : 'contextmenu';
-
-  Tr8n.Utils.addEvent(document, event_type, function(e) {
-    if (Tr8n.Utils.isOpera() && !e.ctrlKey) return;
-
-    var translatable_node = Tr8n.Utils.findElement(e, ".tr8n_translatable");
-    var link_node = Tr8n.Utils.findElement(e, "a");
-
-    if (translatable_node == null) return;
-
-    if (link_node) {
-      var temp_href = link_node.href;
-      link_node.href='javascript:void(0);';
-      setTimeout(function() {link_node.href = temp_href;}, 500);
-    }
-
-    if (e.stop) e.stop();
-    if (e.preventDefault) e.preventDefault();
-    if (e.stopPropagation) e.stopPropagation();
-
-    if (e.altKey) {
-      var key_id = translatable_node.getAttribute('translation_key_id');
-      if (key_id) {
-        var url = "/tr8n/admin/translation_key/view?key_id=" + key_id;
-        var win=window.open(url, '_blank');
-        win.focus();
-      }
-      return false;
-    }
-
-    self.show(translatable_node);
-    return false;
-  });
+  this.enable();
+  this.bindEvents();
 }
 
 Tr8n.Translator.prototype = {
+  enable: function() {
+    if (document.getElementById(this.container.id)) {
+      return;
+    }
+
+    document.body.appendChild(this.container);
+  },
+
+  bindEvents: function() {
+    var event_type = Tr8n.Utils.isOpera() ? 'click' : 'contextmenu';
+
+    var self = this;
+    Tr8n.Utils.addEvent(document, event_type, function(e) {
+      if (Tr8n.Utils.isOpera() && !e.ctrlKey) return;
+
+      var translatable_node = Tr8n.Utils.findElement(e, ".tr8n_translatable");
+      var link_node = Tr8n.Utils.findElement(e, "a");
+
+      if (translatable_node == null) return;
+
+      if (link_node) {
+        var temp_href = link_node.href;
+        link_node.href='javascript:void(0);';
+        setTimeout(function() {link_node.href = temp_href;}, 500);
+      }
+
+      if (e.stop) e.stop();
+      if (e.preventDefault) e.preventDefault();
+      if (e.stopPropagation) e.stopPropagation();
+
+      if (e.altKey) {
+        var key_id = translatable_node.getAttribute('translation_key_id');
+        if (key_id) {
+          var url = "/tr8n/admin/translation_key/view?key_id=" + key_id;
+          var win=window.open(url, '_blank');
+          win.focus();
+        }
+        return false;
+      }
+
+      self.show(translatable_node);
+      return false;
+    });
+  },
+
   hide: function() {
     this.container.style.display = "none";
     Tr8n.Utils.showFlash();

@@ -13,13 +13,18 @@
   <%=javascript_include_tag( url_with_cache_version("/tr8n/javascripts/tr8n-compiled.js"), :charset => "UTF-8") -%>
 
   <% javascript_tag(nonce: true) do %>
-     initializeTr8n();
-     Tr8n.source = "<%= Tr8n::Config.current_source ? h(Tr8n::Config.current_source.source) : "" -%>";
-     Tr8n.url_cache_version = "<%= Tr8n::Config.url_cache_version -%>";
-     Tr8n.allow_invalid_tokens = "<%= Tr8n::Config.rules_engine['allow_invalid_tokens'] -%>";
-     Tr8n.allow_unused_tokens = "<%=  Tr8n::Config.rules_engine['allow_unused_tokens'] -%>";
-     Tr8n.csrfParam = "<%=  request_forgery_protection_token -%>";
-     Tr8n.csrfToken = "<%=  form_authenticity_token -%>";
+    if (!Tr8n.source) {
+      initializeTr8n();
+      Tr8n.source = "<%= Tr8n::Config.current_source ? h(Tr8n::Config.current_source.source) : "" -%>";
+      Tr8n.url_cache_version = "<%= Tr8n::Config.url_cache_version -%>";
+      Tr8n.allow_invalid_tokens = "<%= Tr8n::Config.rules_engine['allow_invalid_tokens'] -%>";
+      Tr8n.allow_unused_tokens = "<%=  Tr8n::Config.rules_engine['allow_unused_tokens'] -%>";
+      Tr8n.csrfParam = "<%=  request_forgery_protection_token -%>";
+      Tr8n.csrfToken = "<%=  form_authenticity_token -%>";
+    } else {
+      // re-enable the Translation lightbox
+      tr8nTranslator.enable();
+    }
   <% end %>
 
   <% if Tr8n::Config.enable_effects? %>
