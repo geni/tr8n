@@ -60,10 +60,10 @@ class Tr8n::TranslationKeySource < ApplicationRecord
     raise ArgumentError.new("translation_source cannot be nil") if translation_source.nil?
 
     Tr8n::Cache.fetch(cache_key(translation_key.id, translation_source.id)) do
-      tks = find(:first, :conditions => ["translation_key_id = ? and translation_source_id = ?", translation_key.id, translation_source.id])
+      tks = where(translation_key_id: translation_key.id, translation_source_id: translation_source.id).first
       tks ||= begin
         translation_source.touch
-        create(:translation_key => translation_key, :translation_source => translation_source)
+        create!(:translation_key => translation_key, :translation_source => translation_source)
       end
     end
   end
