@@ -211,7 +211,7 @@ class Tr8n::Config
 
     default_language_cases.each do |locale, cases|
       language = Tr8n::Language.for(locale)
-      puts ">> Initializing language cases for #{language.english_name}..."
+      puts ">> Initializing language cases for #{language.english_name}..." unless env.test?
 
       next unless language
       cases.keys.sort.each do |lkey|
