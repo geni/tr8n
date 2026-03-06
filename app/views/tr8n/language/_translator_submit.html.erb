@@ -27,9 +27,9 @@
                   <span dir="ltr">
                   <% @translation_key.translation_tokens.each do |token| %>
                     <% if token.decoration? %>
-                      <%= link_to_function(token.sanitized_name, "tr8nTranslator.insertDecorationToken('#{token.name}');", :title => trla("Click to insert this token above") ) %>
+                      <%= link_to_function(token.sanitized_name, "tr8nTranslator.insertDecorationToken('#{token.name}');", :class => 'js-tr8n_token', :title => trla("Click to insert this token above") ) %>
                     <% else %>
-                      <%= link_to_function(token.sanitized_name, "tr8nTranslator.insertToken('#{token.name}');", :title => trla("Click to insert this token above") ) %>
+                      <%= link_to_function(token.sanitized_name, "tr8nTranslator.insertToken('#{token.name}');", :class => 'js-tr8n_token', :title => trla("Click to insert this token above") ) %>
                     <% end %>
                   <% end %>
                   </span>

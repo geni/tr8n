@@ -198,10 +198,14 @@ Tr8n.Translator.prototype = {
   },
 
   validateTranslationTokens: function() {
-    var tokenLinks = document.querySelectorAll('#tr8n_translator_tokens_simple_view a');
+    var errorDiv = document.getElementById('tr8n_token_errors');
+    var parentDiv = errorDiv.parentNode;
+    var tokenLinks = parentDiv.querySelectorAll('a.js-tr8n_token');
+    var translationLabel = parentDiv.querySelector('#tr8n_translator_translation_label').value;
+    var submitBtn = document.querySelector('#tr8n_translator_buttons_container').querySelector('.translator_submit_btn');
+
     var unusedTokens = [];
     var invalidTokens = [];
-    var translationLabel = document.getElementById('tr8n_translator_translation_label').value;
 
     // check which tokens have been used
     tokenLinks.forEach(function(tokenLink, idx) {
@@ -262,10 +266,8 @@ Tr8n.Translator.prototype = {
       if (Tr8n.allow_unused_tokens == 'error') disableSubmit = true;
     }
 
-    var errorDiv = document.getElementById('tr8n_token_errors');
     if (errorDiv) errorDiv.innerHTML = errors;
 
-    var submitBtn = document.getElementById('tr8n_translator_buttons_container').querySelector('button[type="submit"]');
     if (submitBtn) {
       if (disableSubmit)
         submitBtn.setAttribute('disabled','');
@@ -346,10 +348,6 @@ Tr8n.Translator.prototype = {
 
     if (Tr8n.element("tr8n_translator_translation_label")) {
       Tr8n.element("tr8n_translator_translation_label").value = suggestion;
-    }
-
-    if (Tr8n.element("tr8n_translation_label_" + this.translation_key_id)) {
-      Tr8n.element("tr8n_translation_label_" + this.translation_key_id).value = suggestion;
     }
 
     Tr8n.element("tr8n_translation_suggestion_" + this.translation_key_id).innerHTML = suggestion;

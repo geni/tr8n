@@ -1,4 +1,5 @@
 <div id="translation_module" class="section_box colored" style="display:none">
+  <div id="tr8n_token_errors"></div>
   <div style="font-size:17px;padding-bottom:3px;font-weight:bold;">
     <%=tra("Translation for {language} Language", "", :language => tr8n_current_language.native_name)%>
   </div>
@@ -11,7 +12,7 @@
       <%= hidden_field_tag(:section_key, @section_key) %>
 
       <div style="padding-bottom:10px;">
-        <%= f.text_area(:label, :id => "tr8n_translation_label_#{@translation_key.id}", :style=>"width:99%;height:60px;border:1px solid #ccc;background-color:white;padding:3px;", :class => "keyboardInput" ) %>
+        <%= f.text_area(:label, :id => "tr8n_translator_translation_label", :style=>"width:99%;height:60px;border:1px solid #ccc;background-color:white;padding:3px;", :class => "keyboardInput" ) %>
       </div>
 
       <% if @translation_key.rules? %>
@@ -92,7 +93,7 @@
         </div>
       <% end %>
 
-      <div id="buttons_container" style="padding-top:5px;padding-bottom:5px;text-align:center">
+      <div id="tr8n_translator_buttons_container" style="padding-top:5px;padding-bottom:5px;text-align:center">
           <%= link_to_function("<span>#{tra('Translate')}</span>", "submitTranslation()", :class => "button translator_btn translator_submit_btn") %>
           <%=tra("or")%> <%= link_to_function(tra("Cancel"), "viewTranslations()") %>
       </div>
@@ -102,12 +103,12 @@
 
 <% javascript_tag(nonce: true) do %>
   function acceptSuggestion(translation_key_id) {
-    Tr8n.element("tr8n_translation_label_" + translation_key_id).value = Tr8n.element("tr8n_translation_suggestion_link_" + translation_key_id).innerHTML;
+    Tr8n.element("tr8n_translator_translation_label").value = Tr8n.element("tr8n_translation_suggestion_link_" + translation_key_id).innerHTML;
     return false;
   }
 
   function submitTranslation() {
-    if (Tr8n.value("tr8n_translation_label_<%= @translation_key.id -%>") == "") {
+    if (Tr8n.value("tr8n_translator_translation_label") == "") {
       alert("<%= trla('Translation must be provided.') -%>");
       return;
     }
@@ -128,4 +129,11 @@
       }
     });
   }
+
+  window.setTimeout(function() {
+    Tr8n.Utils.addEvent(document.getElementById("tr8n_translator_translation_label"), "keyup", tr8nTranslator.validateTranslationTokens);
+    Tr8n.Utils.addEvent(document.getElementById("tr8n_translator_translation_label"), "blur", tr8nTranslator.validateTranslationTokens);
+    tr8nTranslator.validateTranslationTokens();
+  }, 1000);
+
 <% end %>
