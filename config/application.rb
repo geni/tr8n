@@ -19,7 +19,17 @@ if defined?(Rails)
 
         # Disable some Rails 3.0 features not needed for gem testing
         config.active_support.deprecation = :log
+
+        # Database configuration for testing
+        config.paths['config/database'] = 'config/database.yml'
       end
     end
+  end
+
+  # Establish database connection for testing if config exists
+  if File.exist?(File.expand_path('../database.yml', __FILE__))
+    require 'yaml'
+    db_config = YAML.load_file(File.expand_path('../database.yml', __FILE__))
+    ActiveRecord::Base.establish_connection(db_config[ENV['RAILS_ENV'] || 'test'])
   end
 end

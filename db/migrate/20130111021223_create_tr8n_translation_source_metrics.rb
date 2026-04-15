@@ -9,7 +9,8 @@ class CreateTr8nTranslationSourceMetrics < ActiveRecord::Migration
       t.integer :translated_key_count,  :default => 0
       t.timestamps
     end
-    add_index :tr8n_translation_source_metrics, [:translation_source_id, :language_id]
+    add_index :tr8n_translation_source_metrics, [:translation_source_id, :language_id], :name => 'tr8n_tsm_trans_source_and_lang'
+
   end
 
   def self.down

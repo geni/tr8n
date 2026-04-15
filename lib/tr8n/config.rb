@@ -227,11 +227,23 @@ class Tr8n::Config
   end
 
   def self.root
-    Rails.root
+    if defined?(Rails) && Rails.respond_to?(:root)
+      Rails.root.to_s
+    elsif defined?(RAILS_ROOT)
+      RAILS_ROOT
+    else
+      '.'
+    end
   end
 
   def self.env
-    Rails.env
+    if defined?(Rails) && Rails.respond_to?(:env)
+      Rails.env
+    elsif defined?(RAILS_ENV)
+      RAILS_ENV
+    else
+      'development'
+    end
   end
 
   def self.tr8n_root

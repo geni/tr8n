@@ -32,9 +32,19 @@ end
 
 require_relative '../config/environment'
 
+# Set up database connection for Rails 3.0+
+if defined?(Rails::VERSION) && Rails::VERSION::MAJOR >= 3
+  # Rails 3.0 requires explicit database connection setup
+  db_config = YAML.load_file(File.expand_path('../../config/database.yml', __FILE__))
+  ActiveRecord::Base.establish_connection(db_config['test'])
+
+  # Load mocha after Rails is loaded (for Rails 3.0 + mocha 0.11.4 compatibility)
+  require 'mocha'
+end
+
 class Tr8n::TestCase < ActiveRecord::TestCase
 
-  def setup
+  def setup(*args)
     @current_user = Tr8n::Translator.create!(:id => 1, :user_id => 1, :name => 'Mike', :gender => 'male')
     @english      = Tr8n::Language.for('en-US')
     @russian      = Tr8n::Language.for('ru')

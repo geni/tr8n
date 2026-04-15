@@ -29,3 +29,27 @@ if [ -f "$BIGDECIMAL_FILE" ]; then
     echo "BigDecimal patch applied successfully"
   fi
 fi
+
+# Patch 3: Fix Arel 2.0.10 SQLite Integer visitor for Rails 3.0
+AREL_VISITOR_FILE="vendor/bundle/ruby/2.7.0/gems/arel-2.0.10/lib/arel/visitors/to_sql.rb"
+if [ -f "$AREL_VISITOR_FILE" ]; then
+  if grep -q "visit_Integer" "$AREL_VISITOR_FILE"; then
+    echo "Arel visitor already patched for Integer support"
+  else
+    echo "Patching Arel visitor for Integer/Fixnum support..."
+    # Add visit_Integer and visit_Fixnum methods to ToSql visitor
+    cat >> "$AREL_VISITOR_FILE" << 'EOFARELPATCH'
+
+    # Patch for Ruby 2.7+ where Fixnum is unified with Integer
+    def visit_Integer o
+      o.to_s
+    end
+
+    # Preserve Fixnum support for older Ruby versions
+    def visit_Fixnum o
+      o.to_s
+    end
+EOFARELPATCH
+    echo "Arel visitor patch applied successfully"
+  fi
+fi

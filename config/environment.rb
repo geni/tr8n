@@ -18,6 +18,13 @@ if rails_3?
   if defined?(Tr8nTest::Application)
     Tr8nTest::Application.initialize!
   end
+
+  # Establish database connection for Rails 3.0
+  if File.exist?(File.expand_path('../database.yml', __FILE__))
+    require 'yaml'
+    db_config = YAML.load_file(File.expand_path('../database.yml', __FILE__))
+    ActiveRecord::Base.establish_connection(db_config[ENV['RAILS_ENV'] || 'test'])
+  end
 else
   # Rails 2.3 initialization
   Rails::Initializer.run do |config|
