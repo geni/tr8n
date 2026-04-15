@@ -11,7 +11,14 @@ Gem::Specification.new do |gem|
   gem.homepage      = 'https://github.com/berk/tr8n'
   gem.license       = 'MIT'
 
-  gem.add_dependency 'rails', '~> 2.3.0'
+  # Support both Rails 2.3 and 3.0 for dual-boot compatibility
+  # Use individual components to avoid bundler version conflicts
+  rails_version = ENV['BUNDLE_GEMFILE'] =~ /\.next/ ? '~> 3.0.0' : '~> 2.3.0'
+
+  gem.add_dependency 'activesupport', rails_version
+  gem.add_dependency 'activerecord', rails_version
+  gem.add_dependency 'actionpack', rails_version
+  gem.add_dependency 'actionmailer', rails_version
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
