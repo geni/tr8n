@@ -32,6 +32,8 @@ do
   # Reinstall gems before each test run to ensure correct versions
   if [ "$bx" = "next" ]; then
     next bundle install
+    # Patch Rails 3.0 for Ruby 2.7 compatibility after install
+    ./script/patch_rails_3_for_ruby_27.sh
   else
     bundle install
   fi
