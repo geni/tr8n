@@ -39,18 +39,21 @@ class Tr8n::RelationshipKey < Tr8n::TranslationKey
     end
   end
 
-  def after_save
-    Tr8n::Cache.delete("relationship_key_#{key}")
-  end
-
-  def after_destroy
-    Tr8n::Cache.delete("relationship_key_#{key}")
-  end
+  after_save :delete_cache
+  after_destroy :delete_cache
 
   # must be overloaded
-  def gender 
+  def gender
     'unknown'
   end
+
+private
+
+  def delete_cache
+    Tr8n::Cache.delete("relationship_key_#{key}")
+  end
+
+public
 
   def self.with_valid_translations_for_locale(locale = Tr8n::Config.current_language.locale)
     lang = Tr8n::Language.for(locale)

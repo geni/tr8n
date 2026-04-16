@@ -18,7 +18,7 @@ end
 group :development, :test do
   gem 'fssm', '~> 0.2.10'
   gem 'method_source'
-  gem 'mocha', '0.11.4', :require => false
+  gem 'mocha', '0.11.4'
   gem 'rake'
   gem 'simplecov',       :require => false
   gem 'sqlite3', '1.6.9'

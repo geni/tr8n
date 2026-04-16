@@ -29,12 +29,14 @@ class Tr8n::ComponentTranslator < ActiveRecord::Base
   belongs_to :language, :class_name => 'Tr8n::Language'
 
   def self.find_or_create(component, translator)
-    cs = find(:first, :conditions => ["component_id = ? and translator_id = ?", component.id, translator.id]) 
+    cs = find(:first, :conditions => ["component_id = ? and translator_id = ?", component.id, translator.id])
     cs || create(:component => component, :translator => translator)
   end
 
-  def after_create
-    Tr8n::Notification.distribute(self)    
+  after_create :distribute_notification
+
+  def distribute_notification
+    Tr8n::Notification.distribute(self)
   end
 
 end

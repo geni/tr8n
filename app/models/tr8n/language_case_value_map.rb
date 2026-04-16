@@ -88,14 +88,15 @@ class Tr8n::LanguageCaseValueMap < ActiveRecord::Base
     # new_translator.reported_language_case_values!(self)
 
     update_attributes(:reported => true)
-    self.translator.update_attributes(:reported => true) 
+    self.translator.update_attributes(:reported => true)
   end
 
-  def after_save
-    Tr8n::Cache.delete("language_case_value_map_#{language.id}_#{keyword}")
-  end
+  after_save :delete_cache
+  after_destroy :delete_cache
 
-  def after_destroy
+private
+
+  def delete_cache
     Tr8n::Cache.delete("language_case_value_map_#{language.id}_#{keyword}")
   end
 

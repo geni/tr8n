@@ -55,14 +55,18 @@ class Tr8n::TotalLanguageMetric < Tr8n::LanguageMetric
   ###############################################################
   ## Offline Tasks
   ###############################################################
-  def after_create
-    Tr8n::OfflineTask.schedule(self.class.name, :update_metrics_offline, {
-                               :language_metric_id => self.id
-    })
-  end
+  after_create :schedule_metrics_update
 
   def self.update_metrics_offline(opts)
     Tr8n::LanguageMetric.find_by_id(opts[:language_metric_id]).update_metrics!
+  end
+
+private
+
+  def schedule_metrics_update
+    Tr8n::OfflineTask.schedule(self.class.name, :update_metrics_offline, {
+                               :language_metric_id => self.id
+    })
   end
 
 end

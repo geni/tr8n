@@ -98,14 +98,18 @@ class Tr8n::TranslationSourceMetric < ActiveRecord::Base
   ###############################################################
   ## Offline Tasks
   ###############################################################
-  def after_create
-    Tr8n::OfflineTask.schedule(self.class.name, :update_metrics_offline, {
-                               :translation_source_metric_id => self.id
-    })
-  end
+  after_create :schedule_metrics_update
 
   def self.update_metrics_offline(opts)
     Tr8n::TranslationSourceMetric.find_by_id(opts[:translation_source_metric_id]).update_metrics!
+  end
+
+private
+
+  def schedule_metrics_update
+    Tr8n::OfflineTask.schedule(self.class.name, :update_metrics_offline, {
+                               :translation_source_metric_id => self.id
+    })
   end
 
 end

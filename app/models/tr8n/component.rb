@@ -83,11 +83,10 @@ class Tr8n::Component < ActiveRecord::Base
     "#{name} (#{key})"
   end
 
-  def after_destroy
-    Tr8n::Cache.delete(cache_key)
-  end
-  
-  def after_save
+  after_destroy :delete_cache
+  after_save :delete_cache
+
+  def delete_cache
     Tr8n::Cache.delete(cache_key)
   end
 

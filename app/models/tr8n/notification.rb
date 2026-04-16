@@ -56,7 +56,7 @@ class Tr8n::Notification < ActiveRecord::Base
     self.class.key(object)
   end
 
-  def valid?
+  def valid?(*args)
     return false unless object
     true
   end

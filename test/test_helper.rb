@@ -37,12 +37,16 @@ if defined?(Rails::VERSION) && Rails::VERSION::MAJOR >= 3
   # Rails 3.0 requires explicit database connection setup
   db_config = YAML.load_file(File.expand_path('../../config/database.yml', __FILE__))
   ActiveRecord::Base.establish_connection(db_config['test'])
-
-  # Load mocha after Rails is loaded (for Rails 3.0 + mocha 0.11.4 compatibility)
-  require 'mocha'
 end
 
 class Tr8n::TestCase < ActiveRecord::TestCase
+  # Enable transactional tests - rollback after each test
+  # Rails 3.0 uses use_transactional_fixtures, Rails 2.3 uses use_transactional_tests
+  if respond_to?(:use_transactional_fixtures=)
+    self.use_transactional_fixtures = true
+  elsif respond_to?(:use_transactional_tests=)
+    self.use_transactional_tests = true
+  end
 
   def setup(*args)
     @current_user = Tr8n::Translator.create!(:id => 1, :user_id => 1, :name => 'Mike', :gender => 'male')
@@ -56,6 +60,11 @@ class Tr8n::TestCase < ActiveRecord::TestCase
 
 end
 
+# Load mocha for Rails 3.0+ (mocha 1.x requires explicit test framework integration)
+if defined?(Rails::VERSION) && Rails::VERSION::MAJOR >= 3
+  require 'mocha/test_unit'
+end
+
 # create database tables
 Dir[File.expand_path(File.dirname(__FILE__) + '/../db/migrate/*.rb')].each do |file|
   require file
@@ -64,6 +73,6 @@ end
 ActiveRecord::Migration.verbose = true
 ActiveRecord::Migrator.migrate("db/migrate/")
 
-Tr8n::Config.init_language('en-US', )
+Tr8n::Config.init_language('en-US')
 Tr8n::Config.init_language('ru')
 Tr8n::Config.init_language('es')

@@ -210,24 +210,24 @@ class Tr8n::Translation < ActiveRecord::Base
     destroy
   end
 
+  after_create :clear_cache_and_notify
+  after_save :clear_cache
+  after_destroy :clear_cache
+
   def clear_cache
     Tr8n::Cache.delete("translations_#{language.locale}_#{translation_key.key}") if language and translation_key
     language.translations_changed! if language
     translation_key.translations_changed!(language) if translation_key
   end
 
-  def after_create
+private
+
+  def clear_cache_and_notify
     clear_cache # geni/geni#2583
     Tr8n::Notification.distribute(self)
   end
 
-  def after_save
-    clear_cache
-  end
-
-  def after_destroy
-    clear_cache
-  end
+public
 
   ###############################################################
   ## Synchronization Methods

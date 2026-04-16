@@ -576,19 +576,13 @@ class Tr8n::TranslationKey < ActiveRecord::Base
   end
 
   # FIXME: make sure this does not create deadlocks
+  after_save :touch_sources
+  after_destroy :clear_cache
+
   def touch_sources
     sources.each do |source|
       source.touch
     end
-  end
-
-  def after_save
-    # Tr8n::Cache.delete(cache_key)
-    touch_sources
-  end
-
-  def after_destroy
-    # Tr8n::Cache.delete(cache_key)
   end
 
   def add_translation(label, rules = nil, lang = Tr8n::Config.current_language, translator = Tr8n::Config.current_translator)
@@ -599,6 +593,14 @@ class Tr8n::TranslationKey < ActiveRecord::Base
     translation.vote!(translator, 1)
     translation
   end
+
+private
+
+  def clear_cache
+    # Tr8n::Cache.delete(cache_key)
+  end
+
+public
 
   ###############################################################
   ## Offline Tasks

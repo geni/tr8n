@@ -42,17 +42,18 @@ class Tr8n::TranslationDomain < ActiveRecord::Base
 
   def self.find_or_create(url = nil)
     domain_name = URI.parse(url || 'localhost').host || 'localhost'
-    Tr8n::Cache.fetch(cache_key(domain_name)) do 
+    Tr8n::Cache.fetch(cache_key(domain_name)) do
       find_by_name(domain_name) || create(:name => domain_name)
-    end  
+    end
   end
-  
-  def after_save
+
+  after_save :delete_cache
+  after_destroy :delete_cache
+
+private
+
+  def delete_cache
     Tr8n::Cache.delete(cache_key)
   end
 
-  def after_destroy
-    Tr8n::Cache.delete(cache_key)
-  end
-  
 end

@@ -104,17 +104,20 @@ class Tr8n::LanguageRule < ActiveRecord::Base
   
   def destroy_with_log!(new_translator)
     new_translator.deleted_language_rule!(self)
-    
+
     destroy
   end
 
-  def after_save
+  after_save :delete_cache
+  after_destroy :delete_cache
+
+private
+
+  def delete_cache
     Tr8n::Cache.delete("language_rule_#{id}")
   end
 
-  def after_destroy
-    Tr8n::Cache.delete("language_rule_#{id}")
-  end
+public
 
   ###############################################################
   ## Synchronization Methods

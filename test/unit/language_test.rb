@@ -66,14 +66,21 @@ class Tr8n::LanguageTest < Tr8n::TestCase
     hello_world.add_translation('Hola Mundo', nil, @spanish)
     assert_equal "Hola Mundo", @spanish.translate("Hello World")
 
-    spanish_translation = hello_world.translations.filter{|t| t.language_id == @spanish.id}.first
+    # Reload associations to get fresh data
+    hello_world.reload
+    spanish_translation = hello_world.translations.detect{|t| t.language_id == @spanish.id}
     spanish_translator  = spanish_translation.translator
 
     # let's down vote so that it has 0 votes
     spanish_translation.vote!(@user, -1)
 
     # should now be considered not successfully translated
+    spanish_translation.reload
     assert_equal 0, spanish_translation.rank
+
+    # Clear cache to ensure we get fresh translation
+    Tr8n::Cache.delete("translation_key_#{hello_world.id}_#{@spanish.locale}") rescue nil
+
     assert_equal false, @spanish.translate("Hello World").tr8n_translation_successful?
 
 

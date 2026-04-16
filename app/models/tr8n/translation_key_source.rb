@@ -53,9 +53,7 @@ class Tr8n::TranslationKeySource < ActiveRecord::Base
     end
   end
 
-  def after_destroy
-    Tr8n::Cache.delete(cache_key)
-  end
+  after_destroy :delete_cache
 
   def update_details!(options)
     return unless options[:caller_key]
@@ -65,6 +63,12 @@ class Tr8n::TranslationKeySource < ActiveRecord::Base
 
     details[options[:caller_key]] = options[:caller]
     save
+  end
+
+private
+
+  def delete_cache
+    Tr8n::Cache.delete(cache_key)
   end
 
 end

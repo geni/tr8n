@@ -35,11 +35,16 @@ class Tr8n::TranslationKeyComment < ActiveRecord::Base
     message.gsub("\n", "<br>")
   end
 
-  def after_create
-    Tr8n::Notification.distribute(self)    
-  end
-  
+  after_create :distribute_notification
+
   def can_be_deleted_by?(deleter)
     translator == deleter
   end
+
+private
+
+  def distribute_notification
+    Tr8n::Notification.distribute(self)
+  end
+
 end

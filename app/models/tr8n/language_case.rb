@@ -142,12 +142,12 @@ class Tr8n::LanguageCase < ActiveRecord::Base
     [["every word", "words"], ["entire phrase", "phrase"]]
   end
 
-  def after_save
-    Tr8n::Cache.delete("language_case_#{id}")
-    Tr8n::Cache.delete("language_case_rules_#{id}")
-  end
+  after_save :delete_cache
+  after_destroy :delete_cache
 
-  def after_destroy
+private
+
+  def delete_cache
     Tr8n::Cache.delete("language_case_#{id}")
     Tr8n::Cache.delete("language_case_rules_#{id}")
   end

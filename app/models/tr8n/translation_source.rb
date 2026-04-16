@@ -79,13 +79,8 @@ class Tr8n::TranslationSource < ActiveRecord::Base
     })
   end
 
-  def after_destroy
-    Tr8n::Cache.delete(cache_key)
-  end
-
-  def after_save
-    Tr8n::Cache.delete(cache_key)
-  end
+  after_destroy :delete_cache
+  after_save :delete_cache
 
   def total_metric(language = Tr8n::Config.current_language)
     Tr8n::TranslationSourceMetric.find_or_create(self, language)
@@ -110,6 +105,12 @@ class Tr8n::TranslationSource < ActiveRecord::Base
       return false unless comp.translator_authorized?(translator)
     end
     true
+  end
+
+private
+
+  def delete_cache
+    Tr8n::Cache.delete(cache_key)
   end
 
 end

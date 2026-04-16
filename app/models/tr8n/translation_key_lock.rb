@@ -52,8 +52,13 @@ class Tr8n::TranslationKeyLock < ActiveRecord::Base
     translator.unlocked_translation_key!(translation_key, language)
     key.update_metrics!(language)
   end
-  
-  def after_save
+
+  after_save :delete_cache
+
+private
+
+  def delete_cache
     Tr8n::Cache.delete("translation_key_lock_#{language.locale}_#{translation_key.key}")
   end
+
 end

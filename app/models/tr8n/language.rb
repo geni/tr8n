@@ -295,17 +295,18 @@ class Tr8n::Language < ActiveRecord::Base
     # TODO: handle change event
   end
 
-  def after_save
+  after_save :delete_cache
+  after_destroy :delete_cache
+
+private
+
+  def delete_cache
     Tr8n::Cache.delete("language_#{locale}")
     Tr8n::Cache.delete("featured_languages")
     Tr8n::Cache.delete("enabled_languages")
   end
 
-  def after_destroy
-    Tr8n::Cache.delete("language_#{locale}")
-    Tr8n::Cache.delete("featured_languages")
-    Tr8n::Cache.delete("enabled_languages")
-  end
+public
 
   def recently_added_forum_messages
     @recently_added_forum_messages ||= Tr8n::LanguageForumMessage.find(:all, :conditions => ["language_id = ?", self.id], :order => "created_at desc", :limit => 5)

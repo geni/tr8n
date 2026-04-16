@@ -43,8 +43,8 @@ class Tr8n::TranslationKeyTest < Tr8n::TestCase
   end
 
   test "gender based translations in English" do
-    @user.stubs(:name).returns("Mike")
-    @user.stubs(:gender).returns("male")
+    # @user already has name set to "Mike" in setup, just need to set gender
+    @user.update_attributes(:gender => "male")
 
     key = Tr8n::TranslationKey.find_or_create("Dear {user}")
     assert_equal ["{user}"], key.tokens.collect{|t| t.sanitized_name}
@@ -68,12 +68,10 @@ class Tr8n::TranslationKeyTest < Tr8n::TestCase
     assert_equal ["Tr8n::Tokens::DataToken", "Tr8n::Tokens::TransformToken"], key.tokens.collect{|t| t.class.name}
     assert_equal "Mike updated his profile", key.translate(@default_language, :user => @user)
 
-    @user.stubs(:name).returns("Tina")
-    @user.stubs(:gender).returns("female")
+    @user.update_attributes(:name => "Tina", :gender => "female")
     assert_equal "Tina updated her profile", key.translate(@default_language, :user => @user)
 
-    @user.stubs(:name).returns("Alex")
-    @user.stubs(:gender).returns("unknown")
+    @user.update_attributes(:name => "Alex", :gender => "unknown")
     assert_equal "Alex updated his/her profile", key.translate(@default_language, :user => @user)
 
     key = Tr8n::TranslationKey.find_or_create("{user} updated {user | his, her, his-her} profile")
@@ -100,8 +98,9 @@ class Tr8n::TranslationKeyTest < Tr8n::TestCase
     assert_equal ["Tr8n::Tokens::DataToken", "Tr8n::Tokens::HiddenToken"], key.tokens.collect{|t| t.class.name}
     assert_equal "5 messages", key.translate(@default_language, :count => 5, :_messages => "message".pluralize_for(5))
 
-    @user.stubs(:name).returns("Alex")
-    @user.stubs(:age).returns(5)
+    @user.update_attributes(:name => "Alex")
+    # Define age method on this instance (since Translator doesn't have age attribute)
+    def @user.age; 5; end
     key = Tr8n::TranslationKey.find_or_create("{user} is now {years} {_years} old")
     assert_equal ["{user}", "{years}", "{_years}"], key.tokens.collect{|t| t.sanitized_name}
     assert_equal ["Tr8n::Tokens::DataToken", "Tr8n::Tokens::DataToken", "Tr8n::Tokens::HiddenToken"], key.tokens.collect{|t| t.class.name}
@@ -156,7 +155,7 @@ class Tr8n::TranslationKeyTest < Tr8n::TestCase
 
   test "nested tokens" do
     # see config/tr8n/tokens/decorations.yml
-    @user.stubs(:name).returns("Michael")
+    @user.update_attributes(:name => "Michael")
 
     key = Tr8n::TranslationKey.find_or_create("Hello [b: {user.name}]")
     assert_equal ["{user.name}", "[b: {user.name}]"], key.tokens.collect{|t| t.full_name}
@@ -210,7 +209,8 @@ class Tr8n::TranslationKeyTest < Tr8n::TestCase
   end
 
   test "object translations" do
-    @user.stubs(:first_name => 'Mike')
+    # Define first_name method on this instance (since Translator doesn't have first_name attribute)
+    def @user.first_name; 'Mike'; end
     key = Tr8n::TranslationKey.find_or_create("Hello {user.first_name}")
     assert key.add_translation("Привет {user.first_name}")
 

@@ -35,11 +35,10 @@ class Tr8n::ConfigurationKey < Tr8n::TranslationKey
     end
   end
 
-  def after_save
-    Tr8n::Cache.delete("configuration_key_#{key}")
-  end
+  after_save :delete_cache
+  after_destroy :delete_cache
 
-  def after_destroy
+  def delete_cache
     Tr8n::Cache.delete("configuration_key_#{key}")
   end
 
