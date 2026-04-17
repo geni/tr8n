@@ -12,6 +12,9 @@ if rails_3?
   # Rails 3.0 boot process
   # Load individual Rails components (since we're not using the rails meta-gem)
 
+  # Patch Rails 3.0 for Ruby 2.7 compatibility after install
+  `#{RAILS_ROOT}/script/patch_rails_3_for_ruby_27.sh`
+
   # Monkey patch for Rails 3.0 + Ruby 2.7+ compatibility
   # Must happen BEFORE requiring active_support
   if RUBY_VERSION >= '2.7'
