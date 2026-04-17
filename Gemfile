@@ -2,18 +2,8 @@ source 'http://www.rubygems.org'
 
 gemspec
 
-gem 'will_filter', :git => 'https://github.com/geni/will_filter.git', :ref => 'rails-2.3.x'
-
-# Rails LTS sources for free Community plan
-git 'https://github.com/makandra/rails.git', :branch => '2-3-lts' do
-  gem 'rails', '~>2.3.18'
-#  gem 'actionmailer',     :require => false
-  gem 'actionpack',       :require => false
-  gem 'activerecord',     :require => false
-#  gem 'activeresource',   :require => false
-  gem 'activesupport',    :require => false
-  gem 'railties',         :require => false
-end
+# Use Rails 3.0 compatible branch of will_filter
+gem 'will_filter', :git => 'https://github.com/geni/will_filter.git', :ref => '6111ede'
 
 group :development, :test do
   gem 'fssm', '~> 0.2.10'

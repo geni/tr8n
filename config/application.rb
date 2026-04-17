@@ -3,33 +3,29 @@
 
 require File.expand_path('../boot', __FILE__)
 
-# For a gem, we don't need a full Rails::Application
-# Just configure Rails directly
-if defined?(Rails)
-  # Configure Rails for testing
-  if defined?(Rails.application) && Rails.application.nil?
-    # Create a minimal application for testing
-    module Tr8nTest
-      class Application < Rails::Application
-        config.encoding = "utf-8"
-        config.time_zone = 'UTC'
-        config.filter_parameters += [:password]
-        config.session_store :cookie_store, :key => '_tr8n_session'
-        config.secret_token = '09ae61ae208e3df7066ff7d514533fcd'
+# For a gem, we don't need a full Rails::Application for testing
+# Just establish database connection directly
 
-        # Disable some Rails 3.0 features not needed for gem testing
-        config.active_support.deprecation = :log
+# Establish database connection for testing if config exists
+if File.exist?(File.expand_path('../database.yml', __FILE__))
+  # Pre-require sqlite3 to avoid version constraint issues with Rails 3.1
+  # Rails 3.1 expects sqlite3 ~> 1.3.4 but we're using 1.6.9
+  require 'sqlite3'
 
-        # Database configuration for testing
-        config.paths['config/database'] = 'config/database.yml'
+  # Monkey-patch Kernel#gem to bypass sqlite3 version check for Rails 3.1
+  # This allows us to use sqlite3 1.6.9 with Rails 3.1 which expects 1.3.4
+  if defined?(ActiveSupport::VERSION) && ActiveSupport::VERSION::STRING =~ /^3\.1/
+    original_gem = Kernel.method(:gem)
+    Kernel.define_method(:gem) do |name, *requirements|
+      if name == 'sqlite3'
+        # Skip the version check for sqlite3
+        return
       end
+      original_gem.call(name, *requirements)
     end
   end
 
-  # Establish database connection for testing if config exists
-  if File.exist?(File.expand_path('../database.yml', __FILE__))
-    require 'yaml'
-    db_config = YAML.load_file(File.expand_path('../database.yml', __FILE__))
-    ActiveRecord::Base.establish_connection(db_config[ENV['RAILS_ENV'] || 'test'])
-  end
+  require 'yaml'
+  db_config = YAML.load_file(File.expand_path('../database.yml', __FILE__))
+  ActiveRecord::Base.establish_connection(db_config[ENV['RAILS_ENV'] || 'test'])
 end

@@ -2,8 +2,8 @@ source 'http://www.rubygems.org'
 
 gemspec
 
-# Use Rails 3.0 compatible branch of will_filter
-gem 'will_filter', :git => 'https://github.com/geni/will_filter.git', :ref => '6111ede'
+# Use Rails 3.1 compatible branch of will_filter
+gem 'will_filter', :git => 'https://github.com/geni/will_filter.git', :branch => 'rails-3.1.x'
 
 group :development, :test do
   gem 'fssm', '~> 0.2.10'

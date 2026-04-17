@@ -11,9 +11,9 @@ Gem::Specification.new do |gem|
   gem.homepage      = 'https://github.com/berk/tr8n'
   gem.license       = 'MIT'
 
-  # Support both Rails 2.3 and 3.0 for dual-boot compatibility
+  # Support both Rails 3.0 and 3.1 for dual-boot compatibility
   # Use individual components to avoid bundler version conflicts
-  rails_version = ENV['BUNDLE_GEMFILE'] =~ /\.next/ ? '~> 3.0.0' : '~> 2.3.0'
+  rails_version = ENV['BUNDLE_GEMFILE'] =~ /\.next/ ? '~> 3.1.0' : '~> 3.0.0'
 
   gem.add_dependency 'activesupport', rails_version
   gem.add_dependency 'activerecord', rails_version
