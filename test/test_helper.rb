@@ -32,16 +32,16 @@ end
 
 require_relative '../config/environment'
 
-# Set up database connection for Rails 3.0+
+# Set up database connection for Rails 3.1+
 if defined?(Rails::VERSION) && Rails::VERSION::MAJOR >= 3
-  # Rails 3.0 requires explicit database connection setup
+  # Rails 3.1 requires explicit database connection setup
   db_config = YAML.load_file(File.expand_path('../../config/database.yml', __FILE__))
   ActiveRecord::Base.establish_connection(db_config['test'])
 end
 
 class Tr8n::TestCase < ActiveRecord::TestCase
   # Enable transactional tests - rollback after each test
-  # Rails 3.0 uses use_transactional_fixtures, Rails 2.3 uses use_transactional_tests
+  # Rails 3.1 uses use_transactional_fixtures, Rails 2.3 uses use_transactional_tests
   if respond_to?(:use_transactional_fixtures=)
     self.use_transactional_fixtures = true
   elsif respond_to?(:use_transactional_tests=)
@@ -60,7 +60,7 @@ class Tr8n::TestCase < ActiveRecord::TestCase
 
 end
 
-# Load mocha for Rails 3.0+ (mocha 1.x requires explicit test framework integration)
+# Load mocha for Rails 3.1+ (mocha 1.x requires explicit test framework integration)
 if defined?(Rails::VERSION) && Rails::VERSION::MAJOR >= 3
   require 'mocha/test_unit'
 end

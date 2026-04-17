@@ -1,5 +1,5 @@
-# Rails 3.0+ application configuration
-# This file is only loaded when running under Rails 3.0+
+# Rails 3.1+ application configuration
+# This file is only loaded when running under Rails 3.1+
 
 require File.expand_path('../boot', __FILE__)
 

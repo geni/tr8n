@@ -2,7 +2,7 @@
 require File.join(File.dirname(__FILE__), 'boot')
 require 'pp'
 
-# Rails 3.0 and 3.1 initialization (both use the same process)
+# Rails 3.1 initialization
 require File.expand_path('../application', __FILE__)
 
 # Load Tr8n gem explicitly
