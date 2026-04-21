@@ -7,8 +7,7 @@ bundle config --local without vscode
 # The bundler version can change between branches
 
 if [[ "${CLEAN-1}" == "1" ]]; then
-  rm -f Gemfile.lock
-  rm -rf vendor/bundle unl
+  rm -rf Gemfile.lock vendor/bundle
 fi
 
 bundle install
