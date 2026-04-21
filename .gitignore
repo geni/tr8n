@@ -2,7 +2,6 @@
 .bundle/
 coverage/
 Gemfile.lock
-Gemfile.next.lock
 pkg/
 *.sqlite3
 *.log

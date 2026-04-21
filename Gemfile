@@ -2,16 +2,8 @@ source 'http://www.rubygems.org'
 
 gemspec
 
-def next?
-  File.basename(__FILE__) == 'Gemfile.next'
-end
-
-# Use Rails 3.1 or 3.2 compatible branch of will_filter
-if next?
-  gem 'will_filter', :git => 'https://github.com/geni/will_filter.git', :branch => 'rails-3.2.x'
-else
-  gem 'will_filter', :git => 'https://github.com/geni/will_filter.git', :branch => 'rails-3.1.x'
-end
+# Use Rails 3.2 compatible branch of will_filter
+gem 'will_filter', :git => 'https://github.com/geni/will_filter.git', :branch => 'rails-3.2.x'
 
 group :development, :test do
   gem 'fssm', '~> 0.2.10'
