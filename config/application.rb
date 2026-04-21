@@ -8,13 +8,13 @@ require File.expand_path('../boot', __FILE__)
 
 # Establish database connection for testing if config exists
 if File.exist?(File.expand_path('../database.yml', __FILE__))
-  # Pre-require sqlite3 to avoid version constraint issues with Rails 3.1
-  # Rails 3.1 expects sqlite3 ~> 1.3.4 but we're using 1.6.9
+  # Pre-require sqlite3 to avoid version constraint issues with Rails 3.1 and 3.2
+  # Rails 3.1 expects sqlite3 ~> 1.3.4, Rails 3.2 expects ~> 1.3.5, but we're using 1.6.9
   require 'sqlite3'
 
-  # Monkey-patch Kernel#gem to bypass sqlite3 version check for Rails 3.1
-  # This allows us to use sqlite3 1.6.9 with Rails 3.1 which expects 1.3.4
-  if defined?(ActiveSupport::VERSION) && ActiveSupport::VERSION::STRING =~ /^3\.1/
+  # Monkey-patch Kernel#gem to bypass sqlite3 version check for Rails 3.1 and 3.2
+  # This allows us to use sqlite3 1.6.9 with Rails 3.1/3.2 which expect older versions
+  if defined?(ActiveSupport::VERSION) && ActiveSupport::VERSION::STRING =~ /^3\.[12]/
     original_gem = Kernel.method(:gem)
     Kernel.define_method(:gem) do |name, *requirements|
       if name == 'sqlite3'
