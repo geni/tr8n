@@ -53,4 +53,5 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   config.hosts << Socket.gethostname
+  config.hosts << Socket.getaddrinfo(Socket.gethostname, nil, nil, nil, nil, Socket::AI_CANONNAME).first[2]  # FQDN
 end
