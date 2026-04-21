@@ -46,7 +46,7 @@ module Tr8n
     end
 
     def translator
-      @translator ||= Tr8n::Translator.create!(:id => 1, :user => user)
+      @translator ||= Tr8n::Translator.create!(:user => user)
     end
 
     def english

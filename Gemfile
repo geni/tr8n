@@ -14,6 +14,7 @@ group :development, :test do
   gem 'puma'
   gem 'rake'
   gem 'simplecov',       :require => false
+  gem 'sqlite3'
 end
 
 group :vscode do
