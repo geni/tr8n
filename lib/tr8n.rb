@@ -21,7 +21,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
-# Main Tr8n gem entry point for Rails 3.1+
+# Main Tr8n gem entry point for Rails 3.0+
 # For Rails 2.3, init.rb is used instead
 
 require 'pp'
@@ -42,7 +42,7 @@ end
 # Get the gem root directory
 gem_root = File.expand_path('../..', __FILE__)
 
-# Require external gem dependencies first (needed for Rails 3.1+)
+# Require external gem dependencies first (needed for Rails 3.0+)
 begin
   require 'will_filter'
 rescue LoadError
@@ -96,7 +96,7 @@ if defined?(Tr8n::Config)
   end
 end
 
-# Rails 3.1+ initialization hook
+# Rails 3.0+ initialization hook
 if defined?(Rails) && defined?(Rails::VERSION) && Rails::VERSION::MAJOR >= 3
   require 'rails'
 

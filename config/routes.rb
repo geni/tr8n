@@ -10,7 +10,7 @@ rescue
 end
 
 if rails_3?
-  # Rails 3.1+ routing syntax
+  # Rails 3.0+ routing syntax
   Rails.application.routes.draw do
     [:awards, :chart, :forum, :glossary, :help, :language_cases,
      :language, :phrases, :translations, :translator, :home, :login].each do |ctrl|
