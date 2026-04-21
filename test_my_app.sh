@@ -12,8 +12,7 @@ fi
 
 bundle install
 
-rm -f test/dummy/db/test.sqlite3
-rm -f test/dummy/db/schema.rb
+rm -f db/test.sqlite3 test/dummy/db/test.sqlite3 test/dummy/db/schema.rb
 
 bundle exec rails db:create db:migrate
 bundle exec rails test
