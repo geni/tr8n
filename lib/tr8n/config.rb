@@ -263,7 +263,10 @@ class Tr8n::Config
   end
 
   def self.load_yml(file_path, for_env = env)
-    yml = YAML.load_file("#{root}#{file_path}")
+    file = "#{root}/#{file_path}"
+    file = "#{Tr8n::Engine.root}/#{file_path}" unless File.exist?(file)
+
+    yml = YAML.load_file(file)
     yml = yml[for_env] unless for_env.nil?
     HashWithIndifferentAccess.new(yml)
   end
