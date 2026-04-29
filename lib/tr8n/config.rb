@@ -263,7 +263,7 @@ class Tr8n::Config
   end
 
   def self.load_yml(file_path, for_env = env)
-    yml = YAML.load_file("#{root}#{file_path}")
+    yml = YAML.load_file("#{root}#{file_path}", :aliases => true)
     yml = yml[for_env] unless for_env.nil?
     HashWithIndifferentAccess.new(yml)
   end
