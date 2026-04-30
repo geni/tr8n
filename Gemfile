@@ -11,7 +11,7 @@ group :development, :test do
   gem 'mocha', '0.11.4'
   gem 'rake'
   gem 'simplecov',       :require => false
-  gem 'sqlite3', '1.6.9'
+  gem 'sqlite3', '~> 1.3.5'
   gem 'test-unit', '3.6.2' # >3.6.3 have problems with elapsed_time
 end
 

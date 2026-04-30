@@ -1,18 +1,18 @@
 # this will need to go away once we make tr8n a gem
-$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + "/../../will_filter/app/models")
+#$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + "/../../will_filter/app/models")
 
 require 'pp'
 
 ENV["RAILS_ENV"] = "test"
 
-module CaptureRubyWarnings
-  def warn(message)
-    return if message =~ /assigned but unused variable/
-    return if caller[0] =~ /vendor/ || message =~ /vendor/ # Ignore warnings from vendored code
-    super
-  end
-end
-Warning.extend(CaptureRubyWarnings)
+#module CaptureRubyWarnings
+#  def warn(message)
+#    return if message =~ /assigned but unused variable/
+#    return if caller[0] =~ /vendor/ || message =~ /vendor/ # Ignore warnings from vendored code
+#    super
+#  end
+#end
+#Warning.extend(CaptureRubyWarnings)
 
 unless defined?($SKIP_COVERAGE)
   require 'simplecov'
@@ -30,12 +30,12 @@ class Object
   end
 end
 
-require_relative '../config/environment'
+require_relative '../test/dummy/config/environment'
 
 # Set up database connection for Rails 3.0+
 if defined?(Rails::VERSION) && Rails::VERSION::MAJOR >= 3
   # Rails 3.0 requires explicit database connection setup
-  db_config = YAML.load_file(File.expand_path('../../config/database.yml', __FILE__))
+  db_config = YAML.load_file(File.expand_path('../../test/dummy/config/database.yml', __FILE__))
   ActiveRecord::Base.establish_connection(db_config['test'])
 end
 
@@ -60,10 +60,9 @@ class Tr8n::TestCase < ActiveRecord::TestCase
 
 end
 
-# Load mocha for Rails 3.0+ (mocha 1.x requires explicit test framework integration)
-if defined?(Rails::VERSION) && Rails::VERSION::MAJOR >= 3
-  require 'mocha/test_unit'
-end
+# Load mocha for Rails 3.0+
+# Note: test-unit 3.x has built-in mocha support, so we don't need to load mocha/integration
+# The mocha gem will be automatically integrated by test-unit
 
 # create database tables
 Dir[File.expand_path(File.dirname(__FILE__) + '/../db/migrate/*.rb')].each do |file|
@@ -72,6 +71,15 @@ end
 
 ActiveRecord::Migration.verbose = true
 ActiveRecord::Migrator.migrate("db/migrate/")
+
+# Also run dummy app migrations if they exist
+dummy_migrations = File.expand_path(File.dirname(__FILE__) + '/dummy/db/migrate')
+if File.directory?(dummy_migrations)
+  Dir["#{dummy_migrations}/*.rb"].each do |file|
+    require file
+  end
+  ActiveRecord::Migrator.migrate(dummy_migrations)
+end
 
 Tr8n::Config.init_language('en-US')
 Tr8n::Config.init_language('ru')

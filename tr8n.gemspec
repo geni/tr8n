@@ -1,24 +1,23 @@
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+$:.push File.expand_path("../lib", __FILE__)
 
-Gem::Specification.new do |gem|
-  gem.name          = 'tr8n'
-  gem.version       = IO.read('VERSION')
-  gem.authors       = ['Michael Berkovich']
-  gem.email         = ['michael@geni.com']
-  gem.description   = %q{Crowd-sourced translation and localization for Rails}
-  gem.summary       = gem.description
-  gem.homepage      = 'https://github.com/berk/tr8n'
-  gem.license       = 'MIT'
+# Maintain your gem's version:
+require "tr8n/version"
 
-  # Rails 3.2 dependencies
-  gem.add_dependency 'activesupport', '~> 3.2.0'
-  gem.add_dependency 'activerecord', '~> 3.2.0'
-  gem.add_dependency 'actionpack', '~> 3.2.0'
-  gem.add_dependency 'actionmailer', '~> 3.2.0'
+# Describe your gem and declare its dependencies:
+Gem::Specification.new do |s|
+  s.name        = "tr8n"
+  s.version     = Tr8n::VERSION
+  s.authors     = ["Michael Berkovich"]
+  s.email       = ["michael@geni.com"]
+  s.homepage    = "https://github.com/berk/tr8n"
+  s.summary     = "Crowd-sourced translation and localization for Rails"
+  s.description = "Crowd-sourced translation and localization for Rails"
+  s.license     = "MIT"
 
-  gem.files         = `git ls-files`.split($/)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.require_paths = ['lib']
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE", "Rakefile", "README.rdoc"]
+  s.test_files = Dir["test/**/*"]
+
+  s.add_dependency "rails", "~> 3.2.22.5"
+
+  s.add_development_dependency "sqlite3"
 end

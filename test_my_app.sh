@@ -7,11 +7,14 @@ bundle config --local clean true
 bundle config --local path vendor/bundle
 bundle config --local without vscode
 
-rm Gemfile.lock
-rm -rf vendor/bundle
+# clean and reinstall unless --no-clean is specified
+if [[ "$*" != *--no-clean* ]]; then
+  git gc
 
-${BUNDLE} install
+  rm -rf Gemfile.lock vendor/bundle
+  ${BUNDLE} install
+fi
 
-rm db/test.sqlite3
+rm -f db/test.sqlite3 test/dummy/db/test.sqlite3
 ${BUNDLE} exec rake test
 

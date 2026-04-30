@@ -2,8 +2,11 @@
 # Patch Rails 3.2.22 for Ruby 2.7+ compatibility
 # Fixes circular argument reference errors
 
+# Get the project root directory (this script is in project_root/script/)
+PROJECT_ROOT = File.expand_path('../..', __FILE__)
+
 def patch_timezone
-  file_path = "vendor/bundle/ruby/2.7.0/gems/activesupport-3.2.22/lib/active_support/values/time_zone.rb"
+  file_path = File.join(PROJECT_ROOT, "vendor/bundle/ruby/2.7.0/gems/activesupport-3.2.22.5/lib/active_support/values/time_zone.rb")
 
   unless File.exist?(file_path)
     puts "TimeZone file not found: #{file_path}"
@@ -33,7 +36,7 @@ def patch_timezone
 end
 
 def patch_has_many
-  file_path = "vendor/bundle/ruby/2.7.0/gems/activerecord-3.2.22/lib/active_record/associations/has_many_association.rb"
+  file_path = File.join(PROJECT_ROOT, "vendor/bundle/ruby/2.7.0/gems/activerecord-3.2.22.5/lib/active_record/associations/has_many_association.rb")
 
   unless File.exist?(file_path)
     puts "HasManyAssociation file not found: #{file_path}"
@@ -107,7 +110,7 @@ end
 
 def patch_arel_3_0
   # Rails 3.2 uses Arel 3.0, which needs Integer/Fixnum visitor support
-  file_path = "vendor/bundle/ruby/2.7.0/gems/arel-3.0.3/lib/arel/visitors/to_sql.rb"
+  file_path = File.join(PROJECT_ROOT, "vendor/bundle/ruby/2.7.0/gems/arel-3.0.3/lib/arel/visitors/to_sql.rb")
 
   unless File.exist?(file_path)
     puts "Arel 3.0 visitor file not found: #{file_path}"
@@ -141,7 +144,36 @@ def patch_arel_3_0
   puts "Arel 3.0 visitor patch applied successfully"
 end
 
+def patch_bigdecimal
+  # Rails 3.2 uses BigDecimal.new which is removed in Ruby 2.7+
+  file_path = File.join(PROJECT_ROOT, "vendor/bundle/ruby/2.7.0/gems/activesupport-3.2.22.5/lib/active_support/core_ext/object/duplicable.rb")
+
+  unless File.exist?(file_path)
+    puts "Duplicable file not found: #{file_path}"
+    return
+  end
+
+  content = File.read(file_path)
+
+  if content.include?('Kernel.BigDecimal') || content.include?('# PATCHED FOR BIGDECIMAL')
+    puts "BigDecimal already patched for Ruby 2.7"
+    return
+  end
+
+  puts "Patching BigDecimal for Ruby 2.7 compatibility..."
+
+  # Replace BigDecimal.new with Kernel.BigDecimal (Ruby 2.7+)
+  content.gsub!(/BigDecimal\.new\(/, 'Kernel.BigDecimal(')
+
+  # Add a marker comment at the top
+  content = "# PATCHED FOR BIGDECIMAL Ruby 2.7+ compatibility\n" + content
+
+  File.write(file_path, content)
+  puts "BigDecimal patch applied successfully"
+end
+
 # Run all patches
+patch_bigdecimal
 patch_timezone
 patch_has_many
 patch_arel_3_0
