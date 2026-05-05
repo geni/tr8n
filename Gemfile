@@ -14,13 +14,14 @@ group :development, :test do
   gem 'puma'
   gem 'rake'
   gem 'simplecov',       :require => false
-  gem 'sqlite3'
+  gem 'sqlite3', '~> 2.1.0'
 end
 
 group :vscode do
   # VSCode ruby-lsp plugin uses these.
   # Normally they're installed by the plugin using .ruby-lsp/Gemfile
   # If we don't put them here, they'll be removed if we run bundle install
+  gem 'debug',                :require => false
   gem 'prism', '~> 1.9.0',    :require => false
   gem 'rbs',                  :require => false
   gem 'ruby-lsp', '>=0.18.0', :require => false
