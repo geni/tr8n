@@ -8,8 +8,6 @@ bundle config --local path vendor/bundle
 
 # clean and reinstall unless --no-clean is specified
 if [[ "$*" != *--no-clean* ]]; then
-  git gc
-
   rm -rf Gemfile.lock vendor/bundle
   ${BUNDLE} install --without=vscode
 fi
