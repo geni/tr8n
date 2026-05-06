@@ -1,7 +1,7 @@
 
 class Tr8n::TokenizedLabel
-   
-  # constracts the label  
+
+  # constracts the label
   def initialize(label)
     @label = label
   end
@@ -18,7 +18,7 @@ class Tr8n::TokenizedLabel
     end
   end
 
-  # scans for all token types    
+  # scans for all token types
   def data_tokens
     @data_tokens ||= Tr8n::Token.register_data_tokens(label)
   end
@@ -48,14 +48,14 @@ class Tr8n::TokenizedLabel
       hash
     end
   end
-  
+
   def tokens?
     tokens.any?
   end
 
   # tokens that can be used by the user in translation
   def translation_tokens
-    @translation_tokens ||= tokens.select{|token| token.allowed_in_translation?} 
+    @translation_tokens ||= tokens.select{|token| token.allowed_in_translation?}
   end
 
   def translation_tokens?
@@ -63,15 +63,15 @@ class Tr8n::TokenizedLabel
   end
 
   def sanitized_label
-    @sanitized_label ||= begin 
+    @sanitized_label ||= begin
       lbl = label.clone
       data_tokens.each do |token|
         lbl = token.prepare_label_for_translator(lbl)
       end
       lbl
-    end 
+    end
   end
-  
+
   def tokenless_label
     @tokenless_label ||= begin
       lbl = label.clone
@@ -80,7 +80,7 @@ class Tr8n::TokenizedLabel
       end
       lbl
     end
-  end 
+  end
 
   def suggestion_tokens
     @suggestion_tokens ||= begin
@@ -88,22 +88,22 @@ class Tr8n::TokenizedLabel
       tokens.each do |token|
         if token.decoration?
           toks << token.name
-        else  
-          toks << token.sanitized_name          
+        else
+          toks << token.sanitized_name
         end
       end
       toks
     end
-  end 
-  
+  end
+
   def words
     return [] if label.blank?
-    
-    @words ||= begin 
+
+    @words ||= begin
       clean_label = sanitized_label
       parts = []
       clean_label = clean_label.gsub(/[\,\.\;\!\-\:\'\"\[\]{}]/, "")
-      
+
       clean_label.split(" ").each do |w|
         parts << w.strip.capitalize if w.length > 3
       end
@@ -120,7 +120,7 @@ class Tr8n::TokenizedLabel
       hash
     end
   end
-  
+
   def allowed_token?(token)
     not sanitized_tokens_hash[token.sanitized_name].nil?
   end

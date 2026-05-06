@@ -1,7 +1,6 @@
 module Tr8n
   module Admin
-    class ApplicationsController < BaseController
-
+    class ApplicationsController < Tr8n::Admin::BaseController
 
       def index
         @apps = Tr8n::Application.filter(:params => params, :filter => Tr8n::ApplicationFilter)

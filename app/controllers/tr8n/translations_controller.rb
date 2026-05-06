@@ -1,6 +1,6 @@
 
 module Tr8n
-  class TranslationsController < ApplicationController
+  class TranslationsController < Tr8n::BaseController
 
     before_filter :validate_tr8n_enabled,     :except => [:translate]
     before_filter :validate_guest_user,       :except => [:translate]

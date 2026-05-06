@@ -1,22 +1,22 @@
 
-####################################################################### 
-# 
+#######################################################################
+#
 # Hidden Token Forms:
 #
-# {_he_she} 
+# {_he_she}
 # {_posted__items}
 #
 #  '_' escaped as '/'
 #  '__' escaped as '__'
-# 
+#
 # Hidden tokens cannot have rules and are there for default language
 # substitutions only
 #
-####################################################################### 
+#######################################################################
 
 
 class Tr8n::Tokens::HiddenToken < Tr8n::Token
-  
+
   def self.expression
     /(\{_[\w]+\})/
   end
@@ -50,7 +50,7 @@ class Tr8n::Tokens::HiddenToken < Tr8n::Token
   def prepare_label_for_suggestion(label, index)
     label.gsub(full_name, humanized_name)
   end
-  
+
   def humanized_name
     @humanized_name ||= begin
       hnm = name[1..-1].clone
@@ -59,5 +59,5 @@ class Tr8n::Tokens::HiddenToken < Tr8n::Token
       hnm
     end
   end
-  
+
 end

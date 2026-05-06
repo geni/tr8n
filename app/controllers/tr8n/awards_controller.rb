@@ -1,5 +1,5 @@
 module Tr8n
-  class AwardsController < ApplicationController
+  class AwardsController < Tr8n::BaseController
 
     before_filter :validate_current_translator
 

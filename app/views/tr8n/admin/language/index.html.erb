@@ -1,7 +1,7 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
 
-<%= tr8n_will_filter(@languages.results) %>
+<%= tr8n_will_filter(@languages) %>
 
 <%=link_to_function("+ Add New Language", "tr8nLightbox.show('#{admin_language_lb_update_path}', {'height':400})")%>
  |
@@ -69,7 +69,7 @@
 	]) %>
 <% end %>
 
-<%= will_filter_actions_bar_tag(@languages.results, [
+<%= will_filter_actions_bar_tag(@languages, [
 	['Enable Selected Languages', 'enableSelectedLanguages()'],
 	['Disable Selected Languages', 'disableSelectedLanguages()'],
 	['Add To Component', 'addSelectedLanguagesToComponent()'],

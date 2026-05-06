@@ -1,6 +1,6 @@
 
 module Tr8n
-  class RelationshipsController < ApplicationController
+  class RelationshipsController < Tr8n::BaseController
 
 
     set_tr8n_feature  :relationships

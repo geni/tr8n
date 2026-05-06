@@ -1,3 +1,3 @@
 module Tr8n
-  VERSION = "2.3.23"
+  VERSION = "3.2.0"
 end

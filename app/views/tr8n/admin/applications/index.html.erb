@@ -1,6 +1,6 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@apps.results) %>
+<%= tr8n_will_filter(@apps) %>
 
 <%= link_to_function("+ Register New Application", "tr8nLightbox.show('#{admin_applications_lb_update_path}', {'height':350})") %>
 

@@ -1,6 +1,6 @@
 
 module Tr8n
-  class TranslatorController < ApplicationController
+  class TranslatorController < Tr8n::BaseController
 
     before_filter :validate_guest_user,   :except => [:registration]
     before_filter :validate_current_user, :except => [:registration]

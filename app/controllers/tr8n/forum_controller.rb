@@ -1,5 +1,5 @@
 module Tr8n
-  class ForumController < ApplicationController
+  class ForumController < Tr8n::BaseController
     set_tr8n_feature  :forum
 
     before_filter :validate_current_translator

@@ -11,15 +11,15 @@
 		<table>
 			<tr>
 				<td style="vertical-align:middle;text-align:center;padding:25px;">
-          <%=image_tag('tr8n/tr8n_logo2.png', :style => 'height:180px;')%>
+          <%= image_tag('tr8n/tr8n_logo2.png', :style => 'height:180px;') %>
 				</td>
 				<td style="vertical-align:top;padding:15px;">
 					<div class="content_bd">
 						<h2 class="underscore content_hd">
-						  <%=tr('Welcome to Tr8n Translation Engine') %>
+						  <%= tr('Welcome to Tr8n Translation Engine') %>
 						</h2>
 					  <h3 style="padding-left:15px;color:#666;font-size:14px;"><%=tr("Follow these links to get started:")%></h3>
-						<br>
+						<br />
 					  <ul style="list-style-type:decimal; margin-left:30px; font-size:14px;">
 					    <li class="link"><%= link_to_function(tr("Change your language and enable inline translations"), "tr8nLightbox.show('#{language_select_path(lightbox: true)}', {'height':500, 'width':400})")%></li>
 							<li class="link"><%= link_to(tr("Take a look at your dashboard and see your translation progress"), translator_path)%></li>

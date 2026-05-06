@@ -1,5 +1,5 @@
 module Tr8n
-  class ApplicationController < ::ApplicationController
+  class BaseController < ::ApplicationController
     include Tr8n::Concerns::ControllerMethods
     include Tr8n::ApplicationHelper
 

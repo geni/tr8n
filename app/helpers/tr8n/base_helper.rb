@@ -1,4 +1,7 @@
+module Tr8n
+  module BaseHelper
+    include CommonMethods
+    include HelperMethods
 
-module Tr8n::BaseHelper
-
-end
+  end # module BaseHelper
+end # module Tr8n

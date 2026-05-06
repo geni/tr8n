@@ -1,6 +1,6 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@comps.results) %>
+<%= tr8n_will_filter(@comps) %>
 
 <%=link_to_function("+ Register New Component", "tr8nLightbox.show('#{admin_applications_lb_update_component_path}', {'height':400})")%>
 

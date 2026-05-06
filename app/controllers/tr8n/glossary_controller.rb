@@ -1,5 +1,5 @@
 module Tr8n
-  class GlossaryController < ApplicationController
+  class GlossaryController < Tr8n::BaseController
 
     set_tr8n_feature  :glossary
 

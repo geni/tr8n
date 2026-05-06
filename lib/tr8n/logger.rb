@@ -2,7 +2,7 @@
 require 'logger'
 
 class Tr8n::Logger < Logger
-  
+
   def self.logger
     return Rails.logger unless Tr8n::Config.enable_logger?
     @logger ||= begin
@@ -25,15 +25,15 @@ class Tr8n::Logger < Logger
       '.'
     end
   end
-  
+
   def format_message(severity, timestamp, progname, msg)
-    "#{timestamp.to_formatted_s(:db)}: #{msg}\n" 
-  end 
-  
+    "#{timestamp.to_formatted_s(:db)}: #{msg}\n"
+  end
+
   def self.debug(msg)
     logger.debug(msg)
   end
-  
+
   def self.info(msg)
     logger.info(msg)
   end
@@ -41,8 +41,8 @@ class Tr8n::Logger < Logger
   def self.error(msg)
     logger.error(msg)
   end
-  
+
   def self.fatal(msg)
     logger.fatal(msg)
   end
-end 
+end

@@ -6,7 +6,7 @@ class DummyController < ApplicationController
   end
 
   def switch_user
-    user = User.find_by(id: params[:user_id])
+    user = User.where(id: params[:user_id]).first
     if user
       session[:user_id] = user.id
       redirect_to root_path, notice: "Switched to user: #{user.name}"

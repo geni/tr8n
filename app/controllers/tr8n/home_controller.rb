@@ -1,5 +1,5 @@
 module Tr8n
-  class HomeController < ApplicationController
+  class HomeController < Tr8n::BaseController
 
     layout Tr8n::Config.site_info[:tr8n_layout]
 

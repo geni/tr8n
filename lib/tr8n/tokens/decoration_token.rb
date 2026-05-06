@@ -1,33 +1,33 @@
 
-####################################################################### 
-# 
+#######################################################################
+#
 # Decoration Token Forms:
 #
 # [link: click here]
 #
 # Decoration Tokens Allow Nesting:
-# 
-# [link: {count} {_messages}] 
-# [link: {count||message}] 
-# [link: {count||person, people}] 
-# [link: {user.name}] 
 #
-####################################################################### 
+# [link: {count} {_messages}]
+# [link: {count||message}]
+# [link: {count||person, people}]
+# [link: {user.name}]
+#
+#######################################################################
 
 class Tr8n::Tokens::DecorationToken < Tr8n::Token
-  
+
   def self.expression
     /(\[\w+:[^\]]+\])/
   end
-  
+
   def decoration?
     true
   end
-  
+
   def language_rule
     nil
   end
-  
+
   def value
     @value ||= begin
       parts = full_name.gsub(/[\]]/, '').split(':')
@@ -35,7 +35,7 @@ class Tr8n::Tokens::DecorationToken < Tr8n::Token
       vl.strip
     end
   end
-  
+
   # return as is
   def prepare_label_for_translator(label)
     label
@@ -45,7 +45,7 @@ class Tr8n::Tokens::DecorationToken < Tr8n::Token
   def prepare_label_for_suggestion(label, index)
     label.gsub(name, "(#{index})")
   end
-    
+
   def handle_default_decorations(token_name, token_value, token_values)
     unless Tr8n::Config.default_decoration_tokens[token_name]
       raise Tr8n::TokenException.new("Invalid decoration token value")
@@ -53,7 +53,7 @@ class Tr8n::Tokens::DecorationToken < Tr8n::Token
 
     default_decoration = Tr8n::Config.default_decoration_tokens[token_name].clone
     decoration_token_values = token_values[token_name.to_sym] || []
-    
+
     if decoration_token_values.is_a?(Array)
       params = [token_value, decoration_token_values].flatten
       params.each_with_index do |param, index|
@@ -72,14 +72,14 @@ class Tr8n::Tokens::DecorationToken < Tr8n::Token
         default_decoration.gsub!("{$#{key}}", decoration_token_values[key])
       end
     end
-    
+
     default_decoration
-  end  
-  
+  end
+
   def substitute(label, values = {}, options = {}, language = Tr8n::Config.current_language)
     method = values[name_key]
     substitution_value = ""
-    
+
     if method
       if method.is_a?(Proc)
         substitution_value = method.call(value)
@@ -95,12 +95,12 @@ class Tr8n::Tokens::DecorationToken < Tr8n::Token
     else
       raise Tr8n::TokenException.new("Missing decoration token value")
     end
-      
-    label.gsub(full_name, substitution_value) 
+
+    label.gsub(full_name, substitution_value)
   end
-  
+
   def sanitized_name
     "[#{name}: ]"
   end
-  
+
 end

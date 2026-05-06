@@ -1,7 +1,7 @@
 module Tr8n
   module Admin
     # TODO rename to AdminController
-    class BaseController < Tr8n::ApplicationController
+    class BaseController < Tr8n::BaseController
 
       if Tr8n::Config.admin_helpers.any?
         helper *Tr8n::Config.admin_helpers

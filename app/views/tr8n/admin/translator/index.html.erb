@@ -1,7 +1,7 @@
 <%= tr8n_google_charts_js_tag %>
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@translators.results) %>
+<%= tr8n_will_filter(@translators) %>
 
 <%= link_to_function("+ Register new translator", "tr8nLightbox.show('#{admin_translator_lb_register_path}', {'height':150})") %>
  |

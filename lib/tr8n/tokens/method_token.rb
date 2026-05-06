@@ -1,15 +1,15 @@
 
-####################################################################### 
-# 
+#######################################################################
+#
 # Method Token Forms
 #
-# {user.name}  
+# {user.name}
 # {user.name:gender}
-# 
-####################################################################### 
+#
+#######################################################################
 
 class Tr8n::Tokens::MethodToken < Tr8n::Token
-  
+
   def self.expression
     /(\{[^_:.][\w]*(\.[\w]+)(:[\w]+)?(::[\w]+)?\})/
   end
@@ -32,5 +32,5 @@ class Tr8n::Tokens::MethodToken < Tr8n::Token
     object_value = sanitize_token_value(object, object.send(object_method_name), options.merge(:sanitize_values => true), language)
     label.gsub(full_name, object_value)
   end
-  
+
 end

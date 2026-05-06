@@ -1,6 +1,6 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@sources.results) %>
+<%= tr8n_will_filter(@sources) %>
 
 <%=link_to_function("+ Register New Source", "tr8nLightbox.show('#{admin_applications_lb_update_source_path}', {'height':400})")%>
 

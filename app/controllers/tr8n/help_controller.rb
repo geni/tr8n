@@ -1,5 +1,5 @@
 module Tr8n
-  class HelpController < ApplicationController
+  class HelpController < Tr8n::BaseController
     set_tr8n_feature  :help
 
     before_filter :validate_current_translator, :except => [:lb_shortcuts, :lb_stats, :credits, :license]

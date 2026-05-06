@@ -1,5 +1,8 @@
 
 module Tr8n::Admin::BaseHelper
+  include Tr8n::CommonMethods
+  include Tr8n::HelperMethods
+  include WillFilter::HelperMethods
 
   def tr8n_will_filter(results)
     will_filter(results)

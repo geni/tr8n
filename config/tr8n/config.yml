@@ -74,7 +74,7 @@ defaults: &defaults
   # be a translator in order to submit or vote on translations.
   #############################################################################
   open_registration_mode:           true
-  enable_registration_disclaimer:   true
+  enable_registration_disclaimer:   false
   registration_disclaimer_path:     "common/terms_of_use"
 
   #############################################################################

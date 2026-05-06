@@ -1,5 +1,6 @@
 
 require 'json'
+require_relative 'cache'
 
 class Tr8n::Config
 
@@ -188,7 +189,7 @@ class Tr8n::Config
 
     default_language_cases.each do |locale, cases|
       language = Tr8n::Language.for(locale)
-      puts ">> Initializing language cases for #{language.english_name}..."
+      puts ">> Initializing language cases for #{language.english_name}..." unless env.test?
 
       next unless language
       cases.keys.sort.each do |lkey|
@@ -254,15 +255,15 @@ class Tr8n::Config
   end
 
   def self.config
-    @config ||= load_yml("/config/tr8n/config.yml")
+    @config ||= load_yml("config/tr8n/config.yml")
   end
 
   def self.reload_config!
-    @config = load_yml("/config/tr8n/config.yml")
+    @config = load_yml("config/tr8n/config.yml")
   end
 
   def self.default_languages
-    @default_languages ||= load_yml("/config/tr8n/site/default_languages.yml", nil)
+    @default_languages ||= load_yml("config/tr8n/site/default_languages.yml", nil)
   end
 
   def self.format
@@ -274,21 +275,21 @@ class Tr8n::Config
   end
 
   def self.default_decoration_tokens
-    @default_decoration_tokens ||= load_yml("/config/tr8n/tokens/decorations.yml", nil)
+    @default_decoration_tokens ||= load_yml("config/tr8n/tokens/decorations.yml", nil)
     @default_decoration_tokens[format]
   end
 
   def self.default_data_tokens
-    @default_data_tokens ||= load_yml("/config/tr8n/tokens/data.yml", nil)
+    @default_data_tokens ||= load_yml("config/tr8n/tokens/data.yml", nil)
     @default_data_tokens[format]
   end
 
   def self.default_glossary
-    @default_glossary ||= load_yml("/config/tr8n/site/default_glossary.yml", nil)
+    @default_glossary ||= load_yml("config/tr8n/site/default_glossary.yml", nil)
   end
 
   def self.features
-    @features ||= load_yml("/config/tr8n/site/features.yml")
+    @features ||= load_yml("config/tr8n/site/features.yml")
   end
 
   def self.enabled?
@@ -308,7 +309,7 @@ class Tr8n::Config
   end
 
   def self.default_shortcuts
-    @default_shortcuts ||= load_yml("/config/tr8n/site/shortcuts.yml", nil)
+    @default_shortcuts ||= load_yml("config/tr8n/site/shortcuts.yml", nil)
   end
 
   def self.enable_inline_translations?
@@ -449,9 +450,6 @@ class Tr8n::Config
     caching[:version]
   end
 
-  def self.url_cache_version
-    @url_cache_version ||= tr8n_gem_version.gsub(/\./, '_')
-  end
   #########################################################
 
   #########################################################
@@ -652,11 +650,11 @@ class Tr8n::Config
   end
 
   def self.silhouette_image
-    "/tr8n/images/photo_silhouette.gif"
+    '/assets/tr8n/photo_silhouette.gif'
   end
 
   def self.system_image
-    "/tr8n/images/photo_system.gif"
+    '/assets/tr8n/photo_system.gif'
   end
 
   #########################################################
@@ -746,7 +744,7 @@ class Tr8n::Config
   # get rules for specified locale, or get default language rules
   def self.load_default_rules(rules_type, locale = default_locale)
     @default_rules ||= {}
-    @default_rules[rules_type] ||= load_yml("/config/tr8n/rules/default_#{rules_type}_rules.yml", nil)
+    @default_rules[rules_type] ||= load_yml("config/tr8n/rules/default_#{rules_type}_rules.yml", nil)
     rules_for_locale = @default_rules[rules_type][locale.to_s]
 
     return rules_for_locale.values unless rules_for_locale.nil?
@@ -779,7 +777,7 @@ class Tr8n::Config
   end
 
   def self.default_language_cases
-    @default_language_cases ||= load_yml("/config/tr8n/rules/default_language_cases.yml", nil)
+    @default_language_cases ||= load_yml("config/tr8n/rules/default_language_cases.yml", nil)
   end
 
   #########################################################
@@ -1000,7 +998,7 @@ class Tr8n::Config
   end
 
   def self.default_relationship_keys
-    @default_relationship_keys ||= load_yml("/config/tr8n/data/default_relationship_keys.yml", nil)
+    @default_relationship_keys ||= load_yml("config/tr8n/data/default_relationship_keys.yml", nil)
   end
 
   def self.init_configuration_keys
@@ -1026,7 +1024,7 @@ class Tr8n::Config
   end
 
   def self.default_configuration_keys
-    @default_configuration_keys ||= load_yml("/config/tr8n/data/default_configuration_keys.yml", nil)
+    @default_configuration_keys ||= load_yml("config/tr8n/data/default_configuration_keys.yml", nil)
   end
 
   def self.guid

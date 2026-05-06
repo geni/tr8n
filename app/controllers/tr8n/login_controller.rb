@@ -1,5 +1,5 @@
 module Tr8n
-  class LoginController < ApplicationController
+  class LoginController < Tr8n::BaseController
 
     layout Tr8n::Config.site_info[:tr8n_layout]
 

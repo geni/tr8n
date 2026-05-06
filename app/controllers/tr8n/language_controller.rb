@@ -1,6 +1,6 @@
 
 module Tr8n
-  class LanguageController < ApplicationController
+  class LanguageController < Tr8n::BaseController
 
     before_filter :validate_guest_user, :except => [:select, :switch, :table]
     before_filter :validate_current_user, :except => [:select, :switch, :table]
