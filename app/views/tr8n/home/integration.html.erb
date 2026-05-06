@@ -37,7 +37,7 @@
   }
 </style>
 <div style="text-align:center; margin:15px;">
- <%=image_tag( url_with_cache_version("/tr8n/images/tr8n_logo2.png"), :style => "height:120px;")%>
+ <%=image_tag('tr8n/tr8n_logo2.png', :style => "height:120px;")%>
 </div>
 
 <h2 class="underscore content_hd">
@@ -258,8 +258,8 @@ site_info:
   tr8n_helpers:             []                              # if you need to add extra helpers
   admin_layout:             tr8n_admin                      # layout to be used for the admin user interface
   admin_helpers:            []                              # if you need to add extra helpers
-  before_filters:           []                              # filters from application controller
-  skip_before_filters:      []                              # filters from application controller
+  before_actions:           []                              # filters from application controller
+  skip_before_actions:      []                              # filters from application controller
   after_filters:            []                              # filters from application controller
   user_info:
     enabled:                false                           # if disabled, will fallback onto translators
@@ -294,8 +294,8 @@ site_info:
   tr8n_helpers:             []
   <strong>admin_layout:             admin</strong>
   admin_helpers:            []
-  before_filters:           []
-  skip_before_filters:      []
+  before_actions:           []
+  skip_before_actions:      []
   after_filters:            []
   user_info:
     <strong>enabled:                true</strong>
@@ -365,7 +365,7 @@ end
     elsif !current_user.guest? and current_user.locale != nil
       session[:locale] = current_user.locale
     elsif session[:locale] == nil
-      session[:locale] = tr8n_user_preffered_locale
+      session[:locale] = tr8n_user_preferred_locale
       session[:save_locale] = (session[:locale] != Tr8n::Config.default_locale)
     end
 
@@ -379,7 +379,7 @@ end
       </pre>
     </div>
 
-		 <strong>tr8n_user_preffered_locale</strong> returns back the first available locale supported by Tr8n that the browser has requested in the order of the browser's language preferences.
+		 <strong>tr8n_user_preferred_locale</strong> returns back the first available locale supported by Tr8n that the browser has requested in the order of the browser's language preferences.
 
 		 <br><br>
 		 There are a few other settings in config.yml that you may want to review. Those settings will be covered in the later sections.
@@ -465,7 +465,7 @@ logger:
     <div class="snippet">
       module ApplicationHelper<br>
       &nbsp;&nbsp;&nbsp;<strong>include Tr8n::HelperMethods</strong><br>
-      &nbsp;&nbsp;&nbsp;<strong>include Wf::HelperMethods</strong><br>
+      &nbsp;&nbsp;&nbsp;<strong>include WillFilter::HelperMethods</strong><br>
       &nbsp;&nbsp;&nbsp;...<br>
       end
     </div>
@@ -484,7 +484,7 @@ logger:
 			&nbsp;&nbsp;&nbsp;&lt;head&gt;<br>
 			&nbsp;&nbsp;&nbsp;&lt;/head&gt;<br>
 			&nbsp;&nbsp;&nbsp;&lt;body&gt;<br>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;%= @content_for_layout %&gt;<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;%= yield %&gt;<br>
 			&nbsp;&nbsp;&nbsp;&lt;/body&gt;<br>
 			&lt;/html&gt;<br>
    </div>
@@ -524,7 +524,7 @@ logger:
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div style="float:right"&gt;<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;%= tr8n_language_selector_tag %&gt;<br>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;%= @content_for_layout %&gt;<br><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;%= yield %&gt;<br><br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;%= tr8n_language_strip_tag %&gt;<br>
       &nbsp;&nbsp;&nbsp;&lt;/body&gt;<br>
       &lt;/html&gt;<br>

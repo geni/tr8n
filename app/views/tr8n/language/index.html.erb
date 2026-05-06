@@ -26,9 +26,9 @@
     <%=render(:partial => "relationships", :locals => {:mode => :view}) %>
   <% end %>
 
-	<% javascript_tag(nonce: true) do %>
+	<%= javascript_tag(nonce: true) do %>
 	  function switchSectionMode(section, mode) {
-	    Tr8n.Utils.update(section + '_container', '/tr8n/language/update_language_section', {
+	    Tr8n.Utils.update(section + '_container', '<%= language_update_language_section_path %>', {
 	        parameters: {section:section, mode:mode}
 	    });
 	  }
@@ -46,7 +46,7 @@
 
 	    var params = Tr8n.Utils.serializeForm(section + '_form');
 	    params['section'] = section;
-	    Tr8n.Utils.update(section + '_container', '/tr8n/language/update_language_section', {
+	    Tr8n.Utils.update(section + '_container', '<%= language_update_language_section_path %>', {
 	      parameters: params,
 	      method: 'post'
 	    });

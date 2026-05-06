@@ -12,7 +12,7 @@
 <div id="language_cases_container" style="font-size:12px;">
   <%=render(:partial => "header", :locals => {:section => "language_cases", :label => "Language Cases", :description => "", :mode => mode})%>
 
-  <% form_for(:language, tr8n_current_language, :url => {:action => :index}, :html => {:id => 'language_cases_form', :method => :post}) do |f| %>
+  <%= form_for(tr8n_current_language, :as => :language, :url => {:action => :index}, :html => {:id => 'language_cases_form', :method => :post}) do |f| %>
     <div id="language_cases_content" class="section_box colored">
       <div style="<%=tr8n_style_attribute_tag('float', 'right')%>; padding-right:5px;">
           <%=tr8n_help_icon_tag %>
@@ -64,7 +64,7 @@
 					  <% end %>
 
 			      <div style="padding-top:15px;">
-			          <%=link_to(tra("Click here to view the exceptional case values submitted by translators"), :controller => "/tr8n/language_cases", :action => :index) %>
+			          <%= link_to(tra("Click here to view the exceptional case values submitted by translators"), language_cases_path) %>
 			      </div>
 
 					<% end %>
@@ -75,7 +75,7 @@
 
 </div>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function updateLanguageCases(language_id) {
     performLanguageCasesOperation(Tr8n.Utils.serializeForm('language_cases_form'));
   }
@@ -108,7 +108,7 @@
   }
 
   function performLanguageCasesOperation(params){
-    Tr8n.Utils.update('language_cases', '/tr8n/language/update_language_cases', {
+    Tr8n.Utils.update('language_cases', '<%= language_update_language_cases_path %>', {
       parameters: params,
       method: 'post'
     });
@@ -129,7 +129,7 @@
 		edit_rule_index = position;
 		edit_case_action = form_hash['case_action'];
 
-    tr8nLightbox.show('/tr8n/language/lb_language_case_rule?' + Tr8n.Utils.toQueryParams(form_hash), {width:600, height:270});
+    tr8nLightbox.show('<%= language_lb_language_case_rule_path %>?' + Tr8n.Utils.toQueryParams(form_hash), {width:600, height:270});
   }
 
   function editLanguageCaseRule(case_index, position) {
@@ -156,7 +156,7 @@
     edit_rule_index = position;
     edit_case_action = form_hash['case_action'];
 
-    tr8nLightbox.show('/tr8n/language/lb_language_case_rule?' + Tr8n.Utils.toQueryParams(form_hash), {width:600, height:300});
+    tr8nLightbox.show('<%= language_lb_language_case_rule_path %>?' + Tr8n.Utils.toQueryParams(form_hash), {width:600, height:300});
   }
 
   function updateLanguageCaseRule() {
@@ -188,7 +188,7 @@
   }
 
   function performLanguageCaseRuleOperation(case_index, params){
-    Tr8n.Utils.update('language_case_rules_' + case_index, '/tr8n/language/update_language_case_rules', {
+    Tr8n.Utils.update('language_case_rules_' + case_index, '<%= language_update_language_case_rules_path %>', {
       parameters: params,
       method: 'post'
     });

@@ -3,14 +3,14 @@
     [:checkbox, :comments],
     [:language_id, lambda{|comment|
       if comment.language
-        link_to(comment.language.english_name, :controller => "/tr8n/admin/language", :action => :view, :lang_id => comment.language.id)
+        link_to(comment.language.english_name, admin_language_view_path(lang_id: comment.language.id))
       else
          "Deleted Language"
       end
     }],
     [:translator_id, lambda{|comment|
       if comment.translator
-        link_to(comment.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => comment.translator.id)
+        link_to(comment.translator.name, admin_translator_view_path(translator_id: comment.translator.id))
       else
          "Deleted Translator"
       end
@@ -28,11 +28,11 @@
   ['Delete Selected Comments', 'deleteSelectedComments()']
 ]) %>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function deleteSelectedComments() {
-    if (!confirm('Are you sure you want to run this opperation?'))
+    if (!confirm('Are you sure you want to run this operation?'))
        return;
-    Tr8n.element('comments_form').action = "/tr8n/admin/translation_key/delete_comment";
+    Tr8n.element('comments_form').action = "<%= admin_translation_key_delete_comment_path %>";
     Tr8n.element('comments_form').submit();
   }
 <% end %>

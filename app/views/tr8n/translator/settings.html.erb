@@ -8,7 +8,7 @@
       <%=tra("Your Preferences") %>
     </div>
 
-    <% form_for(:translator, tr8n_current_translator, :url => {:action => :settings}, :html => {:id => 'basic_info_form', :method => :post}) do |f| %>
+    <%= form_for(tr8n_current_translator, :as => 'translator', :url => translator_settings_path, :html => {:id => 'basic_info_form', :method => :post}) do |f| %>
       <div class="section_box colored">
           <table>
             <tr>
@@ -97,7 +97,7 @@
     <div class="section_title">
       <%=tra("Language Manager Settings") %>
     </div>
-    <% form_for(:translator, tr8n_current_translator, :url => {:action => :settings}, :html => {:id => 'manager_info_form', :method => :post}) do |f| %>
+    <%= form_for(tr8n_current_translator, :as => 'translator', :url => translator_settings_path, :html => {:id => 'manager_info_form', :method => :post}) do |f| %>
     <div class="section_box colored">
       <table>
         <tr>

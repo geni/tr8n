@@ -12,7 +12,7 @@
 							<% else %>
 	               <%= "#{language.completeness || 0}%" if Tr8n::Config.enable_language_stats?%>
                  <% unless user_language.manager? %>
-	                 <%=link_to_function(image_tag( url_with_cache_version("/tr8n/images/close.gif"), :style=>"width:5px; padding-right:3px; padding-left:3px;"), "tr8nLanguageSelector.removeLanguage('#{language.id}');") %>
+	                 <%=link_to_function(image_tag('tr8n/close.gif', :style=>"width:5px; padding-right:3px; padding-left:3px;"), "tr8nLanguageSelector.removeLanguage('#{language.id}');") %>
  								 <% end %>
 		          <% end %>
     			  </span>
@@ -33,7 +33,7 @@
   </div>
 
   <div style="font-size:11px; border-bottom: 1px solid #ccc;">
-	   <%=tr8n_toggler_tag("tr8n_languages_list", "<span style='color:grey;'>#{trl("Other Languages")}</span>", (@user_languages.size <= 1) )%>
+	   <%= tr8n_toggler_tag("tr8n_languages_list", "<span style='color:grey;'>#{trl("Other Languages")}</span>", (@user_languages.size <= 1) ) %>
 	</div>
 <% end %>
 
@@ -60,21 +60,26 @@
   </ul>
 </div>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   selectLocale = function(locale) {
     Tr8n.element('language_selector_locale').value = locale;
     Tr8n.element('language_selector_form').submit();
     return false;
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
+  registerEventListeners = function() {
     var elements = document.querySelectorAll('[data-select-locale]');
     elements.forEach(function(element) {
-        element.addEventListener('click', function(event) {
-          selectLocale(event.target.getAttribute('data-select-locale'));
-          event.preventDefault();
-          return false;
-        });
+      element.addEventListener('click', function(event) {
+        selectLocale(this.getAttribute('data-select-locale'));
+        event.preventDefault();
+        return false;
+      });
     });
-});
+  }
+
+  // We don't know if we'll get a DOMContentLoaded event
+  // or if this was loaded via Ajax.
+  // So we're doing this immediately.
+  registerEventListeners();
 <% end %>

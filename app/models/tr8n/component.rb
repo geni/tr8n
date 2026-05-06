@@ -1,41 +1,36 @@
-#--
-# Copyright (c) 2010-2013 Michael Berkovich
+
+# == Schema Information
 #
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
+# Table name: tr8n_components
 #
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
+#  id             :integer          not null, primary key
+#  description    :string
+#  key            :string
+#  name           :string
+#  state          :string
+#  created_at     :datetime
+#  updated_at     :datetime
+#  application_id :integer
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
+# Indexes
+#
+#  tr8n_comp_app_id  (application_id)
+#  tr8n_comp_key     (key)
+#
+class Tr8n::Component < ApplicationRecord
 
-class Tr8n::Component < ActiveRecord::Base
-  set_table_name :tr8n_components
+  belongs_to :application
 
-  belongs_to :application, :class_name => 'Tr8n::Application'
+  has_many :component_sources,       :dependent => :destroy
+  has_many :translation_sources,     :through => :component_sources
+  has_many :translation_key_sources, :through => :translation_sources
+  has_many :translation_keys,        :through => :translation_key_sources
 
-  has_many :component_sources, :class_name => 'Tr8n::ComponentSource', :dependent => :destroy
-  has_many :translation_sources, :class_name => 'Tr8n::TranslationSource', :through => :component_sources
-  has_many :translation_key_sources, :class_name => 'Tr8n::TranslationKeySource', :through => :translation_sources
-  has_many :translation_keys, :class_name => 'Tr8n::TranslationKey', :through => :translation_key_sources
+  has_many :component_languages, :dependent => :destroy
+  has_many :languages,           :through => :component_languages
 
-  has_many :component_languages, :class_name => 'Tr8n::ComponentLanguage', :dependent => :destroy
-  has_many :languages, :class_name => 'Tr8n::Language', :through => :component_languages
-
-  has_many :component_translators, :class_name => 'Tr8n::ComponentTranslator', :dependent => :destroy
-  has_many :translators, :class_name => 'Tr8n::Translator', :through => :component_translators
+  has_many :component_translators, :dependent => :destroy
+  has_many :translators,           :through => :component_translators
 
   alias :sources :translation_sources
 
@@ -51,9 +46,9 @@ class Tr8n::Component < ActiveRecord::Base
     return component if key.is_a?(Tr8n::Component)
     key = key.to_s
 
-    Tr8n::Cache.fetch(cache_key(key)) do 
+    Tr8n::Cache.fetch(cache_key(key)) do
       find(:first, :conditions => ["key = ?", key.to_s]) || create(:key => key.to_s, :state => "restricted")
-    end  
+    end
   end
 
   def self.state_options
@@ -83,10 +78,11 @@ class Tr8n::Component < ActiveRecord::Base
     "#{name} (#{key})"
   end
 
-  after_destroy :delete_cache
-  after_save :delete_cache
+  def after_destroy
+    Tr8n::Cache.delete(cache_key)
+  end
 
-  def delete_cache
+  def after_save
     Tr8n::Cache.delete(cache_key)
   end
 

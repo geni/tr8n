@@ -3,7 +3,7 @@
     [:checkbox, :locks],
     [:language_id, lambda{|lock|
       if lock.language
-        link_to(lock.language.english_name, :controller => "/tr8n/admin/language", :action => :view, :lang_id => lock.language.id)
+        link_to(lock.language.english_name, admin_language_view_path(lang_id: lock.language.id))
       else
          "Deleted Language"
       end
@@ -26,11 +26,11 @@
   ['Delete Selected Locks', 'deleteSelectedLocks()']
 ]) %>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function deleteSelectedLocks() {
-    if (!confirm('Are you sure you want to run this opperation?'))
+    if (!confirm('Are you sure you want to run this operation?'))
        return;
-    Tr8n.element('locks_form').action = "/tr8n/admin/translation_key/delete_lock";
+    Tr8n.element('locks_form').action = "<%= admin_translation_key_delete_lock_path %>";
     Tr8n.element('locks_form').submit();
   }
 <% end %>

@@ -1,34 +1,35 @@
-#--
-# Copyright (c) 2010 Michael Berkovich, Geni Inc
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
 
-class Tr8n::LanguageCaseRule < ActiveRecord::Base
-  set_table_name :tr8n_language_case_rules
+# == Schema Information
+#
+# Table name: tr8n_language_case_rules
+#
+#  id               :integer          not null, primary key
+#  definition       :text             not null
+#  position         :integer
+#  created_at       :datetime
+#  updated_at       :datetime
+#  language_case_id :integer          not null
+#  language_id      :integer
+#  translator_id    :bigint
+#
+# Indexes
+#
+#  tr8n_lcr_case_id        (language_case_id)
+#  tr8n_lcr_lang_id        (language_id)
+#  tr8n_lcr_translator_id  (translator_id)
+#
+class Tr8n::LanguageCaseRule < ApplicationRecord
 
-  belongs_to :language_case,  :class_name => "Tr8n::LanguageCase"
-  belongs_to :language,       :class_name => "Tr8n::Language"
-  belongs_to :translator,     :class_name => "Tr8n::Translator"
+  belongs_to :language_case
+  belongs_to :language
+  belongs_to :translator
 
   serialize :definition
+  validates_presence_of :definition
+
+  def definition=(value)
+    write_attribute(:definition, HashWithIndifferentAccess.new(value || {}))
+  end
 
   def self.by_id(id)
     Tr8n::Cache.fetch("language_case_rule_#{id}") do

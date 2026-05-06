@@ -63,7 +63,7 @@
 <div id="tr8n_debugger" class="section_box colored" style="font-size:10px; border:1px solid black; height:350px; overflow:auto; padding: 2px;">
 </div>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   tr8nProxy.enableLogger();
 
   function clearResults() {
@@ -93,13 +93,13 @@
   }
 
   function searchPhrase() {
-    url = "/tr8n/phrases/index?search=" + encodeURI(Tr8n.value('label'));
+    url = "<%= phrases_path %>?search=" + encodeURI(Tr8n.value('label'));
     window.open(url,'translation_key');
     return false;
   }
 
   function showExamples() {
-    tr8nLightbox.show('/tr8n/admin/clientsdk/lb_samples', {height:500});
+    tr8nLightbox.show('<%= admin_clientsdk_lb_samples_path %>', {height:500});
     return false;
   }
 

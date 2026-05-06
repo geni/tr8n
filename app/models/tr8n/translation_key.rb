@@ -1,37 +1,37 @@
-#--
-# Copyright (c) 2010 Michael Berkovich, Geni Inc
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
 
+# == Schema Information
+#
+# Table name: tr8n_translation_keys
+#
+#  id                :integer          not null, primary key
+#  admin             :boolean
+#  description       :text
+#  key               :string           not null
+#  label             :text             not null
+#  level             :integer          default(0)
+#  locale            :string
+#  synced_at         :datetime
+#  translation_count :integer
+#  type              :string
+#  verified_at       :datetime
+#  created_at        :datetime
+#  updated_at        :datetime
+#
+# Indexes
+#
+#  index_tr8n_translation_keys_on_key        (key) UNIQUE
+#  index_tr8n_translation_keys_on_synced_at  (synced_at)
+#
 require 'digest/md5'
 
-class Tr8n::TranslationKey < ActiveRecord::Base
-  set_table_name :tr8n_translation_keys
+class Tr8n::TranslationKey < ApplicationRecord
 
-  has_many :translations,             :class_name => "Tr8n::Translation",           :dependent => :destroy
-  has_many :translation_key_locks,    :class_name => "Tr8n::TranslationKeyLock",    :dependent => :destroy
-  has_many :translation_key_sources,  :class_name => "Tr8n::TranslationKeySource",  :dependent => :destroy
-  has_many :translation_sources,      :class_name => "Tr8n::TranslationSource",     :through => :translation_key_sources
-  has_many :translation_domains,      :class_name => "Tr8n::TranslationDomain",     :through => :translation_sources
-  has_many :translation_key_comments, :class_name => "Tr8n::TranslationKeyComment", :dependent => :destroy, :order => "created_at desc"
+  has_many :translations,             :dependent => :destroy
+  has_many :translation_key_locks,    :dependent => :destroy
+  has_many :translation_key_sources,  :dependent => :destroy
+  has_many :translation_sources,      :through => :translation_key_sources
+  has_many :translation_domains,      :through => :translation_sources
+  has_many :translation_key_comments, :dependent => :destroy, :order => "created_at desc"
 
   alias :locks        :translation_key_locks
   alias :key_sources  :translation_key_sources
@@ -149,7 +149,7 @@ class Tr8n::TranslationKey < ActiveRecord::Base
 
   # comments are left for a specific language
   def comments(language = Tr8n::Config.current_language)
-    Tr8n::TranslationKeyComment.find(:all, :conditions => ["language_id = ? and translation_key_id = ?", language.id, self.id])
+    Tr8n::TranslationKeyComment.where(["language_id = ? and translation_key_id = ?", language.id, self.id])
   end
 
   delegate :tokens, :tokens?, :to => :tokenized_label
@@ -185,7 +185,7 @@ class Tr8n::TranslationKey < ActiveRecord::Base
   end
 
   def glossary
-    @glossary ||= Tr8n::Glossary.find(:all, :conditions => ["keyword in (?)", words], :order => "keyword asc")
+    @glossary ||= Tr8n::Glossary.where(["keyword in (?)", words]).order("keyword asc")
   end
 
   def glossary?
@@ -227,27 +227,26 @@ class Tr8n::TranslationKey < ActiveRecord::Base
   def commented?(language, translator = nil)
     translator ||= (Tr8n::Config.current_user_is_translator? ? Tr8n::Config.current_translator : nil)
     return false unless translator
-    Tr8n::TranslationKeyComment.find(:first,
-        :conditions => ["translator_id = ? and translation_key_id = ? and language_id = ?",
-                         translator.id, self.id, language.id]
-    )
+    Tr8n::TranslationKeyComment
+            .where(["translator_id = ? and translation_key_id = ? and language_id = ?", translator.id, self.id, language.id])
+            .first
   end
 
   # returns all translations for the key, language and minimal rank
   def translations_for(language = nil, rank = nil)
-    conditions = ["translation_key_id = ?", self.id]
+    conditions = [String.new('translation_key_id = ?'), self.id]
 
     if language
-      conditions[0] << " and language_id = ? "
+      conditions[0] << ' and language_id = ? '
       conditions << language.id
     end
 
     if rank
-      conditions[0] << " and rank >= ?"
+      conditions[0] << ' and rank >= ?'
       conditions << rank
     end
 
-    Tr8n::Translation.find(:all, :conditions => conditions, :order => "rank desc")
+    Tr8n::Translation.where(conditions).order('rank desc')
   end
 
   # used by the inline popup dialog, we don't want to show blocked translations
@@ -463,7 +462,7 @@ class Tr8n::TranslationKey < ActiveRecord::Base
       processed_label = token.substitute(processed_label, token_values, options, language)
     end
 
-    processed_label
+    processed_label.html_safe
   end
 
   def default_decoration(language = Tr8n::Config.current_language, options = {})
@@ -483,7 +482,7 @@ class Tr8n::TranslationKey < ActiveRecord::Base
     html = "<tr8n class='#{classes.join(' ')}' translation_key_id='#{id}'>"
     html << sanitized_label
     html << "</tr8n>"
-    html
+    html.html_safe
   end
 
   def level
@@ -541,7 +540,7 @@ class Tr8n::TranslationKey < ActiveRecord::Base
     html = "<tr8n class='#{classes.join(' ')}' translation_key_id='#{id}'>"
     html << translated_label
     html << "</tr8n>"
-    html
+    html.html_safe
   end
 
   def verify!(time = Time.now)
@@ -561,7 +560,7 @@ class Tr8n::TranslationKey < ActiveRecord::Base
   end
 
   def update_translation_count!
-    update_attributes(:translation_count => Tr8n::Translation.count(:conditions => ["translation_key_id = ?", self.id]))
+    update_attributes!(:translation_count => Tr8n::Translation.where(:translation_key_id => self.id).count)
   end
 
   # deprecated
@@ -576,16 +575,23 @@ class Tr8n::TranslationKey < ActiveRecord::Base
   end
 
   # FIXME: make sure this does not create deadlocks
-  after_save :touch_sources
-  after_destroy :clear_cache
-
   def touch_sources
     sources.each do |source|
       source.touch
     end
   end
 
+  def after_save
+    # Tr8n::Cache.delete(cache_key)
+    touch_sources
+  end
+
+  def after_destroy
+    # Tr8n::Cache.delete(cache_key)
+  end
+
   def add_translation(label, rules = nil, lang = Tr8n::Config.current_language, translator = Tr8n::Config.current_translator)
+    raise Tr8n::Exception.new("The translator is blocked and cannot submit translations") if translator.blocked?
     raise Tr8n::Exception.new("The sentence contains dirty words") unless lang.clean_sentence?(label)
 
     translation = Tr8n::Translation.create(:translation_key => self, :language => lang,
@@ -593,14 +599,6 @@ class Tr8n::TranslationKey < ActiveRecord::Base
     translation.vote!(translator, 1)
     translation
   end
-
-private
-
-  def clear_cache
-    # Tr8n::Cache.delete(cache_key)
-  end
-
-public
 
   ###############################################################
   ## Offline Tasks
@@ -613,9 +611,9 @@ public
   end
 
   def self.update_metrics_offline(opts)
-    tkey = Tr8n::TranslationKey.find(opts[:translation_key_id])
-    language = Tr8n::Language.find(opts[:language_id])
-    Tr8n::TranslationKeySource.find(:all, :conditions => ["translation_key_id = ?", tkey.id]).each do |tks|
+    tkey = Tr8n::TranslationKey.find_by_id(opts[:translation_key_id])
+    language = Tr8n::Language.find_by_id(opts[:language_id])
+    Tr8n::TranslationKeySource.where(:translation_key_id => tkey.id).each do |tks|
       next unless tks.source
       tks.source.update_metrics!(language)
     end
@@ -626,7 +624,7 @@ public
   ## Synchronization Methods
   ###############################################################
   def mark_as_synced!
-    update_attributes(:synced_at => Time.now + 2.seconds)
+    update_attributes!(:synced_at => Time.now + 2.seconds)
   end
 
   def to_sync_hash(opts = {})
@@ -695,7 +693,7 @@ public
   end
 
   def self.help_url
-    '/tr8n/help'
+    help_path
   end
 
   def suggestion_label
@@ -719,15 +717,13 @@ public
   ###############################################################
 
   def self.all_restricted_ids
-    Tr8n::TranslationKey.find(:all,
-        :select => "distinct tr8n_translation_keys.id",
-        :conditions => ["c.state = ?", 'restricted'],
-        :joins => [
-          "join tr8n_translation_key_sources as tks on tr8n_translation_keys.id = tks.translation_key_id",
-          "join tr8n_component_sources as cs on tks.translation_source_id = cs.translation_source_id",
-          "join tr8n_components as c on cs.component_id = c.id"
-        ]
-    ).collect{|key| key.id}
+    Tr8n::TranslationKey
+        .where(["c.state = ?", 'restricted'])
+        .select("distinct tr8n_translation_keys.id")
+        .joins("join tr8n_translation_key_sources as tks on tr8n_translation_keys.id = tks.translation_key_id")
+        .joins("join tr8n_component_sources as cs on tks.translation_source_id = cs.translation_source_id")
+        .joins("join tr8n_components as c on cs.component_id = c.id")
+        .collect{|key| key.id}
   end
 
   def self.filter_phrase_type_options
@@ -751,7 +747,7 @@ public
   end
 
   def self.search_conditions_for(params)
-    conditions = ["(tr8n_translation_keys.type is null or tr8n_translation_keys.type = 'Tr8n::TranslationKey' or tr8n_translation_keys.type = 'TranslationKey')"]
+    conditions = [String.new("(tr8n_translation_keys.type is null or tr8n_translation_keys.type = 'Tr8n::TranslationKey' or tr8n_translation_keys.type = 'TranslationKey')")]
     conditions[0] << " and tr8n_translation_keys.locale <> ? and (level is null or level <= ?) "
     conditions << Tr8n::Config.current_language.locale
     conditions << (Tr8n::Config.current_user_is_translator? ? Tr8n::Config.current_translator.level : 0)

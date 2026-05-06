@@ -6,7 +6,7 @@
         Source Details
     </div>
     <div class="bd">
-        <% form_for(:source, @source, :url => {:action => :update_source}, :html => {:id => 'tr8n_form', :method => :post, :class => "tr8n"}) do |form| %>
+        <%= form_for(@source, :as => 'source', :url => admin_applications_update_source_path, :html => {:id => 'tr8n_form', :method => :post, :class => "tr8n"}) do |form| %>
             <%= form.hidden_field :id %>
             <%= hidden_field_tag :source_url, request.env['HTTP_REFERER'] %>
             <table class="admin_table">

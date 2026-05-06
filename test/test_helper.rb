@@ -1,27 +1,17 @@
-# this will need to go away once we make tr8n a gem
-#$LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__) + "/../../will_filter/app/models")
+# frozen_string_literal: false
 
 require 'pp'
 
 ENV["RAILS_ENV"] = "test"
 
-#module CaptureRubyWarnings
-#  def warn(message)
-#    return if message =~ /assigned but unused variable/
-#    return if caller[0] =~ /vendor/ || message =~ /vendor/ # Ignore warnings from vendored code
-#    super
-#  end
-#end
-#Warning.extend(CaptureRubyWarnings)
-
-unless defined?($SKIP_COVERAGE)
-  require 'simplecov'
-  SimpleCov.start do
-    add_filter 'config'
-    add_filter 'test'
-    add_filter 'vendor'
+module CaptureRubyWarnings
+  def warn(message)
+    return if message =~ /assigned but unused variable/
+    return if caller[0] =~ /vendor/ || message =~ /vendor/ # Ignore warnings from vendored code
+    super
   end
 end
+Warning.extend(CaptureRubyWarnings)
 
 class Object
   def tap_pp(*args)
@@ -30,56 +20,96 @@ class Object
   end
 end
 
-require_relative '../test/dummy/config/environment'
+require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require "rails/test_help"
 
-# Set up database connection for Rails 3.0+
-if defined?(Rails::VERSION) && Rails::VERSION::MAJOR >= 3
-  # Rails 3.0 requires explicit database connection setup
-  db_config = YAML.load_file(File.expand_path('../../test/dummy/config/database.yml', __FILE__))
-  ActiveRecord::Base.establish_connection(db_config['test'])
-end
+Rails.backtrace_cleaner.remove_silencers!
 
-class Tr8n::TestCase < ActiveRecord::TestCase
-  # Enable transactional tests - rollback after each test
-  # Rails 3.0 uses use_transactional_fixtures, Rails 2.3 uses use_transactional_tests
-  if respond_to?(:use_transactional_fixtures=)
+module Tr8n
+  class TestCase < ActiveSupport::TestCase
     self.use_transactional_fixtures = true
-  elsif respond_to?(:use_transactional_tests=)
-    self.use_transactional_tests = true
-  end
 
-  def setup(*args)
-    @current_user = Tr8n::Translator.create!(:id => 1, :user_id => 1, :name => 'Mike', :gender => 'male')
-    @english      = Tr8n::Language.for('en-US')
-    @russian      = Tr8n::Language.for('ru')
-    @spanish      = Tr8n::Language.for('es')
+    SETUP = begin
+      # run once before all tests are executed and
+      # before any other SETUP= blocks in subclasses
+    end
 
-    @default_language = @english
-    Tr8n::Config.init(@default_language.locale, @current_user)
-  end
+    def setup
+      Tr8n::Config.reload_config!
+      init_tr8n
+    end
 
-end
+  private
 
-# Load mocha for Rails 3.0+
-# Note: test-unit 3.x has built-in mocha support, so we don't need to load mocha/integration
-# The mocha gem will be automatically integrated by test-unit
+    def init_tr8n(locale=english.locale, user=self.user)
+      Tr8n::Config.init(locale, user)
+    end
 
-# create database tables
-Dir[File.expand_path(File.dirname(__FILE__) + '/../db/migrate/*.rb')].each do |file|
-  require file
-end
+    def translator
+      @translator ||= Tr8n::Translator.create!(:user => user)
+    end
 
-ActiveRecord::Migration.verbose = true
-ActiveRecord::Migrator.migrate("db/migrate/")
+    def user
+      @user ||= User.create!(:name => 'Mike', :gender => 'male')
+    end
 
-# Also run dummy app migrations if they exist
-dummy_migrations = File.expand_path(File.dirname(__FILE__) + '/dummy/db/migrate')
-if File.directory?(dummy_migrations)
-  Dir["#{dummy_migrations}/*.rb"].each do |file|
-    require file
-  end
-  ActiveRecord::Migrator.migrate(dummy_migrations)
-end
+    def mike
+      @mike ||= User.create!(:name => 'Mike', :gender => 'male')
+    end
+
+    def anna
+      @anna ||= User.create!(:name => 'Anna', :gender => 'female')
+    end
+
+    def alex
+      @alex ||= User.create!(:name => 'Alex', :gender => 'unknown')
+    end
+
+    def english
+      @english ||= Tr8n::Language.for('en-US')
+    end
+
+    def russian
+      @russian ||= Tr8n::Language.for('ru')
+    end
+
+    def spanish
+      @spanish ||= Tr8n::Language.for('es')
+    end
+
+  end # class TestCase
+
+  class ControllerTest < ActionController::TestCase
+    include Engine.routes.url_helpers
+
+    def setup
+      @routes = Tr8n::Engine.routes
+    end
+
+  private
+
+    def user
+      @user ||= User.create!(:name => 'Mike', :gender => 'male', :admin => true)
+    end
+
+    def login!(user: self.user, translator: true)
+      Tr8n::Translator.register(user) if translator
+      request.session[:user_id] = user.id
+    end
+
+    def logout
+      request.session[:user_id] = nil
+    end
+
+    def dump_routes
+      require 'rails/commands/routes/routes_command'
+      Rails::Command::RoutesCommand.new.perform
+    end
+
+  end # ControllerTest
+
+
+end # module Tr8n
 
 Tr8n::Config.init_language('en-US')
 Tr8n::Config.init_language('ru')

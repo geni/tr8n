@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
     end
 
     if save_locale and !current_user.guest?
-      current_user.update!(:locale => session[:locale])
+      current_user.update_attributes!(:locale => session[:locale])
     end
 
     session[:locale]
@@ -21,19 +21,7 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
   def current_user
-    @current_user ||= User.find_by_id(session[:user_id].to_i) || User.new(:id => -1, :name => 'Guest').freeze
+    @current_user ||= User.find_by_id(session[:user_id].to_i) || User.new(:id => -1, :name => 'Guest', :guest => true).freeze
   end
 
-private
-
-  def logout!
-    session[:user_id] = nil
-  end
-
-  # Returns the user's preferred locale based on browser headers or defaults
-  def tr8n_user_preferred_locale
-    # Try to get locale from Accept-Language header or use default
-    Tr8n::Config.default_locale
-  end
-
-end # class ApplicationController
+end

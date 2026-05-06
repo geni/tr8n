@@ -2,7 +2,7 @@
 	<div class="section_title">
 		<% if @translation_key.can_be_translated? %>
 	    <div style="<%=tr8n_style_attribute_tag('float', 'right')%>; font-size: 12px; font-weight:normal;">
-	      <%= link_to_function("#{image_tag( url_with_cache_version('/tr8n/images/add.png'), :style=>'vertical-align:bottom')} #{tra("add translation")}", "addTranslation()") %>
+	      <%= link_to_function("#{image_tag('tr8n/add.png', :style=>'vertical-align:bottom')} #{tra("add translation")}".html_safe, "addTranslation()") %>
 	    </div>
     <% end %>
 

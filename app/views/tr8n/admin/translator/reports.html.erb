@@ -1,18 +1,18 @@
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@reports) %>
+<%= tr8n_will_filter(@reports.results) %>
 
 <% form_tag("", :id => "sources_form") do %>
   <%= will_filter_table_tag(@reports, :columns => [
     :created_at,
     [:translator_id, lambda{|report|
       if report.translator
-        link_to(report.translator.name, :controller => "/tr8n/admin/translator", :action => :view, :translator_id => report.translator.id)
+        link_to(report.translator.name, admin_translator_view_path(:translator_id => report.translator.id))
       else
-        "Unknown" 
-      end  
+        "Unknown"
+      end
     }],
-    :object_type, 
+    :object_type,
     :object_id,
     :reason,
     :comment

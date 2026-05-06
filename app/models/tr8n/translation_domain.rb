@@ -1,37 +1,29 @@
-#--
-# Copyright (c) 2010 Michael Berkovich, Geni Inc
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
 
-class Tr8n::TranslationDomain < ActiveRecord::Base
-  set_table_name :tr8n_translation_domains
-  
-  has_many    :translation_sources,       :class_name => "Tr8n::TranslationSource",     :dependent => :destroy
-  has_many    :translation_key_sources,   :class_name => "Tr8n::TranslationKeySource",  :through => :translation_sources
-  has_many    :translation_keys,          :class_name => "Tr8n::TranslationKey",        :through => :translation_key_sources
-  
+# == Schema Information
+#
+# Table name: tr8n_translation_domains
+#
+#  id           :integer          not null, primary key
+#  description  :string
+#  name         :string
+#  source_count :integer          default(0)
+#  created_at   :datetime
+#  updated_at   :datetime
+#
+# Indexes
+#
+#  index_tr8n_translation_domains_on_name  (name) UNIQUE
+#
+class Tr8n::TranslationDomain < ApplicationRecord
+
+  has_many    :translation_sources,     :dependent => :destroy
+  has_many    :translation_key_sources, :through => :translation_sources
+  has_many    :translation_keys,        :through => :translation_key_sources
+
   alias :sources      :translation_sources
   alias :key_sources  :translation_key_sources
   alias :keys         :translation_keys
-  
+
   def self.cache_key(domain_name)
     "translation_domain_#{domain_name}"
   end
@@ -47,12 +39,11 @@ class Tr8n::TranslationDomain < ActiveRecord::Base
     end
   end
 
-  after_save :delete_cache
-  after_destroy :delete_cache
+  def after_save
+    Tr8n::Cache.delete(cache_key)
+  end
 
-private
-
-  def delete_cache
+  def after_destroy
     Tr8n::Cache.delete(cache_key)
   end
 

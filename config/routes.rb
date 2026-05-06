@@ -1,56 +1,191 @@
-# prevent re-drawing of routes if this gem is required multiple times
-return unless defined?(@drawn)
-@drawn = true
+Tr8n::Engine.routes.draw do
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  mount WillFilter::Engine => '/will_filter'
 
-# Detect Rails version
-def rails_3?
-  defined?(Rails::VERSION) && Rails::VERSION::MAJOR >= 3
-rescue
-  false
-end
+  namespace :admin do
+    get    '/applications',                               :to => 'applications#index'
+    get    '/applications/components',                    :to => 'applications#components'
+    delete '/applications/delete',                        :to => 'applications#delete'
+    delete '/applications/delete_component',              :to => 'applications#delete_component'
+    delete '/applications/delete_key_source',             :to => 'applications#delete_key_source'
+    delete '/applications/delete_source',                 :to => 'applications#delete_source'
+    get    '/applications/key_sources',                   :to => 'applications#key_sources'
+    post   '/applications/lb_add_objects_to_component',   :to => 'applications#lb_add_objects_to_component'
+    post   '/applications/lb_add_to_component',           :to => 'applications#lb_add_to_component'
+    get    '/applications/lb_caller',                     :to => 'applications#lb_caller'
+    get    '/applications/lb_update',                     :to => 'applications#lb_update'
+    get    '/applications/lb_update_component',           :to => 'applications#lb_update_component'
+    get    '/applications/lb_update_source',              :to => 'applications#lb_update_source'
+    get    '/applications/recalculate_metric',            :to => 'applications#recalculate_metric'
+    get    '/applications/recalculate_source',            :to => 'applications#recalculate_source'
+    delete '/applications/remove_keys_from_source',       :to => 'applications#remove_keys_from_source'
+    delete '/applications/remove_objects_from_component', :to => 'applications#remove_objects_from_component'
+    get    '/applications/source',                        :to => 'applications#source'
+    get    '/applications/sources',                       :to => 'applications#sources'
+    post   '/applications/update',                        :to => 'applications#update'
+    post   '/applications/update_component',              :to => 'applications#update_component'
+    post   '/applications/update_source',                 :to => 'applications#update_source'
 
-if rails_3?
-  # Rails 3.0+ routing syntax
-  Rails.application.routes.draw do
-    [:awards, :chart, :forum, :glossary, :help, :language_cases,
-     :language, :phrases, :translations, :translator, :home, :login].each do |ctrl|
-      match "tr8n/#{ctrl}/:action", :controller => "tr8n/#{ctrl}", :via => [:get, :post]
-    end
+    get    '/clientsdk',            :to => 'clientsdk#index'
+    get    '/clientsdk/lb_samples', :to => 'clientsdk#lb_samples'
 
-    [:chart, :clientsdk, :forum, :glossary, :language, :translation, :translation_key, :translator, :applications].each do |ctrl|
-      match "tr8n/admin/#{ctrl}/:action", :controller => "tr8n/admin/#{ctrl}", :via => [:get, :post]
-    end
+    get    '/forum',                :to => 'forum#index'
+    delete '/forum/delete_message', :to => 'forum#delete_message'
+    delete '/forum/delete_report',  :to => 'forum#delete_report'
+    delete '/forum/delete_topic',   :to => 'forum#delete_topic'
+    get    '/forum/messages',       :to => 'forum#messages'
+    get    '/forum/reports',        :to => 'forum#reports'
 
-    [:application, :language, :translation, :translator].each do |ctrl|
-      match "tr8n/api/v1/#{ctrl}/:action", :controller => "tr8n/api/v1/#{ctrl}", :via => [:get, :post]
-    end
+    get    '/glossary',           :to => 'glossary#index'
+    delete '/glossary/delete',    :to => 'glossary#delete'
+    get    '/glossary/lb_update', :to => 'glossary#lb_update'
+    post   '/glossary/update',    :to => 'glossary#update'
 
-    match "tr8n/api/v1/language/translate.js", :controller => "tr8n/api/v1/language", :action => "translate", :via => [:get, :post]
+    get    '/language',                         :to => 'language#index'
+    get    '/language/calculate_metrics',       :to => 'language#calculate_metrics'
+    get    '/language/calculate_total_metrics', :to => 'language#calculate_total_metrics'
+    get    '/language/cases',                   :to => 'language#cases'
+    get    '/language/case_rules',              :to => 'language#case_rules'
+    get    '/language/case_values',             :to => 'language#case_values'
+    post   '/language/disable',                 :to => 'language#disable'
+    post   '/language/enable',                  :to => 'language#enable'
+    get    '/language/lb_add_to_component',     :to => 'language#lb_add_to_component'
+    get    '/language/lb_update',               :to => 'language#lb_update'
+    get    '/language/rules',                   :to => 'language#rules'
+    post   '/language/update',                  :to => 'language#update'
+    post   '/language/update_value_map',        :to => 'language#update_value_map'
+    get    '/language/users',                   :to => 'language#users'
+    get    '/language/view',                    :to => 'language#view'
 
-    namespace :tr8n do
-      root :to => 'home#index'
-    end
+    get    '/metrics',                          :to => 'metrics#index'
+    get    '/metrics/charts',                   :to => 'metrics#charts'
+    get    '/metrics/languages',                :to => 'metrics#languages'
+    get    '/metrics/translators',              :to => 'metrics#translators'
+    get    '/metrics/top_translators',          :to => 'metrics#top_translators'
+
+    get    '/translation',             :to => 'translation#index'
+    delete '/translation/delete',      :to => 'translation#delete'
+    delete '/translation/delete_vote', :to => 'translation#delete_vote'
+    get    '/translation/votes',       :to => 'translation#votes'
+
+    get    '/translation_key',                            :to => 'translation_key#index'
+    get    '/translation_key/comments',                   :to => 'translation_key#comments'
+    delete '/translation_key/delete',                     :to => 'translation_key#delete'
+    delete '/translation_key/delete_lock',                :to => 'translation_key#delete_lock'
+    post   '/translation_key/lb_add_to_source',           :to => 'translation_key#lb_add_to_source'
+    post   '/translation_key/lb_merge',                   :to => 'translation_key#lb_merge'
+    post   '/translation_key/lb_update',                  :to => 'translation_key#lb_update'
+    get    '/translation_key/locks',                      :to => 'translation_key#locks'
+    post   '/translation_key/merge',                      :to => 'translation_key#merge'
+    get    '/translation_key/reset_verification_flags',   :to => 'translation_key#reset_verification_flags'
+    post   '/translation_key/update',                     :to => 'translation_key#update'
+    post   '/translation_key/update_lock',                :to => 'translation_key#update_lock'
+    get    '/translation_key/update_translation_counts',  :to => 'translation_key#update_translation_counts'
+    get    '/translation_key/view',                       :to => 'translation_key#view'
+
+    get    '/translator',                 :to => 'translator#index'
+    delete '/translator/delete',          :to => 'translator#delete'
+    delete '/translator/delete_comment',  :to => 'translator#delete_comment'
+    get    '/translator/following',       :to => 'translator#following'
+    get    '/translator/ip_locations',    :to => 'translator#ip_locations'
+    get    '/translator/log',             :to => 'translator#log'
+    get    '/translator/lb_register',     :to => 'translator#lb_register'
+    post   '/translator/register',        :to => 'translator#register'
+    get    '/translator/reports',         :to => 'translator#reports'
+    get    '/translator/update_stats',    :to => 'translator#update_stats'
+    get    '/translator/view',            :to => 'translator#view'
   end
-else
-  # Rails 2.3 routing syntax
-  ActionController::Routing::Routes.draw do |map|
-    [:awards, :chart, :forum, :glossary, :help, :language_cases,
-     :language, :phrases, :translations, :translator, :home, :login].each do |ctrl|
-      map.connect "tr8n/#{ctrl}/:action", :controller => "tr8n/#{ctrl}"
-    end
 
-    [:chart, :clientsdk, :forum, :glossary, :language, :translation, :translation_key, :translator, :applications].each do |ctrl|
-      map.connect "tr8n/admin/#{ctrl}/:action", :controller => "tr8n/admin/#{ctrl}"
-    end
+  get '/awards', :to => 'awards#index'
 
-    [:application, :language, :translation, :translator].each do |ctrl|
-      map.connect "tr8n/api/v1/#{ctrl}/:action", :controller => "tr8n/api/v1/#{ctrl}"
-    end
+  get '/forum',       :to => 'forum#index'
+  get '/forum/topic', :to => 'forum#topic'
 
-    map.connect "tr8n/api/v1/language/translate.js", :controller => "tr8n/api/v1/language", :action => "translate"
+  get '/glossary', :to => 'glossary#index'
 
-    map.namespace('tr8n') do |tr8n|
-      tr8n.root :controller => 'home'
-    end
-  end
+  get '/help',                        :to => 'help#index'
+  get '/help/advanced_tools',         :to => 'help#advanced_tools'
+  get '/help/awards',                 :to => 'help#awards'
+  get '/help/creating_translations',  :to => 'help#creating_translations'
+  get '/help/dashboard',              :to => 'help#dashboard'
+  get '/help/discussions',            :to => 'help#discussions'
+  get '/help/help',                   :to => 'help#help'
+  get '/help/inline_translator',      :to => 'help#inline_translator'
+  get '/help/language_selector',      :to => 'help#language_selector'
+  get '/help/management',             :to => 'help#management'
+  get '/help/phrases',                :to => 'help#phrases'
+  get '/help/ranks',                  :to => 'help#ranks'
+  get '/help/site_map',               :to => 'help#site_map'
+  get '/help/translations',           :to => 'help#translations'
+  get '/help/voting_on_translations', :to => 'help#voting_on_translations'
+
+  get '/home',         :to => 'home#index'
+  get '/home/credits', :to => 'home#credits'
+  get '/home/license', :to => 'home#license'
+
+  get  '/language',                             :to => 'language#index'
+  get  '/language/lb_language_case_rule',       :to => 'language#lb_language_case_rule'
+  get  '/language/manage',                      :to => 'language#manage'
+  post '/language/manage',                      :to => 'language#manage'
+  post '/language/remove',                      :to => 'language#remove'
+  get  '/language/select',                      :to => 'language#select'
+  post '/language/switch',                      :to => 'language#switch'
+  get  '/language/table',                       :to => 'language#table'
+  get  '/language/translator',                  :to => 'language#translator'
+  post '/language/update_language_case_rules',  :to => 'language#update_language_case_rules'
+  post '/language/update_language_cases',       :to => 'language#update_language_cases'
+  post '/language/update_language_section',     :to => 'language#update_language_section'
+  post '/language/update_rules',                :to => 'language#update_rules'
+
+  get '/language_cases', :to => 'language_cases#index'
+
+  get '/login',     :to => 'login#index'
+  get '/login/out', :to => 'login#out', :as => 'logout'
+
+  get  '/phrases',                :to => 'phrases#index'
+  get  '/phrases/map',            :to => 'phrases#map'
+  post '/phrases/submit_comment', :to => 'phrases#submit_comment'
+  get  '/phrases/view',           :to => 'phrases#view'
+
+  get  '/translations',           :to => 'translations#index'
+  get  '/translations/permutate', :to => 'translations#permutate'
+  post '/translations/permutate', :to => 'translations#permutate'
+  get  '/translations/translate', :to => 'translations#translate'
+  post '/translations/translate', :to => 'translations#translate'
+  get  '/translations/vote',      :to => 'translations#vote'
+  post '/translations/vote',      :to => 'translations#vote'
+
+  get  '/translator',                   :to => 'translator#index'
+  get  '/translator/assignments',       :to => 'translator#assignments'
+  post '/translator/follow',            :to => 'translator#follow'
+  get  '/translator/following',         :to => 'translator#following'
+  get  '/translator/ip_locations',      :to => 'translator#ip_locations'
+  get  '/translator/log',               :to => 'translator#log'
+  get  '/translator/notifications',     :to => 'translator#notifications'
+  get  '/translator/reports',           :to => 'translator#reports'
+  get  '/translator/settings',          :to => 'translator#settings'
+  post '/translator/settings',          :to => 'translator#settings'
+  post '/translator/unfollow',          :to => 'translator#unfollow'
+  post '/translator/update_value_map',  :to => 'translator#update_value_map'
+
+  post '/translations/translate',   :to => 'translations#translate'
+
+#  [chart, :forum, :glossary, :help, :language_cases,
+#   :language, :phrases, :translations, :translator, :home, :login
+#  ].each do |ctrl|
+#    get "/#{ctrl}/:action", :to => "#{ctrl}##{action}"
+#  end
+
+#  [:chart, :clientsdk, :forum, :glossary, :language, :translation,
+#   :translation_key, :translator, :applications
+#  ].each do |ctrl|
+#    get "/admin/#{ctrl}/:action", :to => "admin/#{ctrl}##{action}"
+#  end
+
+#  [:application, :language, :translation, :translator].each do |ctrl|
+#    get "/api/v1/#{ctrl}/:action", :to => "api/v1/#{ctrl}##{action}"
+#  end
+
+  get "/api/v1/language/translate.js", :to => 'api/v1/language#translate'
+  get '/', :to => 'home#index'
 end

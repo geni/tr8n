@@ -5,11 +5,11 @@
               <div style="float:right">
                   <%
                     html = []
-                    html << link_to(image_tag( url_with_cache_version("/tr8n/images/arrow_rotate_clockwise.png") ), {:action => :recalculate_metric, :metric_id => metric.id}, {:confirm => "Are you sure you want to recaluclate this metric?"})
+                    html << link_to(image_tag('tr8n/arrow_rotate_clockwise.png'), {:action => :recalculate_metric, :metric_id => metric.id}, {:confirm => "Are you sure you want to recaluclate this metric?"})
                   %>
                   <%= html.join(' | ') %>
               </div>
-              <div style="font-weight:bold;"><%=image_tag( url_with_cache_version("/tr8n/images/flags/#{metric.language.flag}.png") )%> &nbsp; <%=metric.language.english_name%></div>
+              <div style="font-weight:bold;"><%= tr8n_language_flag_tag(metric.language) %> &nbsp; <%= metric.language.english_name %></div>
           </div>
           <%=render :partial => "/tr8n/translator/translation_source_metric", :locals => {:translation_source => metric.translation_source, :translation_source_metric => metric} %>
       </div>
@@ -17,12 +17,12 @@
 
 <% else %>
   <%= will_filter_table_tag(@metrics, :columns => [
-      [:flag, lambda{|metric| metric.language ? image_tag( url_with_cache_version("/tr8n/images/flags/#{metric.language.flag}.png") ) : ''}, 'width:30px;'],
+      [:flag, lambda{|metric| metric.language ? tr8n_language_flag_tag(metric.language) : ''}, 'width:30px;'],
       [:language_id, lambda{|metric|
          metric.language.english_name
       }],
       [:key_count, lambda{|metric|
-        link_to(metric.key_count, "/tr8n/admin/applications/source?mode=translation_keys&source_id=#{metric.translation_source.id}")
+        link_to(metric.key_count, admin_application_source_path(mode: 'translation_keys', source_id: metric.translation_source.id))
       }, 'text-align:right'],
       [:translated_key_count, lambda{|metric|
         metric.translated_key_count

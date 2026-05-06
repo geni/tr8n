@@ -1,7 +1,7 @@
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
 
 <style>
-	.banner { background: #f6f8ee; border: 1px solid #c2c2c2; color: #666; height: 325px; margin: 20px auto; overflow: hidden; position: relative; width: 938px; -webkit-border-radius: 11px; -moz-border-radius: 11px; border-radius: 11px; }
+	.banner { background: #f6f8ee; border: 1px solid #c2c2c2; color: #666; margin: 20px auto; overflow: hidden; position: relative; width: 938px; -webkit-border-radius: 11px; -moz-border-radius: 11px; border-radius: 11px; }
 	.link {
 		padding-bottom:8px;
 	}
@@ -11,7 +11,7 @@
 		<table>
 			<tr>
 				<td style="vertical-align:middle;text-align:center;padding:25px;">
-			   <%=image_tag( url_with_cache_version("/tr8n/images/tr8n_logo2.png"), :style => "height:180px;")%>
+          <%=image_tag('tr8n/tr8n_logo2.png', :style => 'height:180px;')%>
 				</td>
 				<td style="vertical-align:top;padding:15px;">
 					<div class="content_bd">
@@ -21,13 +21,13 @@
 					  <h3 style="padding-left:15px;color:#666;font-size:14px;"><%=tr("Follow these links to get started:")%></h3>
 						<br>
 					  <ul style="list-style-type:decimal; margin-left:30px; font-size:14px;">
-					    <li class="link"><%= link_to_function(tr("Change your language and enable inline translations"), "tr8nLightbox.show('/tr8n/language/select?lightbox=true', {'height':500, 'width':400})")%></li>
-							<li class="link"><%= link_to(tr("Take a look at your dashboard and see your translation progress"), "/tr8n/translator")%></li>
-					    <li class="link"><%= link_to(tr("View and translate phrases in the bulk translation mode"), "/tr8n/phrases")%></li>
-					    <li class="link"><%= link_to(tr("View and search through translations"), "/tr8n/translations")%></li>
-					    <li class="link"><%= link_to(tr("See translator awards"), "/tr8n/awards")%></li>
-					    <li class="link"><%= link_to(tr("Participate in translator discussions"), "/tr8n/forum")%></li>
-					    <li class="link"><%= link_to(tr("View help"), "/tr8n/help")%></li>
+					    <li class="link"><%= link_to_function(tr("Change your language and enable inline translations"), "tr8nLightbox.show('#{language_select_path(lightbox: true)}', {'height':500, 'width':400})")%></li>
+							<li class="link"><%= link_to(tr("Take a look at your dashboard and see your translation progress"), translator_path)%></li>
+					    <li class="link"><%= link_to(tr("View and translate phrases in the bulk translation mode"), phrases_path)%></li>
+					    <li class="link"><%= link_to(tr("View and search through translations"), translations_path)%></li>
+					    <li class="link"><%= link_to(tr("See translator awards"), awards_path)%></li>
+					    <li class="link"><%= link_to(tr("Participate in translator discussions"), forum_path)%></li>
+					    <li class="link"><%= link_to(tr("View help"), help_path)%></li>
 					  </ul>
 					</div>
 				</td>

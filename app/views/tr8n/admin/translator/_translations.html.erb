@@ -3,7 +3,7 @@
     :id,
     [:translation_key_id, lambda{|translation|
        html = []
-       html << link_to(translation.translation_key.label, :controller => "/tr8n/admin/translation_key", :action => :view, :key_id => translation.translation_key.id)
+       html << link_to(translation.translation_key.label, admin_translation_key_view_path(key_id: translation.translation_key.id))
        html << "<div style='font-size:10px;color:grey'>"
        html << translation.translation_key.description
        html << "</div>"
@@ -11,14 +11,14 @@
     }],
     [:language_id, lambda{|translation|
       if translation.language
-        link_to(translation.language.english_name, :controller => "/tr8n/admin/language", :action => :view, :lang_id => translation.language.id)
+        link_to(translation.language.english_name, admin_language_view_path(lang_id: translation.language.id))
       else
          "Deleted Language"
       end
     }],
     [:label, lambda{|translation|
       html = []
-      html << link_to(translation.label, :controller => "/tr8n/admin/translation", :action => :view, :translation_id => translation.id)
+      html << link_to(translation.label, admin_translation_view_path(translation_id: translation.id))
       if translation.context
         html << "<div style='font-size:10px;color:grey'>"
         html << "Context: #{translation.context}"
@@ -42,7 +42,7 @@
     :created_at,
     [:actions, lambda{|translation|
       html = []
-      html << link_to("Delete", {:controller => "/tr8n/admin/translation", :action => :delete, :translation_id => translation.id}, {:confirm => "Are you sure you want to delete this translation?"})
+      html << link_to("Delete", admin_translation_delete_path(translation_id: translation.id), {:confirm => "Are you sure you want to delete this translation?"})
       html.join(' | ')
     }, 'text-align:right;white-space:nowrap;']
   ]) %>
@@ -52,11 +52,11 @@
 ]) %>
 
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function deleteSelectedTranslations() {
-    if (!confirm('Are you sure you want to run this opperation?'))
+    if (!confirm('Are you sure you want to run this operation?'))
        return;
-    Tr8n.element('translations_form').action = "/tr8n/admin/translation/delete";
+    Tr8n.element('translations_form').action = "<%= admin_translation_delete_path %>";
     Tr8n.element('translations_form').submit();
   }
 <% end %>

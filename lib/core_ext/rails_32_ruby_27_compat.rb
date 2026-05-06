@@ -1,11 +1,3 @@
-#--
-# Copyright (c) 2026 MyHeritage USA, Inc. and MyHeritage Ltd.
-#
-# Rails 3.2 + Ruby 2.7 Compatibility Fixes
-#
-# This file provides compatibility patches for running Rails 3.2 on Ruby 2.7+
-# Note: BigDecimal.new fix is applied in config/boot.rb before Rails loads
-#++
 
 # Add backward compatibility shim for set_table_name in Rails 3.2+
 # In Rails 3.2, set_table_name was deprecated in favor of self.table_name=

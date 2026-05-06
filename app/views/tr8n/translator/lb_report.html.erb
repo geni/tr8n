@@ -32,9 +32,9 @@
             <%=tra("Forum Message")%>
         </div>
         <div style="padding-bottom:5px;font-size:14px; max-height:50px; overflow:auto;">
-            <%=image_tag( url_with_cache_version("/tr8n/images/left_quote.png"), :style=>"text-align:bottom;padding-bottom:5px;") %>
+            <%=image_tag('tr8n/left_quote.png', :style=>"text-align:bottom;padding-bottom:5px;") %>
             <%=@reported_object.toHTML %>
-            <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
+            <%=image_tag('tr8n/right_quote.png', :style=>"text-align:bottom;padding-top:5px;") %>
         </div>
       </div>
     <% elsif @reported_object.is_a?(Tr8n::TranslationKeyComment) %>
@@ -43,9 +43,9 @@
             <%=tra("Translation Key Comment")%>
         </div>
         <div style="padding-bottom:5px;font-size:14px; max-height:50px; overflow:auto;">
-            <%=image_tag( url_with_cache_version("/tr8n/images/left_quote.png"), :style=>"text-align:bottom;padding-bottom:5px;") %>
+            <%=image_tag('tr8n/left_quote.png', :style=>"text-align:bottom;padding-bottom:5px;") %>
             <%=@reported_object.toHTML %>
-            <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
+            <%=image_tag('tr8n/right_quote.png', :style=>"text-align:bottom;padding-top:5px;") %>
         </div>
       </div>
     <% elsif @reported_object.is_a?(Tr8n::Translation) %>
@@ -55,9 +55,9 @@
         </div>
 
         <div style="padding-bottom:5px;font-size:14px">
-            <%=image_tag( url_with_cache_version("/tr8n/images/left_quote.png"), :style=>"text-align:bottom;padding-bottom:5px;") %>
+            <%=image_tag('tr8n/left_quote.png', :style=>"text-align:bottom;padding-bottom:5px;") %>
             <%=h @reported_object.label %>
-            <%=image_tag( url_with_cache_version("/tr8n/images/right_quote.png"), :style=>"text-align:bottom;padding-top:5px;") %>
+            <%=image_tag('tr8n/right_quote.png', :style=>"text-align:bottom;padding-top:5px;") %>
         </div>
 
         <% if @reported_object.context %>

@@ -10,7 +10,7 @@
         <td>
             <%=@key.label %>
         </td>
-    </tr>    
+    </tr>
 
     <tr>
         <th>
@@ -20,7 +20,7 @@
             <%=@key.description %>
         </td>
     </tr>
-    
+
     <tr>
         <th width="160">
             Translation Key Id
@@ -84,7 +84,7 @@
         <td>
             <%=@key.created_at %>
         </td>
-    </tr>    
+    </tr>
     <tr>
         <th>
             Updated At
@@ -92,23 +92,23 @@
         <td>
             <%=@key.updated_at %>
         </td>
-    </tr>    
+    </tr>
     <tr>
         <th>
-            
+
         </th>
         <td>
 
         <%
           html = []
-          html << link_to("View as Translator", {:controller => "/tr8n/phrases", :action => :view, :translation_key_id => @key.id})
-          html << link_to_function("Update", "tr8nLightbox.show('/tr8n/admin/translation_key/lb_update?key_id=#{@key.id}', {'height':450})")
-          html << link_to("Delete", {:action => :delete, :key_id => @key.id, :source => :key}, {:confirm => "Are you sure you want to delete this key?"})
+          html << link_to("View as Translator", phrases_view_path(:translation_key_id => @key.id))
+          html << link_to_function("Update", "tr8nLightbox.show('#{admin_translation_key_lb_update_path(:key_id => @key.id)}', {'height':450})")
+          html << link_to("Delete", admin_translation_key_delete_path(:key_id => @key.id, :source => :key), {:confirm => "Are you sure you want to delete this key?"})
         %>
         <%= html.join(' | ') %>
 
         </td>
-    </tr>    
+    </tr>
 </table>
 
 <%=  tr8n_sections_tag(:modes => [

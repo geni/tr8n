@@ -1,3 +1,3 @@
 //= link_directory ../stylesheets .css
 
-//= link platform
+//= link tr8n

@@ -37,7 +37,7 @@
   }
 </style>
 <div style="text-align:center; margin:15px;">
- <%=image_tag( url_with_cache_version("/tr8n/images/tr8n_logo2.png"), :style => "height:120px;")%>
+ <%= image_tag('tr8n/tr8n_logo2.png', :style => "height:120px;")%>
 </div>
 
 <h2 class="underscore content_hd">
@@ -316,6 +316,5 @@
   <a name="next">&nbsp;</a>
   <h2>What's next?</h2>
 
-  Cnogratulations! You have completed the second part of the integration guide. Now read on about <%=link_to("Tr8n Rules Engine Configuration", "/tr8n/home/rules")%>.
-
+  Congratulations! You have completed the second part of the integration guide. Now read on about <%= link_to("Tr8n Rules Engine Configuration", home_rules_path) %>.
 </div>

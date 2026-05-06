@@ -6,20 +6,20 @@
   <ul class="translations_tab_nav translations_tabs">
       <% tr8n_admin_tabs.each do |tab| %>
         <%  classes = []
-            current = (tab["controller"] == controller.controller_name)
+            current = tab['link'].ends_with?(controller.controller_name)
 
-            classes << "current" if current
+            classes << 'current' if current
             if tr8n_admin_tabs.first == tab
-              classes << "first"
-              classes << "first_current" if current
+              classes << 'first'
+              classes << 'first_current' if current
             elsif tr8n_admin_tabs.last == tab
-              classes << "last"
-              classes << "last_current" if current
+              classes << 'last'
+              classes << 'last_current' if current
             end
         %>
 
         <li class="<%=classes.join(' ') %>">
-          <%=link_to(trl(tab["title"], tab["description"]), "/tr8n/admin/#{tab["controller"]}")%>
+         <%= link_to(trl(tab['title'], tab['description']), tab['link']) %>
         </li>
 
       <% end %>

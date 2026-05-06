@@ -14,5 +14,4 @@ class DummyController < ApplicationController
       redirect_to root_path, alert: "User not found"
     end
   end
-
-end # class DummyController
+end

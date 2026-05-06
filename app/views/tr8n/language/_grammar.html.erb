@@ -1,7 +1,7 @@
 <div id="grammar_container">
   <%=render(:partial => "header", :locals => {:section => "grammar", :label => "Context Rules", :description => "", :mode => mode})%>
 
-  <% form_for(:language, tr8n_current_language, :url => {:action => :index}, :html => {:id => 'grammar_form', :method => :post}) do |f| %>
+  <%= form_for(tr8n_current_language, :as => :language, :url => {:action => :index}, :html => {:id => 'grammar_form', :method => :post}) do |f| %>
     <div id="grammar_content" class="section_box colored">
       <div style="<%=tr8n_style_attribute_tag('float', 'right')%>; padding-right:5px;">
         <%=tr8n_help_icon_tag %>
@@ -49,7 +49,7 @@
   <% end %>
 </div>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function updateLanguageRules(language_id) {
     performLanguageRulesOperation(Tr8n.Utils.serializeForm('grammar_form'));
   }
@@ -75,7 +75,7 @@
   }
 
   function performLanguageRulesOperation(params){
-    Tr8n.Utils.update('language_rules', '/tr8n/language/update_rules', {
+    Tr8n.Utils.update('language_rules', '<%= language_update_rules_path %>', {
       parameters: params,
       method: 'post'
     });

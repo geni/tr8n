@@ -30,11 +30,11 @@
 <% end %>
 
 <% if [:edit, :view].include?(mode) %>
-  <% javascript_tag(nonce: true) do %>
+  <%= javascript_tag(nonce: true) do %>
     function editTranslationRow(translation_id, section_key) {
       Tr8n.Effects.hide('tr8n_votes_for_' + translation_id);
       Tr8n.Effects.show('tr8n_spinner_for_' + translation_id);
-      location = "/tr8n/translations/view?translation_id=" + translation_id + "&section_key=" + section_key;
+      location = "<%= translations_view_path %>?translation_id=" + translation_id + "&section_key=" + section_key;
     }
 
     function deleteTranslationRow(translation_id, section_key) {
@@ -50,8 +50,8 @@
       };
       parameters[Tr8n.csrfParam] = encodeURIComponent(Tr8n.csrfToken);
 
-      Tr8n.Utils.ajax('/tr8n/translations/delete', {
-          method: 'post',
+      Tr8n.Utils.ajax('<%= translations_delete_path %>', {
+          method: 'delete',
           parameters: parameters,
           onSuccess: function(response) {
             Tr8n.Effects.hide('translation_row_' + translation_id);
@@ -64,7 +64,7 @@
       Tr8n.Effects.hide('tr8n_votes_for_' + translation_id);
       Tr8n.Effects.show('tr8n_spinner_for_' + translation_id);
 
-      Tr8n.Utils.update('translation_row_' + translation_id, '/tr8n/translations/update', {
+      Tr8n.Utils.update('translation_row_' + translation_id, '<%= translations_update_path %>', {
         evalScripts: true,
         parameters: "translation_id=" + translation_id + "&mode=" + mode
       });
@@ -74,7 +74,7 @@
       Tr8n.Effects.hide('tr8n_votes_for_' + translation_id);
       Tr8n.Effects.show('tr8n_spinner_for_' + translation_id);
 
-      Tr8n.Utils.update('translation_row_' + translation_id, '/tr8n/translations/update', {
+      Tr8n.Utils.update('translation_row_' + translation_id, '<%= translations_update_path %>', {
         evalScripts: true,
         parameters: {translation_id: translation_id, label: Tr8n.value("translation_row_value_" + translation_id)},
         method: 'post'

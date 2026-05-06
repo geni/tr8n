@@ -1,0 +1,64 @@
+main:
+  - ext/inflector.js
+  - ext/md5.js
+  - ext/shortcut.js
+  - ext/keyboard_1_49.js
+  - base.js
+  - utils.js
+  - effects.js
+  - ui/language_case_manager.js
+  - ui/language_selector.js
+  - ui/lightbox.js
+  - ui/translator.js
+  - proxy.js
+  - logger.js
+  - language.js
+  - translation_key.js
+  - tokens/token.js
+  - tokens/data_token.js
+  - tokens/transform_token.js
+  - tokens/decoration_token.js
+  - rules/language_rule.js
+  - rules/date_rule.js
+  - rules/gender_rule.js
+  - rules/numeric_rule.js
+  - rules/list_rule.js
+  - rules/gender_list_rule.js
+  - tml/label.js
+  - tml/token.js
+  - init.js
+
+ui:
+  - ext/shortcut.js
+  - ext/keyboard_1_49.js
+  - base.js
+  - utils.js
+  - effects.js
+  - ui/language_case_manager.js
+  - ui/language_selector.js
+  - ui/lightbox.js
+  - ui/translator.js
+  - init.js
+
+#unknown:
+#  - ext/inflector.js
+#  - ext/md5.js
+#  - base.js
+#  - utils.js
+#  - effects.js
+#  - proxy.js
+#  - logger.js
+#  - language.js
+#  - translation_key.js
+#  - tokens/token.js
+#  - tokens/data_token.js
+#  - tokens/transform_token.js
+#  - tokens/decoration_token.js
+#  - rules/language_rule.js
+#  - rules/date_rule.js
+#  - rules/gender_rule.js
+#  - rules/numeric_rule.js
+#  - rules/list_rule.js
+#  - rules/gender_list_rule.js
+#  - tml/label.js
+#  - tml/token.js

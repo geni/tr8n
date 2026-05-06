@@ -1,26 +1,27 @@
-#--
-# Copyright (c) 2010 Michael Berkovich, Geni Inc
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
 
+# == Schema Information
+#
+# Table name: tr8n_translation_keys
+#
+#  id                :integer          not null, primary key
+#  admin             :boolean
+#  description       :text
+#  key               :string           not null
+#  label             :text             not null
+#  level             :integer          default(0)
+#  locale            :string
+#  synced_at         :datetime
+#  translation_count :integer
+#  type              :string
+#  verified_at       :datetime
+#  created_at        :datetime
+#  updated_at        :datetime
+#
+# Indexes
+#
+#  index_tr8n_translation_keys_on_key        (key) UNIQUE
+#  index_tr8n_translation_keys_on_synced_at  (synced_at)
+#
 class Tr8n::RelationshipKey < Tr8n::TranslationKey
 
   def self.normalize_key(label)
@@ -32,28 +33,25 @@ class Tr8n::RelationshipKey < Tr8n::TranslationKey
         find_by_key(key) || create(:key => key, :label => label || key, :description => description, :level => 0, :admin => false)
     end
   end
-  
+
   def self.for_key(key)
     Tr8n::Cache.fetch("relationship_key_#{key}") do
         find_by_key(key)
     end
   end
 
-  after_save :delete_cache
-  after_destroy :delete_cache
+  def after_save
+    Tr8n::Cache.delete("relationship_key_#{key}")
+  end
+
+  def after_destroy
+    Tr8n::Cache.delete("relationship_key_#{key}")
+  end
 
   # must be overloaded
   def gender
     'unknown'
   end
-
-private
-
-  def delete_cache
-    Tr8n::Cache.delete("relationship_key_#{key}")
-  end
-
-public
 
   def self.with_valid_translations_for_locale(locale = Tr8n::Config.current_language.locale)
     lang = Tr8n::Language.for(locale)
@@ -65,35 +63,35 @@ public
     conditions[0] << " tr8n_translation_keys.id in (select tr8n_translations.translation_key_id from tr8n_translations where tr8n_translations.language_id = ? and tr8n_translations.rank >= ?) "
     conditions << lang.id
     conditions << Tr8n::Config.translation_threshold
-    Tr8n::RelationshipKey.find(:all, :conditions => conditions)
+    Tr8n::RelationshipKey.where(conditions)
   end
 
 
   def translate(language = Tr8n::Config.current_language, token_values = {}, options = {})
     return find_all_valid_translations(valid_translations_for(language)) if options[:api]
-    
+
     translation_language, translation = find_first_valid_translation_for_language(language, token_values)
-    
+
     # if you want to present the label in it's sanitized form - for the phrase list
-    if options[:default_language] 
+    if options[:default_language]
       return decorate_translation(language, sanitized_label, translation != nil, options)
     end
-    
+
     if translation
       translated_label = substitute_tokens(translation.label, token_values, options, language)
       return decorate_translation(language, translated_label, translation != nil, options.merge(:fallback => (translation_language != language)))
     end
 
-    # no translation found  
+    # no translation found
     translated_label = substitute_tokens(label, token_values, options, Tr8n::Config.default_language)
-    decorate_translation(language, translated_label, translation != nil, options)  
+    decorate_translation(language, translated_label, translation != nil, options)
   end
 
   def default_translation
     @default_translation ||= begin
       trn = valid_translations_for(Tr8n::Config.default_language).first
       trn.nil? ? "" : trn.label
-    end  
+    end
   end
 
   ###############################################################
@@ -132,7 +130,7 @@ public
   def sort_key
     label
   end
-  
+
   ###############################################################
   ## Search Related Stuff
   ###############################################################

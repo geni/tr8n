@@ -26,7 +26,7 @@
             Key
         </th>
         <td>
-            <%= h(@comp.key) %>
+            <%=@comp.key %>
         </td>
     </tr>
     <tr>
@@ -34,7 +34,7 @@
             Name
         </th>
         <td>
-            <%= h(@comp.name) %>
+            <%=@comp.name %>
         </td>
     </tr>
     <tr>
@@ -42,7 +42,7 @@
             Description
         </th>
         <td>
-            <%= h(@comp.description) %>
+            <%=@comp.description %>
         </td>
     </tr>
     <tr>
@@ -68,12 +68,12 @@
         <td>
         <%
           html = []
-          html << link_to_function("Update", "tr8nLightbox.show('/tr8n/admin/applications/lb_update_component?comp_id=#{@comp.id}', {'height':400})")
-          html << link_to_function("Add Sources", "tr8nLightbox.show('/tr8n/admin/applications/lb_add_objects_to_component?type=source&comp_id=#{@comp.id}', {'height':450})")
-          html << link_to_function("Add Languages", "tr8nLightbox.show('/tr8n/admin/applications/lb_add_objects_to_component?type=language&comp_id=#{@comp.id}', {'height':450})")
-          html << link_to_function("Add Translators", "tr8nLightbox.show('/tr8n/admin/applications/lb_add_objects_to_component?type=translator&comp_id=#{@comp.id}', {'height':450})")
+          html << link_to_function("Update", "tr8nLightbox.show('#{admin_applications_lb_update_component_path(:comp_id => @comp.id)}', {'height':400})")
+          html << link_to_function("Add Sources", "tr8nLightbox.show('#{admin_applications_lb_add_objects_to_component_path(:type => 'source', :comp_id=> @comp.id)}', {'height':450})")
+          html << link_to_function("Add Languages", "tr8nLightbox.show('#{admin_applications_lb_add_objects_to_component_path(:type => 'language', :comp_id=> @comp.id)}', {'height':450})")
+          html << link_to_function("Add Translators", "tr8nLightbox.show('#{admin_applications_lb_add_objects_to_component_path(:type => 'translator', :comp_id=> @comp.id)}', {'height':450})")
         %>
-        <%= html.join(' | ') %>
+        <%= html.join(' | ').html_safe %>
         </td>
     </tr>
 </table>

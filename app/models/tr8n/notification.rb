@@ -1,10 +1,32 @@
-class Tr8n::Notification < ActiveRecord::Base
-  set_table_name :tr8n_notifications
+# == Schema Information
+#
+# Table name: tr8n_notifications
+#
+#  id            :integer          not null, primary key
+#  action        :string
+#  object_type   :string
+#  type          :string
+#  viewed_at     :datetime
+#  created_at    :datetime
+#  updated_at    :datetime
+#  actor_id      :integer
+#  object_id     :integer
+#  target_id     :integer
+#  translator_id :integer
+#
+# Indexes
+#
+#  index_tr8n_notifications_on_object_type_and_object_id  (object_type,object_id)
+#  index_tr8n_notifications_on_translator_id              (translator_id)
+#
+require 'tr8n/offline_task'
 
-  belongs_to :translator, :class_name => "Tr8n::Translator"
+class Tr8n::Notification < ApplicationRecord
 
-  belongs_to :actor, :class_name => "Tr8n::Translator", :foreign_key => :actor_id
-  belongs_to :target, :class_name => "Tr8n::Translator", :foreign_key => :target_id
+  belongs_to :translator
+
+  belongs_to :actor,  :class_name => 'Tr8n::Translator'
+  belongs_to :target, :class_name => 'Tr8n::Translator'
   belongs_to :object, :polymorphic => true
 
   def self.distribute(object)
@@ -26,25 +48,20 @@ class Tr8n::Notification < ActiveRecord::Base
   end
 
   def self.commenters(tkey, language)
-    Tr8n::TranslationKeyComment.find(:all, 
-        :conditions => ["translation_key_id = ? and language_id = ?", 
-                         tkey.id, language.id]
-    ).collect{|f| f.translator}
+    Tr8n::TranslationKeyComment.where(["translation_key_id = ? and language_id = ?", tkey.id, language.id])
+                               .collect {|f| f.translator}
   end
 
   def self.followers(obj)
-    Tr8n::TranslatorFollowing.find(:all, 
-          :conditions => ["object_type = ? and object_id = ?", 
-                          obj.class.name, obj.id]
-    ).collect{|f| f.translator}
+    Tr8n::TranslatorFollowing.where(["object_type = ? and object_id = ?", obj.class.name, obj.id])
+                             .collect {|f| f.translator}
   end
 
   def self.translators_for_translation(translation)
     tkey = translation.translation_key
 
     # find translators for all other translations of the key in this language
-    tanslations = Tr8n::Translation.find(:all, :conditions => ["translation_key_id = ? and language_id = ?", 
-                                                 tkey.id, translation.language.id])
+    tanslations = Tr8n::Translation.where(["translation_key_id = ? and language_id = ?", tkey.id, translation.language.id])
     translators = []
     tanslations.each do |t|
       translators << t.translator
@@ -56,7 +73,7 @@ class Tr8n::Notification < ActiveRecord::Base
     self.class.key(object)
   end
 
-  def valid?(*args)
+  def valid?(context=nil)
     return false unless object
     true
   end

@@ -2,8 +2,8 @@
 # Tr8n Features Configuration
 #
 # Default settings for all environments
-# 
-# You can overload any feature for any environment by changing the 
+#
+# You can overload any feature for any environment by changing the
 # environment settings at the bottom of the file
 #############################################################################
 
@@ -11,7 +11,7 @@ defaults: &defaults
   dashboard:
     tab_position:     1
     title:            Dashboard
-    link:             /tr8n/translator
+    link:             :translator
     controller:       translator
     actions:          [index]
     default_language: true
@@ -21,17 +21,17 @@ defaults: &defaults
   sitemap:
     tab_position:     2
     title:            Site Map
-    link:             /tr8n/phrases/map
+    link:             :phrases_map
     controller:       phrases
     actions:          [map, index, view]
     default_language: false
     manager_only:     false
     enabled:          true
-  
+
   phrases:
     tab_position:     3
     title:            Phrases
-    link:             /tr8n/phrases
+    link:             :phrases
     controller:       phrases
     actions:          [index, view]
     default_language: false
@@ -41,57 +41,57 @@ defaults: &defaults
   relationships:
     tab_position:     4
     title:            Relationships
-    link:             /tr8n/relationships
+    link:             :relationships
     controller:       relationships
     actions:          [index, new, help, path]
     default_language: true
     manager_only:     true
     enabled:          true
-  
+
   translations:
     tab_position:     5
     title:            Translations
-    link:             /tr8n/translations
+    link:             :translations
     controller:       translations
     actions:          [index, view]
     default_language: false
     manager_only:     false
     enabled:          true
-    
+
   awards:
     tab_position:     5
     title:            Awards
-    link:             /tr8n/awards
+    link:             :awards
     controller:       awards
     actions:          [index]
     default_language: true
     manager_only:     false
     enabled:          true
-  
+
   forum:
     tab_position:     6
     title:            Discussions
-    link:             /tr8n/forum
+    link:             :forum
     controller:       forum
     actions:          [index, topic, message]
     default_language: true
     manager_only:     false
     enabled:          true
-  
+
   glossary:
     tab_position:     7
     title:            Glossary
-    link:             /tr8n/glossary
+    link:             :glossary
     controller:       glossary
     actions:          [index]
     default_language: true
     manager_only:     false
-    enabled:          false
-  
+    enabled:          true
+
   help:
     tab_position:     8
     title:            Help
-    link:             /tr8n/help
+    link:             :help
     controller:       help
     actions:          []
     default_language: true
@@ -100,13 +100,13 @@ defaults: &defaults
 
   language:
     title:            Manage Language
-    link:             /tr8n/language
+    link:             :language
     controller:       language
     actions:          [index]
     default_language: true
     manager_only:     true
     enabled:          true
-    
+
 #############################################################################
 # Environment Settings
 # You can overload any feature defined in the defaults for any environment
@@ -115,15 +115,6 @@ development:
   <<: *defaults
 
 test:
-  <<: *defaults
-      
-qa:
-  <<: *defaults
-
-sandbox:
-  <<: *defaults
-
-stage:
   <<: *defaults
 
 production:

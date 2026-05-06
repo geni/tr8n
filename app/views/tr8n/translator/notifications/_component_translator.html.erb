@@ -13,7 +13,7 @@
         <div style="padding:5px;">
           <div>
             <div style='display:inline-block'><%=tr("Component:") %></div>
-            <div style='display:inline-block'><%= link_to(notification.object.component.title, "/tr8n/translator/assignments#comp-#{notification.object.component.id}") %></div>
+            <div style='display:inline-block'><%= link_to(notification.object.component.title, "#{tr8n_translator_assignments_path}#comp-#{notification.object.component.id}") %></div>
           </div>
           <div>
             <div style='display:inline-block'><%=tr("Sections:") %></div>
@@ -25,5 +25,5 @@
         </div>
       </td>
     </tr>
-  </table>  
+  </table>
 <%= render :partial => "/tr8n/translator/notifications/footer" %>

@@ -1,600 +1,447 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `bin/rails
-# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
-# be faster and is potentially less error prone than running all of your
-# migrations from scratch. Old migrations may fail to apply correctly if those
-# migrations use external dependencies or application code.
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended that you check this file into your version control system.
+# It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_30_142938) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
+ActiveRecord::Schema.define(:version => 20250930142938) do
 
-  create_table "platform_application_categories", id: :serial, force: :cascade do |t|
-    t.integer "category_id", null: false
-    t.integer "application_id", null: false
-    t.integer "position"
-    t.boolean "featured"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["category_id", "application_id"], name: "idx_platform_app_categories_on_cat_and_app"
-    t.index ["category_id"], name: "index_platform_application_categories_on_category_id"
+  create_table "tr8n_applications", :force => true do |t|
+    t.string   "key"
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
-  create_table "platform_application_developers", id: :serial, force: :cascade do |t|
-    t.integer "application_id"
-    t.integer "developer_id"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["application_id"], name: "index_platform_application_developers_on_application_id"
-    t.index ["developer_id"], name: "index_platform_application_developers_on_developer_id"
+  add_index "tr8n_applications", ["key"], :name => "index_tr8n_applications_on_key"
+
+  create_table "tr8n_component_languages", :force => true do |t|
+    t.integer  "component_id"
+    t.integer  "language_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.string   "state"
   end
 
-  create_table "platform_application_logs", id: :serial, force: :cascade do |t|
-    t.integer "application_id"
-    t.integer "user_id"
-    t.string "event"
-    t.string "controller"
-    t.string "action"
-    t.string "request_method"
-    t.text "data"
-    t.string "user_agent"
-    t.integer "duration"
-    t.string "host"
-    t.string "country"
-    t.string "ip"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["application_id", "created_at"], name: "idx_platform_application_logs_on_app_and_created_at"
+  add_index "tr8n_component_languages", ["component_id"], :name => "tr8n_comp_lang_comp_id"
+  add_index "tr8n_component_languages", ["language_id"], :name => "tr8n_comp_lang_lang_id"
+
+  create_table "tr8n_component_sources", :force => true do |t|
+    t.integer  "component_id"
+    t.integer  "translation_source_id"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
-  create_table "platform_application_metrics", id: :serial, force: :cascade do |t|
-    t.string "type"
-    t.datetime "interval", precision: nil
-    t.integer "application_id"
-    t.integer "active_user_count"
-    t.integer "new_user_count"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["application_id", "interval"], name: "idx_platform_application_metrics_on_app_and_interval"
+  add_index "tr8n_component_sources", ["component_id"], :name => "tr8n_comp_comp_id"
+  add_index "tr8n_component_sources", ["translation_source_id"], :name => "tr8n_comp_src_id"
+
+  create_table "tr8n_component_translators", :force => true do |t|
+    t.integer  "component_id"
+    t.integer  "translator_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.integer  "language_id"
+    t.string   "state"
   end
 
-  create_table "platform_application_permissions", id: :serial, force: :cascade do |t|
-    t.integer "application_id"
-    t.integer "permission_id"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["application_id"], name: "index_platform_application_permissions_on_application_id"
+  add_index "tr8n_component_translators", ["component_id"], :name => "tr8n_comp_trn_comp_id"
+  add_index "tr8n_component_translators", ["translator_id"], :name => "tr8n_comp_trn_trn_id"
+
+  create_table "tr8n_components", :force => true do |t|
+    t.integer  "application_id"
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.string   "state"
+    t.string   "key"
   end
 
-  create_table "platform_application_usage_metrics", id: :serial, force: :cascade do |t|
-    t.string "type"
-    t.datetime "interval", precision: nil
-    t.integer "application_id"
-    t.string "event"
-    t.integer "count"
-    t.integer "avg_response_time"
-    t.integer "error_count"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["application_id", "interval"], name: "idx_platform_app_usage_metrics_on_app_and_interval"
+  add_index "tr8n_components", ["application_id"], :name => "tr8n_comp_app_id"
+  add_index "tr8n_components", ["key"], :name => "tr8n_comp_key"
+
+  create_table "tr8n_glossary", :force => true do |t|
+    t.string   "keyword"
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
-  create_table "platform_application_users", id: :serial, force: :cascade do |t|
-    t.integer "application_id", null: false
-    t.integer "user_id", null: false
-    t.text "data"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["application_id"], name: "index_platform_application_users_on_application_id"
-    t.index ["user_id"], name: "index_platform_application_users_on_user_id"
+  add_index "tr8n_glossary", ["keyword"], :name => "index_tr8n_glossary_on_keyword"
+
+  create_table "tr8n_ip_locations", :force => true do |t|
+    t.integer  "low",        :limit => 8
+    t.integer  "high",       :limit => 8
+    t.string   "registry",   :limit => 20
+    t.date     "assigned"
+    t.string   "ctry",       :limit => 2
+    t.string   "cntry",      :limit => 3
+    t.string   "country",    :limit => 80
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
-  create_table "platform_applications", id: :serial, force: :cascade do |t|
-    t.integer "developer_id"
-    t.string "name"
-    t.text "description"
-    t.string "state", default: "new"
-    t.string "locale"
-    t.string "url"
-    t.string "site_domain"
-    t.string "support_url"
-    t.string "callback_url"
-    t.string "contact_email"
-    t.string "privacy_policy_url"
-    t.string "terms_of_service_url"
-    t.string "permissions"
-    t.string "key"
-    t.string "secret"
-    t.integer "icon_id"
-    t.integer "logo_id"
-    t.string "canvas_name"
-    t.string "canvas_url"
-    t.boolean "auto_resize"
-    t.boolean "auto_login"
-    t.string "mobile_application_type"
-    t.string "ios_bundle_id"
-    t.string "itunes_app_store_id"
-    t.string "android_key_hash"
-    t.integer "rank"
-    t.boolean "auto_signin"
-    t.string "deauthorize_callback_url"
-    t.string "version"
-    t.string "api_version"
-    t.integer "parent_id"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.text "consent_label"
-    t.index ["developer_id"], name: "index_platform_applications_on_developer_id"
-    t.index ["key"], name: "index_platform_applications_on_key", unique: true
-    t.index ["parent_id"], name: "index_platform_applications_on_parent_id"
+  add_index "tr8n_ip_locations", ["high"], :name => "index_tr8n_ip_locations_on_high"
+  add_index "tr8n_ip_locations", ["low"], :name => "index_tr8n_ip_locations_on_low"
+
+  create_table "tr8n_language_case_rules", :force => true do |t|
+    t.integer  "language_case_id",              :null => false
+    t.integer  "language_id"
+    t.integer  "translator_id",    :limit => 8
+    t.text     "definition",                    :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+    t.integer  "position"
   end
 
-  create_table "platform_categories", id: :serial, force: :cascade do |t|
-    t.string "type"
-    t.string "name"
-    t.string "keyword"
-    t.integer "position"
-    t.date "enable_on"
-    t.date "disable_on"
-    t.integer "parent_id"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["parent_id"], name: "index_platform_categories_on_parent_id"
+  add_index "tr8n_language_case_rules", ["language_case_id"], :name => "tr8n_lcr_case_id"
+  add_index "tr8n_language_case_rules", ["language_id"], :name => "tr8n_lcr_lang_id"
+  add_index "tr8n_language_case_rules", ["translator_id"], :name => "tr8n_lcr_translator"
+
+  create_table "tr8n_language_case_value_maps", :force => true do |t|
+    t.string   "keyword",                    :null => false
+    t.integer  "language_id",                :null => false
+    t.integer  "translator_id", :limit => 8
+    t.text     "map"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+    t.boolean  "reported"
   end
 
-  create_table "platform_developers", id: :serial, force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "name", null: false
-    t.text "about"
-    t.string "url"
-    t.string "email"
-    t.string "phone"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["user_id"], name: "index_platform_developers_on_user_id"
+  add_index "tr8n_language_case_value_maps", ["keyword", "language_id"], :name => "tr8n_lcvm_kw_lang"
+  add_index "tr8n_language_case_value_maps", ["translator_id"], :name => "tr8n_lcvm_translator"
+
+  create_table "tr8n_language_cases", :force => true do |t|
+    t.integer  "language_id",                :null => false
+    t.integer  "translator_id", :limit => 8
+    t.string   "keyword"
+    t.string   "latin_name"
+    t.string   "native_name"
+    t.text     "description"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
+    t.string   "application"
   end
 
-  create_table "platform_forum_messages", id: :serial, force: :cascade do |t|
-    t.integer "forum_topic_id", null: false
-    t.integer "user_id", null: false
-    t.text "message", null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["forum_topic_id"], name: "index_platform_forum_messages_on_forum_topic_id"
-    t.index ["user_id"], name: "index_platform_forum_messages_on_user_id"
+  add_index "tr8n_language_cases", ["language_id", "keyword"], :name => "tr8n_lc_lang_keyword"
+  add_index "tr8n_language_cases", ["language_id", "translator_id"], :name => "tr8n_lc_lang_translator"
+  add_index "tr8n_language_cases", ["language_id"], :name => "tr8n_lc_lang"
+
+  create_table "tr8n_language_forum_abuse_reports", :force => true do |t|
+    t.integer  "language_id",               :null => false
+    t.integer  "translator_id",             :null => false
+    t.integer  "language_forum_message_id", :null => false
+    t.string   "reason"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
-  create_table "platform_forum_topics", id: :serial, force: :cascade do |t|
-    t.string "subject_type"
-    t.integer "subject_id"
-    t.integer "user_id", null: false
-    t.text "topic", null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["subject_type", "subject_id"], name: "index_platform_forum_topics_on_subject_type_and_subject_id"
-    t.index ["user_id"], name: "index_platform_forum_topics_on_user_id"
+  add_index "tr8n_language_forum_abuse_reports", ["language_forum_message_id"], :name => "tr8n_forum_reports_message_id"
+  add_index "tr8n_language_forum_abuse_reports", ["language_id", "translator_id"], :name => "tr8n_forum_reports_lang_id_translator_id"
+  add_index "tr8n_language_forum_abuse_reports", ["language_id"], :name => "tr8n_forum_reports_lang_id"
+
+  create_table "tr8n_language_forum_messages", :force => true do |t|
+    t.integer  "language_id",             :null => false
+    t.integer  "language_forum_topic_id", :null => false
+    t.integer  "translator_id",           :null => false
+    t.text     "message",                 :null => false
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
-  create_table "platform_logged_exceptions", id: :serial, force: :cascade do |t|
-    t.string "exception_class"
-    t.string "controller_name"
-    t.string "action_name"
-    t.string "server"
-    t.text "message"
-    t.text "backtrace"
-    t.text "environment"
-    t.text "request"
-    t.text "session"
-    t.binary "cause"
-    t.integer "user_id"
-    t.integer "application_id"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
+  add_index "tr8n_language_forum_messages", ["language_id", "language_forum_topic_id"], :name => "tr8n_forum_msgs_lang_id_topic_id"
+  add_index "tr8n_language_forum_messages", ["language_id"], :name => "tr8n_forum_msgs_lang_id"
+  add_index "tr8n_language_forum_messages", ["translator_id"], :name => "tr8n_forums_msgs_translator_id"
+
+  create_table "tr8n_language_forum_topics", :force => true do |t|
+    t.integer  "translator_id", :null => false
+    t.integer  "language_id"
+    t.text     "topic",         :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  create_table "platform_media", id: :serial, force: :cascade do |t|
-    t.string "type"
-    t.string "file_location"
-    t.string "content_type"
-    t.string "file_name"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
+  add_index "tr8n_language_forum_topics", ["language_id"], :name => "tr8n_forum_topics_lang_id"
+  add_index "tr8n_language_forum_topics", ["translator_id"], :name => "tr8n_forum_topics_translator_id"
+
+  create_table "tr8n_language_metrics", :force => true do |t|
+    t.string   "type"
+    t.integer  "language_id",                         :null => false
+    t.date     "metric_date"
+    t.integer  "user_count",           :default => 0
+    t.integer  "translator_count",     :default => 0
+    t.integer  "translation_count",    :default => 0
+    t.integer  "key_count",            :default => 0
+    t.integer  "locked_key_count",     :default => 0
+    t.integer  "translated_key_count", :default => 0
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
   end
 
-  create_table "platform_oauth_tokens", id: :serial, force: :cascade do |t|
-    t.string "type"
-    t.bigint "user_id"
-    t.integer "application_id"
-    t.string "token", limit: 50
-    t.string "secret", limit: 50
-    t.string "verifier", limit: 20
-    t.string "callback_url"
-    t.string "scope"
-    t.datetime "valid_to", precision: nil
-    t.datetime "authorized_at", precision: nil
-    t.datetime "invalidated_at", precision: nil
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["token"], name: "index_platform_oauth_tokens_on_token", unique: true
+  add_index "tr8n_language_metrics", ["created_at"], :name => "index_tr8n_language_metrics_on_created_at"
+  add_index "tr8n_language_metrics", ["language_id"], :name => "index_tr8n_language_metrics_on_language_id"
+
+  create_table "tr8n_language_rules", :force => true do |t|
+    t.integer  "language_id",   :null => false
+    t.integer  "translator_id"
+    t.string   "type"
+    t.text     "definition"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  create_table "platform_permissions", id: :serial, force: :cascade do |t|
-    t.string "keyword", null: false
-    t.text "description", null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["keyword"], name: "index_platform_permissions_on_keyword"
+  add_index "tr8n_language_rules", ["language_id", "translator_id"], :name => "index_tr8n_language_rules_on_language_id_and_translator_id"
+  add_index "tr8n_language_rules", ["language_id"], :name => "index_tr8n_language_rules_on_language_id"
+
+# Could not dump table "tr8n_language_users" because of following FrozenError
+#   can't modify frozen String: "false"
+
+  create_table "tr8n_languages", :force => true do |t|
+    t.string   "locale",                              :null => false
+    t.string   "english_name",                        :null => false
+    t.string   "native_name"
+    t.boolean  "enabled"
+    t.boolean  "right_to_left"
+    t.integer  "completeness"
+    t.integer  "fallback_language_id"
+    t.text     "curse_words"
+    t.integer  "featured_index",       :default => 0
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.string   "google_key"
+    t.string   "facebook_key"
+    t.string   "myheritage_key"
   end
 
-  create_table "platform_ratings", id: :serial, force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "object_type"
-    t.integer "object_id"
-    t.integer "value"
-    t.text "comment"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["object_type", "object_id"], name: "index_platform_ratings_on_object_type_and_object_id"
-    t.index ["user_id"], name: "index_platform_ratings_on_user_id"
+  add_index "tr8n_languages", ["locale"], :name => "index_tr8n_languages_on_locale"
+
+  create_table "tr8n_notifications", :force => true do |t|
+    t.string   "type"
+    t.integer  "translator_id"
+    t.integer  "actor_id"
+    t.integer  "target_id"
+    t.string   "action"
+    t.string   "object_type"
+    t.integer  "object_id"
+    t.datetime "viewed_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
-  create_table "platform_rollup_logs", id: :serial, force: :cascade do |t|
-    t.datetime "interval", precision: nil
-    t.datetime "started_at", precision: nil
-    t.datetime "finished_at", precision: nil
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["interval"], name: "index_platform_rollup_logs_on_interval"
+  add_index "tr8n_notifications", ["object_type", "object_id"], :name => "index_tr8n_notifications_on_object_type_and_object_id"
+  add_index "tr8n_notifications", ["translator_id"], :name => "index_tr8n_notifications_on_translator_id"
+
+  create_table "tr8n_sync_logs", :force => true do |t|
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.integer  "keys_sent"
+    t.integer  "translations_sent"
+    t.integer  "keys_received"
+    t.integer  "translations_received"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
-  create_table "tr8n_glossary", id: :serial, force: :cascade do |t|
-    t.string "keyword"
-    t.text "description"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["keyword"], name: "index_tr8n_glossary_on_keyword"
+  create_table "tr8n_translation_domains", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.integer  "source_count", :default => 0
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
   end
 
-  create_table "tr8n_ip_locations", id: :serial, force: :cascade do |t|
-    t.bigint "low"
-    t.bigint "high"
-    t.string "registry", limit: 20
-    t.date "assigned"
-    t.string "ctry", limit: 2
-    t.string "cntry", limit: 3
-    t.string "country", limit: 80
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["high"], name: "index_tr8n_ip_locations_on_high"
-    t.index ["low"], name: "index_tr8n_ip_locations_on_low"
+  add_index "tr8n_translation_domains", ["name"], :name => "index_tr8n_translation_domains_on_name", :unique => true
+
+  create_table "tr8n_translation_key_comments", :force => true do |t|
+    t.integer  "language_id",                     :null => false
+    t.integer  "translation_key_id",              :null => false
+    t.integer  "translator_id",      :limit => 8, :null => false
+    t.text     "message",                         :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
-  create_table "tr8n_language_case_rules", id: :serial, force: :cascade do |t|
-    t.integer "language_case_id", null: false
-    t.integer "language_id"
-    t.integer "translator_id"
-    t.text "definition", null: false
-    t.integer "position"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["language_case_id"], name: "tr8n_lcr_case_id"
-    t.index ["language_id"], name: "tr8n_lcr_lang_id"
-    t.index ["translator_id"], name: "tr8n_lcr_translator_id"
+  add_index "tr8n_translation_key_comments", ["language_id", "translation_key_id"], :name => "tr8n_tkey_msgs_lang_id_tkey_id"
+  add_index "tr8n_translation_key_comments", ["language_id"], :name => "tr8n_tkey_msgs_lang_id"
+  add_index "tr8n_translation_key_comments", ["translator_id"], :name => "tr8n_tkc_translator"
+
+# Could not dump table "tr8n_translation_key_locks" because of following FrozenError
+#   can't modify frozen String: "false"
+
+  create_table "tr8n_translation_key_sources", :force => true do |t|
+    t.integer  "translation_key_id",    :null => false
+    t.integer  "translation_source_id", :null => false
+    t.text     "details"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
-  create_table "tr8n_language_case_value_maps", id: :serial, force: :cascade do |t|
-    t.string "keyword", null: false
-    t.integer "language_id", null: false
-    t.integer "translator_id"
-    t.text "map"
-    t.boolean "reported"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["keyword", "language_id"], name: "index_tr8n_language_case_value_maps_on_keyword_and_language_id"
-    t.index ["translator_id"], name: "index_tr8n_language_case_value_maps_on_translator_id"
+  add_index "tr8n_translation_key_sources", ["translation_key_id"], :name => "tr8n_trans_keys_key_id"
+  add_index "tr8n_translation_key_sources", ["translation_source_id"], :name => "tr8n_trans_keys_source_id"
+
+  create_table "tr8n_translation_keys", :force => true do |t|
+    t.string   "key",                              :null => false
+    t.text     "label",                            :null => false
+    t.text     "description"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+    t.datetime "verified_at"
+    t.integer  "translation_count"
+    t.boolean  "admin"
+    t.string   "locale"
+    t.integer  "level",             :default => 0
+    t.string   "type"
+    t.datetime "synced_at"
   end
 
-  create_table "tr8n_language_cases", id: :serial, force: :cascade do |t|
-    t.integer "language_id", null: false
-    t.integer "translator_id"
-    t.string "keyword"
-    t.string "latin_name"
-    t.string "native_name"
-    t.text "description"
-    t.string "application"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["language_id", "keyword"], name: "index_tr8n_language_cases_on_language_id_and_keyword"
-    t.index ["language_id", "translator_id"], name: "index_tr8n_language_cases_on_language_id_and_translator_id"
-    t.index ["language_id"], name: "index_tr8n_language_cases_on_language_id"
+  add_index "tr8n_translation_keys", ["key"], :name => "index_tr8n_translation_keys_on_key", :unique => true
+  add_index "tr8n_translation_keys", ["synced_at"], :name => "index_tr8n_translation_keys_on_synced_at"
+
+  create_table "tr8n_translation_source_languages", :force => true do |t|
+    t.integer  "language_id"
+    t.integer  "translation_source_id"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
-  create_table "tr8n_language_forum_abuse_reports", id: :serial, force: :cascade do |t|
-    t.integer "language_id", null: false
-    t.integer "translator_id", null: false
-    t.integer "language_forum_message_id", null: false
-    t.string "reason"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["language_forum_message_id"], name: "tr8n_forum_reports_message_id"
-    t.index ["language_id", "translator_id"], name: "tr8n_forum_reports_lang_id_translator_id"
-    t.index ["language_id"], name: "tr8n_forum_reports_lang_id"
+  add_index "tr8n_translation_source_languages", ["language_id", "translation_source_id"], :name => "tsllt"
+
+  create_table "tr8n_translation_source_metrics", :force => true do |t|
+    t.integer  "translation_source_id",                :null => false
+    t.integer  "language_id",                          :null => false
+    t.integer  "key_count",             :default => 0
+    t.integer  "locked_key_count",      :default => 0
+    t.integer  "translation_count",     :default => 0
+    t.integer  "translated_key_count",  :default => 0
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
   end
 
-  create_table "tr8n_language_forum_messages", id: :serial, force: :cascade do |t|
-    t.integer "language_id", null: false
-    t.integer "language_forum_topic_id", null: false
-    t.integer "translator_id", null: false
-    t.text "message", null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["language_id", "language_forum_topic_id"], name: "tr8n_forum_msgs_lang_id_topic_id"
-    t.index ["language_id"], name: "tr8n_forum_msgs_lang_id"
-    t.index ["translator_id"], name: "tr8n_forums_msgs_translator_id"
+  add_index "tr8n_translation_source_metrics", ["translation_source_id", "language_id"], :name => "tr8n_tsm_trans_source_and_lang"
+
+  create_table "tr8n_translation_sources", :force => true do |t|
+    t.string   "source"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.integer  "translation_domain_id"
+    t.integer  "completeness",          :default => 0
+    t.string   "name"
+    t.text     "description"
+    t.string   "url"
+    t.integer  "key_count"
   end
 
-  create_table "tr8n_language_forum_topics", id: :serial, force: :cascade do |t|
-    t.integer "translator_id", null: false
-    t.integer "language_id"
-    t.text "topic", null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["language_id"], name: "tr8n_forum_topics_lang_id"
-    t.index ["translator_id"], name: "tr8n_forum_topics_translator_id"
+  add_index "tr8n_translation_sources", ["source"], :name => "tr8n_sources_source"
+
+  create_table "tr8n_translation_votes", :force => true do |t|
+    t.integer  "translation_id", :null => false
+    t.integer  "translator_id",  :null => false
+    t.integer  "vote",           :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
-  create_table "tr8n_language_metrics", id: :serial, force: :cascade do |t|
-    t.string "type"
-    t.integer "language_id", null: false
-    t.date "metric_date"
-    t.integer "user_count", default: 0
-    t.integer "translator_count", default: 0
-    t.integer "translation_count", default: 0
-    t.integer "key_count", default: 0
-    t.integer "locked_key_count", default: 0
-    t.integer "translated_key_count", default: 0
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["created_at"], name: "index_tr8n_language_metrics_on_created_at"
-    t.index ["language_id"], name: "index_tr8n_language_metrics_on_language_id"
+  add_index "tr8n_translation_votes", ["translation_id", "translator_id"], :name => "tr8n_trans_votes_trans_id_translator_id"
+  add_index "tr8n_translation_votes", ["translator_id"], :name => "tr8n_trans_votes_translator_id"
+
+  create_table "tr8n_translations", :force => true do |t|
+    t.integer  "translation_key_id",                             :null => false
+    t.integer  "language_id",                                    :null => false
+    t.integer  "translator_id",                                  :null => false
+    t.text     "label",                                          :null => false
+    t.integer  "rank",                            :default => 0
+    t.integer  "approved_by_id",     :limit => 8
+    t.text     "rules"
+    t.datetime "created_at",                                     :null => false
+    t.datetime "updated_at",                                     :null => false
+    t.datetime "synced_at"
   end
 
-  create_table "tr8n_language_rules", id: :serial, force: :cascade do |t|
-    t.integer "language_id", null: false
-    t.integer "translator_id"
-    t.string "type"
-    t.text "definition"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["language_id", "translator_id"], name: "index_tr8n_language_rules_on_language_id_and_translator_id"
-    t.index ["language_id"], name: "index_tr8n_language_rules_on_language_id"
+  add_index "tr8n_translations", ["created_at"], :name => "tr8n_trans_created_at"
+  add_index "tr8n_translations", ["synced_at"], :name => "index_tr8n_translations_on_synced_at"
+  add_index "tr8n_translations", ["translation_key_id", "translator_id", "language_id"], :name => "tr8n_trans_key_id_translator_id_lang_id"
+  add_index "tr8n_translations", ["translator_id"], :name => "r8n_trans_translator_id"
+
+  create_table "tr8n_translator_following", :force => true do |t|
+    t.integer  "translator_id", :limit => 8
+    t.integer  "object_id"
+    t.string   "object_type"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
-  create_table "tr8n_language_users", id: :serial, force: :cascade do |t|
-    t.integer "language_id", null: false
-    t.integer "user_id", null: false
-    t.integer "translator_id"
-    t.boolean "manager", default: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["created_at"], name: "index_tr8n_language_users_on_created_at"
-    t.index ["language_id", "translator_id"], name: "index_tr8n_language_users_on_language_id_and_translator_id"
-    t.index ["language_id", "user_id"], name: "index_tr8n_language_users_on_language_id_and_user_id"
-    t.index ["updated_at"], name: "index_tr8n_language_users_on_updated_at"
-    t.index ["user_id"], name: "index_tr8n_language_users_on_user_id"
+  add_index "tr8n_translator_following", ["translator_id"], :name => "tr8n_tf_translator"
+
+  create_table "tr8n_translator_logs", :force => true do |t|
+    t.integer  "translator_id"
+    t.integer  "user_id",       :limit => 8
+    t.string   "action"
+    t.integer  "action_level"
+    t.string   "reason"
+    t.string   "reference"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
-  create_table "tr8n_languages", id: :serial, force: :cascade do |t|
-    t.string "locale", null: false
-    t.string "english_name", null: false
-    t.string "native_name"
-    t.boolean "enabled"
-    t.boolean "right_to_left"
-    t.integer "completeness"
-    t.integer "fallback_language_id"
-    t.text "curse_words"
-    t.integer "featured_index", default: 0
-    t.string "google_key"
-    t.string "facebook_key"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["locale"], name: "index_tr8n_languages_on_locale"
+  add_index "tr8n_translator_logs", ["created_at"], :name => "index_tr8n_translator_logs_on_created_at"
+  add_index "tr8n_translator_logs", ["translator_id"], :name => "index_tr8n_translator_logs_on_translator_id"
+  add_index "tr8n_translator_logs", ["user_id"], :name => "index_tr8n_translator_logs_on_user_id"
+
+  create_table "tr8n_translator_metrics", :force => true do |t|
+    t.integer  "translator_id",                                     :null => false
+    t.integer  "language_id",           :limit => 8
+    t.integer  "total_translations",                 :default => 0
+    t.integer  "total_votes",                        :default => 0
+    t.integer  "positive_votes",                     :default => 0
+    t.integer  "negative_votes",                     :default => 0
+    t.integer  "accepted_translations",              :default => 0
+    t.integer  "rejected_translations",              :default => 0
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
   end
 
-  create_table "tr8n_translation_domains", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.string "description"
-    t.integer "source_count", default: 0
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["name"], name: "index_tr8n_translation_domains_on_name", unique: true
+  add_index "tr8n_translator_metrics", ["created_at"], :name => "index_tr8n_translator_metrics_on_created_at"
+  add_index "tr8n_translator_metrics", ["translator_id", "language_id"], :name => "index_tr8n_translator_metrics_on_translator_id_and_language_id"
+  add_index "tr8n_translator_metrics", ["translator_id"], :name => "index_tr8n_translator_metrics_on_translator_id"
+
+  create_table "tr8n_translator_reports", :force => true do |t|
+    t.integer  "translator_id", :limit => 8
+    t.string   "state"
+    t.integer  "object_id"
+    t.string   "object_type"
+    t.string   "reason"
+    t.text     "comment"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
-  create_table "tr8n_translation_key_comments", id: :serial, force: :cascade do |t|
-    t.integer "language_id", null: false
-    t.integer "translation_key_id", null: false
-    t.integer "translator_id", null: false
-    t.text "message", null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["language_id", "translation_key_id"], name: "tr8n_tkey_msgs_lang_id_tkey_id"
-    t.index ["language_id"], name: "tr8n_tkey_msgs_lang_id"
-    t.index ["translator_id"], name: "tr8n_tkey_msgs_translator_id"
+  add_index "tr8n_translator_reports", ["translator_id"], :name => "tr8n_tr_translator"
+
+# Could not dump table "tr8n_translators" because of following FrozenError
+#   can't modify frozen String: "false"
+
+# Could not dump table "users" because of following FrozenError
+#   can't modify frozen String: "false"
+
+  create_table "wf_filters", :force => true do |t|
+    t.string   "type"
+    t.string   "name"
+    t.text     "data"
+    t.integer  "user_id"
+    t.string   "model_class_name"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
-  create_table "tr8n_translation_key_locks", id: :serial, force: :cascade do |t|
-    t.integer "translation_key_id", null: false
-    t.integer "language_id", null: false
-    t.integer "translator_id"
-    t.boolean "locked", default: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["translation_key_id", "language_id"], name: "tr8n_locks_key_id_lang_id"
-  end
+  add_index "wf_filters", ["user_id"], :name => "index_wf_filters_on_user_id"
 
-  create_table "tr8n_translation_key_sources", id: :serial, force: :cascade do |t|
-    t.integer "translation_key_id", null: false
-    t.integer "translation_source_id", null: false
-    t.text "details"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["translation_key_id"], name: "tr8n_trans_keys_key_id"
-    t.index ["translation_source_id"], name: "tr8n_trans_keys_source_id"
-  end
-
-  create_table "tr8n_translation_keys", id: :serial, force: :cascade do |t|
-    t.string "type"
-    t.string "key", null: false
-    t.text "label", null: false
-    t.text "description"
-    t.datetime "verified_at", precision: nil
-    t.integer "translation_count"
-    t.boolean "admin"
-    t.string "locale"
-    t.integer "level", default: 0
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["key"], name: "index_tr8n_translation_keys_on_key", unique: true
-  end
-
-  create_table "tr8n_translation_sources", id: :serial, force: :cascade do |t|
-    t.string "source"
-    t.integer "translation_domain_id"
-    t.integer "key_count", default: 0
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["source"], name: "tr8n_sources_source"
-  end
-
-  create_table "tr8n_translation_votes", id: :serial, force: :cascade do |t|
-    t.integer "translation_id", null: false
-    t.integer "translator_id", null: false
-    t.integer "vote", null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["translation_id", "translator_id"], name: "tr8n_trans_votes_trans_id_translator_id"
-    t.index ["translator_id"], name: "tr8n_trans_votes_translator_id"
-  end
-
-  create_table "tr8n_translations", id: :serial, force: :cascade do |t|
-    t.integer "translation_key_id", null: false
-    t.integer "language_id", null: false
-    t.integer "translator_id", null: false
-    t.text "label", null: false
-    t.integer "rank", default: 0
-    t.bigint "approved_by_id"
-    t.text "rules"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["created_at"], name: "tr8n_trans_created_at"
-    t.index ["translation_key_id", "translator_id", "language_id"], name: "tr8n_trans_key_id_translator_id_lang_id"
-    t.index ["translator_id"], name: "r8n_trans_translator_id"
-  end
-
-  create_table "tr8n_translator_following", id: :serial, force: :cascade do |t|
-    t.integer "translator_id"
-    t.integer "object_id"
-    t.string "object_type"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["translator_id"], name: "index_tr8n_translator_following_on_translator_id"
-  end
-
-  create_table "tr8n_translator_logs", id: :serial, force: :cascade do |t|
-    t.integer "translator_id"
-    t.bigint "user_id"
-    t.string "action"
-    t.integer "action_level"
-    t.string "reason"
-    t.string "reference"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["created_at"], name: "index_tr8n_translator_logs_on_created_at"
-    t.index ["translator_id"], name: "index_tr8n_translator_logs_on_translator_id"
-    t.index ["user_id"], name: "index_tr8n_translator_logs_on_user_id"
-  end
-
-  create_table "tr8n_translator_metrics", id: :serial, force: :cascade do |t|
-    t.integer "translator_id", null: false
-    t.integer "language_id"
-    t.integer "total_translations", default: 0
-    t.integer "total_votes", default: 0
-    t.integer "positive_votes", default: 0
-    t.integer "negative_votes", default: 0
-    t.integer "accepted_translations", default: 0
-    t.integer "rejected_translations", default: 0
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["created_at"], name: "index_tr8n_translator_metrics_on_created_at"
-    t.index ["translator_id", "language_id"], name: "index_tr8n_translator_metrics_on_translator_id_and_language_id"
-    t.index ["translator_id"], name: "index_tr8n_translator_metrics_on_translator_id"
-  end
-
-  create_table "tr8n_translator_reports", id: :serial, force: :cascade do |t|
-    t.integer "translator_id"
-    t.string "state"
-    t.integer "object_id"
-    t.string "object_type"
-    t.string "reason"
-    t.text "comment"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["translator_id"], name: "index_tr8n_translator_reports_on_translator_id"
-  end
-
-  create_table "tr8n_translators", id: :serial, force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.boolean "inline_mode", default: false
-    t.boolean "blocked", default: false
-    t.boolean "reported", default: false
-    t.integer "fallback_language_id"
-    t.integer "rank", default: 0
-    t.string "name"
-    t.string "gender"
-    t.string "email"
-    t.string "password"
-    t.string "mugshot"
-    t.string "link"
-    t.string "locale"
-    t.integer "level", default: 0
-    t.integer "manager"
-    t.string "last_ip"
-    t.string "country_code"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["created_at"], name: "index_tr8n_translators_on_created_at"
-    t.index ["email", "password"], name: "index_tr8n_translators_on_email_and_password"
-    t.index ["email"], name: "index_tr8n_translators_on_email"
-    t.index ["user_id"], name: "index_tr8n_translators_on_user_id"
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string "name"
-    t.string "gender"
-    t.string "email"
-    t.string "password"
-    t.string "mugshot"
-    t.string "link"
-    t.string "locale"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email", "password"], name: "index_users_on_email_and_password"
-    t.index ["email"], name: "index_users_on_email"
-  end
-
-  create_table "wf_filters", id: :serial, force: :cascade do |t|
-    t.string "type"
-    t.string "name"
-    t.text "data"
-    t.integer "user_id"
-    t.string "model_class_name"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["user_id"], name: "index_wf_filters_on_user_id"
-  end
 end

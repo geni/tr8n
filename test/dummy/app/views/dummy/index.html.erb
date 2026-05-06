@@ -1,12 +1,11 @@
 <div>
-  <h1>Platform Stuff</h1>
+  <h1>Tr8n Dummy App</h1>
   <ul>
-    <li>Current User: <%= current_user.name %></li>
-  </ul>
-
-  <h1>Tr8n Stuff</h1>
-  <ul>
-    <li>Current Locale: <%= current_locale %></li>
-    <li>Tr8n Translation: <%= tr 'Hello World', 'dummy translation' %></li>
+    <li>Current Locale: <%= current_locale %> <%= tr8n_language_selector_tag %></li>
+    <li>Current User: <%= switch_user_links %></li>
+    <li><%= link_to 'Tr8n Home', tr8n.home_path %></li>
+    <li><%= link_to 'Tr8n Admin', tr8n.admin_applications_path %></li>
+    <li><%= tr 'Simple Translation', 'dummy translation' %></li>
+    <li><%= tr 'Translation with {string}', 'dummy translation', :string => 'string' %></li>
   </ul>
 </div>

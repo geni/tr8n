@@ -1,63 +1,63 @@
-Ctrl+Shift+S:       
-  description:  Displays Tr8n shortcuts 
+Ctrl+Shift+S:
+  description:  Displays Tr8n shortcuts
   script:       "Tr8n.Utils.displayShortcuts();"
 
-Ctrl+Shift+I:       
+Ctrl+Shift+I:
   description:  Turns on/off inline translations
   script:       "tr8nLanguageSelector.toggleInlineTranslations();"
 
-Ctrl+Shift+L:       
-  description:  Shows/hides language selector 
-  script:       "tr8nLightbox.show('/tr8n/language/select?lightbox=true', {height:500, width:400});"
+Ctrl+Shift+L:
+  description:  Shows/hides language selector
+  script:       "tr8nLightbox.show(`${Tr8n.mountPoint}/language/select?lightbox=true`, {height:500, width:400});"
 
-Ctrl+Shift+N:       
+Ctrl+Shift+N:
   description:  Displays notifications
-  script:       "tr8nLightbox.show('/tr8n/translator/lb_notifications', {height:500, width:600});"
+  script:       "tr8nLightbox.show(`${Tr8n.mountPoint}/translator/lb_notifications`, {height:500, width:600});"
 
-Ctrl+Shift+A:       
-  description:  Displays all available languages  
-  script:       "window.location = '/tr8n/language/table';"
+Ctrl+Shift+A:
+  description:  Displays all available languages
+  script:       "window.location = `${Tr8n.mountPoint}/language/table`;"
 
-Ctrl+Shift+K:       
+Ctrl+Shift+K:
   description:  Adds software keyboard for each entry field
   script:       "Tr8n.Utils.toggleKeyboards();"
 
-Ctrl+Shift+C:       
+Ctrl+Shift+C:
   description:  Displays Tr8n credits
-  script:       "window.location = '/tr8n/home/credits';"
+  script:       "window.location = `${Tr8n.mountPoint}/home/credits`;"
 
-Ctrl+Shift+T:       
+Ctrl+Shift+T:
   description:  Displays Tr8n statistics
   script:       "Tr8n.Utils.displayStatistics();"
 
-Alt+Shift+D: 
+Alt+Shift+D:
   description:  Opens dashboard
-  script:       "window.location = '/tr8n/translator';"
+  script:       "window.location = `${Tr8n.mountPoint}/translator`;"
 
-Alt+Shift+M: 
-  description:  Opens sitemap 
-  script:       "window.location = '/tr8n/phrases/map';"
+Alt+Shift+M:
+  description:  Opens sitemap
+  script:       "window.location = `${Tr8n.mountPoint}/phrases/map`;"
 
-Alt+Shift+P: 
+Alt+Shift+P:
   description:  Opens phrases
-  script:       "window.location = '/tr8n/phrases';"
+  script:       "window.location = `${Tr8n.mountPoint}/phrases`;"
 
-Alt+Shift+T: 
+Alt+Shift+T:
   description:  Opens translations
-  script:       "window.location = '/tr8n/translations';"
+  script:       "window.location = `${Tr8n.mountPoint}/translations`;"
 
-Alt+Shift+A: 
+Alt+Shift+A:
   description:  Opens awards
-  script:       "window.location = '/tr8n/awards';"
+  script:       "window.location = `${Tr8n.mountPoint}/awards`;"
 
-Alt+Shift+B: 
+Alt+Shift+B:
   description:  Opens message board
-  script:       "window.location = '/tr8n/forum';"
+  script:       "window.location = `${Tr8n.mountPoint}/forum`;"
 
-Alt+Shift+G: 
+Alt+Shift+G:
   description:  Opens glossary
-  script:       "window.location = '/tr8n/glossary';"
+  script:       "window.location = `${Tr8n.mountPoint}/glossary`;"
 
-Alt+Shift+H: 
+Alt+Shift+H:
   description:  Opens help
-  script:       "window.location = '/tr8n/help';"
+  script:       "window.location = `${Tr8n.mountPoint}/help`;"

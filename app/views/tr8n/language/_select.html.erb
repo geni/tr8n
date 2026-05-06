@@ -1,4 +1,4 @@
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   removeLanguage = function(languageId, userLanguageId) {
     tr8nLanguageSelector.removeLanguage(languageId);
     Tr8n.Effects.hide('lang_' + userLanguageId);
@@ -11,16 +11,21 @@
     return false;
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
+  registerEventListeners = function() {
     var elements = document.querySelectorAll('[data-select-locale]');
     elements.forEach(function(element) {
         element.addEventListener('click', function(event) {
-          selectLocale(event.target.getAttribute('data-select-locale'));
+          selectLocale(this.getAttribute('data-select-locale'));
           event.preventDefault();
           return false;
         });
     });
-});
+  };
+
+  // We don't know if we'll get a DOMContentLoaded event
+  // or if this was loaded via Ajax.
+  // So we're doing this immediately.
+  registerEventListeners();
 <% end %>
 
 <% Tr8n::Config.with_options(:default_locale => 'en-US', :admin => true) do %>
@@ -51,7 +56,7 @@
                             <% else %>
                               <%= "#{language.completeness || 0}%" if Tr8n::Config.enable_language_stats? %>
                               <% unless user_language.manager? %>
-                                <%=link_to_function(image_tag( url_with_cache_version("/tr8n/images/close.gif"), :style=>"width:5px; padding-#{tr8n_current_language.align(:right)}:3px; padding-left:3px;"), "removeLanguage('#{language.id}', '#{user_language.id}')") %>
+                                <%=link_to_function(image_tag('tr8n/close.gif', :style=>"width:5px; padding-#{tr8n_current_language.align(:right)}:3px; padding-left:3px;"), "removeLanguage('#{language.id}', '#{user_language.id}')") %>
                                 <% end %>
                             <% end %>
                           </span>
@@ -119,20 +124,20 @@
             <% end %>
             <% if tr8n_current_user_is_admin? %>
             <div style="padding-top:5px;font-size: 11px; font-weight:bold;">
-                <%=link_to(trla("Configure tr8n"), "/tr8n/admin/language") %>
+                <%=link_to(trla("Configure tr8n"), admin_language_path) %>
                 <span style="color: grey; font-size: 10px; padding-left:0.5em; font-style:italic;">tr8n admins only</span>
                 <div style="font-weight:normal; color:grey;"><%=trla("Manage translators, languages and translations.") %></div>
             </div>
             <% end %>
             <% end %>
-            <% form_tag({:controller => :language, :action => :switch}, :id => "language_selector_form", :style=>"padding:0px;margin:0px;") do %>
-            <%=hidden_field_tag(:source_url, @source_url) %>
-            <%=hidden_field_tag(:locale, tr8n_current_language.locale, :id => "language_selector_locale") %>
-            <%=hidden_field_tag(:language_action, "switch_language", :id => "language_selector_action") %>
+            <%= form_tag({:controller => :language, :action => :switch}, :id => "language_selector_form", :style=>"padding:0px;margin:0px;") do %>
+              <%=hidden_field_tag(:source_url, @source_url) %>
+              <%=hidden_field_tag(:locale, tr8n_current_language.locale, :id => "language_selector_locale") %>
+              <%=hidden_field_tag(:language_action, "switch_language", :id => "language_selector_action") %>
             <% end %>
         </div>
         <div class="ft" style="font-size:10px;height:10px;">
-            <%=tr8n_help_icon_tag %>
+            <%= tr8n_help_icon_tag %>
             &nbsp;<%=trla("Click this icon to view [link: translation help] in a new window.", "", :link => lambda{|txt| link_to(txt, {:controller => "tr8n/help", :action => :index}, :target => "new")}) %>
         </div>
     </div>

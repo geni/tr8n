@@ -1,23 +1,23 @@
 <%
   links = []
-  current_tab ||= ""
-  [["Applications", {:action => :index}],
-   ["Components", {:action => :components}],
-   ["Sources", {:action => :sources}],
-   ["Key Sources", {:action => :key_sources}]
+  current_tab ||= ''
+  [['Applications', admin_applications_path],
+   ['Components',   admin_applications_components_path],
+   ['Sources',      admin_applications_sources_path],
+   ['Key Sources', admin_applications_key_sources_path]
   ].each do |link|
-      if controller.action_name == link.last[:action].to_s
+      if current_page?(link.last)
         current_tab = link.first if current_tab.blank?
         links << link.first
       else
         links << link_to(link.first, link.last)
-      end 
-   end   
+      end
+   end
 %>
 
 <div class="section_title">
   <span style="font-size:12px; float:right; padding-top:5px;">
-    <%=links.join(" | ")%>
+    <%= links.join(" | ").html_safe %>
   </span>
   <%=current_tab %>
 </div>

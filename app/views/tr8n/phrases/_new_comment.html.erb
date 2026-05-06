@@ -1,5 +1,6 @@
 <div class="section_box colored">
-  <% form_tag({:action => :submit_comment}, {:method => :post, :id => "translation_key_comments_form"}) do %>
+  <%= form_tag(phrases_submit_comment_path, {:method => :post, :id => "translation_key_comments_form"}) do %>
+    <%= hidden_field_tag(request_forgery_protection_token, form_authenticity_token) %>
     <%= hidden_field_tag(:translation_key_id, @translation_key.id)%>
     <%= hidden_field_tag(:section_key, @section_key) %>
 
@@ -16,13 +17,13 @@
         <td></td>
         <td style="color:grey; font-size:12px; padding-top:10px; padding-bottom:10px;">
            <%=tra("Leave your comments here if you would like to discuss translations for this particular phrase.")%>
-           <%=tra("If you would like to discuss translations in general, leave your comments in the [link: language forum].", "", :link => ["/tr8n/forum"])%>
+           <%=tra("If you would like to discuss translations in general, leave your comments in the [link: language forum].", "", :link => forum_path)%>
         </td>
       </tr>
     </table>
 
     <div style="padding-top:20px; padding-bottom:10px;text-align:center">
-      <%= link_to_function("<span>#{tra('Submit Comment')}</span>", "Tr8n.Effects.submit('translation_key_comments_form')", :class => "button translator_btn translator_submit_btn") %>
+      <%= link_to_function("<span>#{tra('Submit Comment')}</span>".html_safe, "Tr8n.Effects.submit('translation_key_comments_form')", :class => "button translator_btn translator_submit_btn") %>
     </div>
   <% end %>
 

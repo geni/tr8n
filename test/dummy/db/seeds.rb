@@ -16,4 +16,4 @@ en_PL = Tr8n::Language.create!(:locale => 'en-PL', :english_name => 'Pig Latin',
 
 Tr8n::Translator.destroy_all
 trans = User.create!(:id => 4, :name => 'Translator')
-Tr8n::Translator.create!(:name => 'Default Translator', :user => trans)
+Tr8n::Translator.create!(:name => 'Default Translator', :user_id => trans.id)

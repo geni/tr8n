@@ -57,7 +57,7 @@
         <td>
             <%=@lang.myheritage_key %>
         </td>
-    </tr>    
+    </tr>
 
     <tr>
         <th>
@@ -83,7 +83,7 @@
             <%=@lang.completeness || 0 %>%
         </td>
     </tr>
-        
+
     <tr>
         <th>
             Created At
@@ -91,7 +91,7 @@
         <td>
             <%=@lang.created_at %>
         </td>
-    </tr>    
+    </tr>
     <tr>
         <th>
             Updated At
@@ -99,15 +99,15 @@
         <td>
             <%=@lang.updated_at %>
         </td>
-    </tr>    
+    </tr>
     <tr>
         <th>
-            
+
         </th>
         <td>
-        	<%=link_to_function("Update", "tr8nLightbox.show('/tr8n/admin/language/lb_update?lang_id=#{@lang.id}', {'height':450})") %>
+        	<%=link_to_function("Update", "tr8nLightbox.show('#{admin_language_lb_update_path(lang_id: @lang.id)}', {'height':450})") %>
         </td>
-    </tr>    
+    </tr>
 </table>
 
 

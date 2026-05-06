@@ -1,28 +1,29 @@
-#--
-# Copyright (c) 2010 Michael Berkovich, Geni Inc
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
 
-class Tr8n::Language < ActiveRecord::Base
-  set_table_name :tr8n_languages
+# == Schema Information
+#
+# Table name: tr8n_languages
+#
+#  id                   :integer          not null, primary key
+#  completeness         :integer
+#  curse_words          :text
+#  enabled              :boolean
+#  english_name         :string           not null
+#  facebook_key         :string
+#  featured_index       :integer          default(0)
+#  google_key           :string
+#  locale               :string           not null
+#  myheritage_key       :string
+#  native_name          :string
+#  right_to_left        :boolean
+#  created_at           :datetime
+#  updated_at           :datetime
+#  fallback_language_id :integer
+#
+# Indexes
+#
+#  index_tr8n_languages_on_locale  (locale)
+#
+class Tr8n::Language < ApplicationRecord
 
   belongs_to :fallback_language,    :class_name => 'Tr8n::Language',            :foreign_key => :fallback_language_id
 
@@ -157,7 +158,7 @@ class Tr8n::Language < ActiveRecord::Base
   end
 
   def dir
-    right_to_left? ? "rtl" : "ltr"
+    right_to_left? ? 'rtl' : 'ltr'
   end
 
   def align(dest)
@@ -167,13 +168,13 @@ class Tr8n::Language < ActiveRecord::Base
 
   def self.enabled_languages
     Tr8n::Cache.fetch("enabled_languages") do
-      find(:all, :conditions => ["enabled = ?", true], :order => "english_name asc")
+      where(:enabled => true).order('english_name asc')
     end
   end
 
   def self.featured_languages
     Tr8n::Cache.fetch("featured_languages") do
-      find(:all, :conditions => ["enabled = ? and featured_index is not null and featured_index > 0", true], :order => "featured_index desc")
+      where(:enabled => true).where('featured_index > 0').order('featured_index desc')
     end
   end
 
@@ -229,20 +230,20 @@ class Tr8n::Language < ActiveRecord::Base
   end
 
   def update_daily_metrics_for(metric_date)
-    metric = Tr8n::DailyLanguageMetric.find(:first, :conditions => ["language_id = ? and metric_date = ?", self.id, metric_date])
+    metric = Tr8n::DailyLanguageMetric.where(["language_id = ? and metric_date = ?", self.id, metric_date]).first
     metric ||= Tr8n::DailyLanguageMetric.create(:language_id => self.id, :metric_date => metric_date)
     metric.update_metrics!
   end
 
   def update_monthly_metrics_for(metric_date)
-    metric = Tr8n::MonthlyLanguageMetric.find(:first, :conditions => ["language_id = ? and metric_date = ?", self.id, metric_date])
+    metric = Tr8n::MonthlyLanguageMetric.where(["language_id = ? and metric_date = ?", self.id, metric_date]).first
     metric ||= Tr8n::MonthlyLanguageMetric.create(:language_id => self.id, :metric_date => metric_date)
     metric.update_metrics!
   end
 
   def total_metric
     @total_metric ||= begin
-      metric = Tr8n::TotalLanguageMetric.find(:first, :conditions => ["language_id = ?", self.id])
+      metric = Tr8n::TotalLanguageMetric.where(:language_id => self.id).first
       metric || Tr8n::TotalLanguageMetric.create(Tr8n::LanguageMetric.default_attributes.merge(:language_id => self.id))
     end
   end
@@ -295,25 +296,27 @@ class Tr8n::Language < ActiveRecord::Base
     # TODO: handle change event
   end
 
-  after_save :delete_cache
-  after_destroy :delete_cache
-
-private
-
-  def delete_cache
+  def after_save
     Tr8n::Cache.delete("language_#{locale}")
     Tr8n::Cache.delete("featured_languages")
     Tr8n::Cache.delete("enabled_languages")
   end
 
-public
+  def after_destroy
+    Tr8n::Cache.delete("language_#{locale}")
+    Tr8n::Cache.delete("featured_languages")
+    Tr8n::Cache.delete("enabled_languages")
+  end
 
   def recently_added_forum_messages
-    @recently_added_forum_messages ||= Tr8n::LanguageForumMessage.find(:all, :conditions => ["language_id = ?", self.id], :order => "created_at desc", :limit => 5)
+    @recently_added_forum_messages ||= Tr8n::LanguageForumMessage
+                                        .where(:language_id => self.id)
+                                        .order("created_at desc")
+                                        .limit(5)
   end
 
   def recently_added_translations
-    @recently_added_translations ||= Tr8n::Translation.find(:all, :conditions => ["language_id = ?", self.id], :order => "created_at desc", :limit => 5)
+    @recently_added_translations ||= Tr8n::Translation.where(:language_id => self.id).order("created_at desc").limit(5)
   end
 
   def recently_updated_translations
@@ -321,12 +324,15 @@ public
       conditions = ["language_id = ?", self.id]
       conditions[0] << " and translation_key_id in (select id from tr8n_translation_keys where level <= ? and (type is null or type = 'Tr8n::TranslationKey' or type = 'TranslationKey')) "
       conditions << Tr8n::Config.current_translator.level
-      Tr8n::Translation.find(:all, :conditions => conditions, :order => "updated_at desc", :limit => 5)
+      Tr8n::Translation.where(conditions).order("updated_at desc").limit(5)
     end
   end
 
   def recently_updated_votes(translator = Tr8n::Config.current_translator)
-    @recently_updated_votes ||= Tr8n::TranslationVote.find(:all, :conditions => ["translation_id in (select tr8n_translations.id from tr8n_translations where tr8n_translations.language_id = ? and tr8n_translations.translator_id = ?)", self.id, translator.id], :order => "updated_at desc", :limit => 5)
+    @recently_updated_votes ||= Tr8n::TranslationVote
+                                  .where("translation_id in (select tr8n_translations.id from tr8n_translations where tr8n_translations.language_id = ? and tr8n_translations.translator_id = ?)", self.id, translator.id)
+                                  .order("updated_at desc")
+                                  .limit(5)
   end
 
 end

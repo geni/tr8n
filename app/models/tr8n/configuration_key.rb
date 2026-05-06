@@ -1,26 +1,27 @@
-#--
-# Copyright (c) 2010 Michael Berkovich, Geni Inc
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
 
+# == Schema Information
+#
+# Table name: tr8n_translation_keys
+#
+#  id                :integer          not null, primary key
+#  admin             :boolean
+#  description       :text
+#  key               :string           not null
+#  label             :text             not null
+#  level             :integer          default(0)
+#  locale            :string
+#  synced_at         :datetime
+#  translation_count :integer
+#  type              :string
+#  verified_at       :datetime
+#  created_at        :datetime
+#  updated_at        :datetime
+#
+# Indexes
+#
+#  index_tr8n_translation_keys_on_key        (key) UNIQUE
+#  index_tr8n_translation_keys_on_synced_at  (synced_at)
+#
 class Tr8n::ConfigurationKey < Tr8n::TranslationKey
 
   def self.find_or_create(key, label = nil, description = nil, options = {})
@@ -35,10 +36,11 @@ class Tr8n::ConfigurationKey < Tr8n::TranslationKey
     end
   end
 
-  after_save :delete_cache
-  after_destroy :delete_cache
+  def after_save
+    Tr8n::Cache.delete("configuration_key_#{key}")
+  end
 
-  def delete_cache
+  def after_destroy
     Tr8n::Cache.delete("configuration_key_#{key}")
   end
 

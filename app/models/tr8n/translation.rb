@@ -1,34 +1,34 @@
-#--
-# Copyright (c) 2010 Michael Berkovich, Geni Inc
-#
-# Permission is hereby granted, free of charge, to any person obtaining
-# a copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish,
-# distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to
-# the following conditions:
-#
-# The above copyright notice and this permission notice shall be
-# included in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#++
 
-class Tr8n::Translation < ActiveRecord::Base
-  set_table_name :tr8n_translations
+# == Schema Information
+#
+# Table name: tr8n_translations
+#
+#  id                 :integer          not null, primary key
+#  label              :text             not null
+#  rank               :integer          default(0)
+#  rules              :text
+#  synced_at          :datetime
+#  created_at         :datetime
+#  updated_at         :datetime
+#  approved_by_id     :bigint
+#  language_id        :integer          not null
+#  translation_key_id :integer          not null
+#  translator_id      :integer          not null
+#
+# Indexes
+#
+#  index_tr8n_translations_on_synced_at     (synced_at)
+#  r8n_trans_translator_id                  (translator_id)
+#  tr8n_trans_created_at                    (created_at)
+#  tr8n_trans_key_id_translator_id_lang_id  (translation_key_id,translator_id,language_id)
+#
+class Tr8n::Translation < ApplicationRecord
 
-  belongs_to :language,         :class_name => "Tr8n::Language"
-  belongs_to :translation_key,  :class_name => "Tr8n::TranslationKey"
-  belongs_to :translator,       :class_name => "Tr8n::Translator"
+  belongs_to :language
+  belongs_to :translation_key
+  belongs_to :translator
 
-  has_many   :translation_votes, :class_name => "Tr8n::TranslationVote", :dependent => :destroy
+  has_many   :translation_votes, :dependent => :destroy
 
   serialize :rules
 
@@ -56,12 +56,12 @@ class Tr8n::Translation < ActiveRecord::Base
   end
 
   def update_rank!
-    self.rank = Tr8n::TranslationVote.sum("vote", :conditions => ["translation_id = ?", self.id])
+    self.rank = Tr8n::TranslationVote.where(:translation_id => self.id).sum("vote")
     save
   end
 
   def reset_votes!(translator)
-    Tr8n::TranslationVote.delete_all("translation_id = #{self.id}")
+    Tr8n::TranslationVote.where(:translation_id => id).delete_all
     vote!(translator, 1)
   end
 
@@ -73,10 +73,10 @@ class Tr8n::Translation < ActiveRecord::Base
   end
 
   def rank_label
-    return "<span style='color:grey'>0</span>" if rank.blank?
+    return "<span style='color:grey'>0</span>".html_safe if rank.blank?
 
     prefix = (rank > 0) ? "+" : ""
-    "<span style='#{rank_style(rank)}'>#{prefix}#{rank}</span>"
+    "<span style='#{rank_style(rank)}'>#{prefix}#{rank}</span>".html_safe
   end
 
   # populate language rules from the internal rules hash
@@ -153,9 +153,8 @@ class Tr8n::Translation < ActiveRecord::Base
   end
 
   def self.default_translation(translation_key, language, translator)
-    trans = find(:first,
-      :conditions => ["translation_key_id = ? and language_id = ? and translator_id = ? and rules is null",
-                       translation_key.id, language.id, translator.id], :order => "rank desc")
+    trans = where("translation_key_id = ? and language_id = ? and translator_id = ? and rules is null",
+                   translation_key.id, language.id, translator.id).order("rank desc").first
     return trans if trans
     label = translation_key.default_translation if translation_key.is_a?(Tr8n::RelationshipKey)
     new(:translation_key => translation_key, :language => language, :translator => translator, :label => label || translation_key.sanitized_label)
@@ -175,7 +174,7 @@ class Tr8n::Translation < ActiveRecord::Base
       conditions << self.id
     end
 
-    self.class.find(:all, :conditions => conditions).empty?
+    self.class.where(conditions).empty?
   end
 
   def clean?
@@ -210,24 +209,24 @@ class Tr8n::Translation < ActiveRecord::Base
     destroy
   end
 
-  after_create :clear_cache_and_notify
-  after_save :clear_cache
-  after_destroy :clear_cache
-
   def clear_cache
     Tr8n::Cache.delete("translations_#{language.locale}_#{translation_key.key}") if language and translation_key
     language.translations_changed! if language
     translation_key.translations_changed!(language) if translation_key
   end
 
-private
-
-  def clear_cache_and_notify
+  def after_create
     clear_cache # geni/geni#2583
     Tr8n::Notification.distribute(self)
   end
 
-public
+  def after_save
+    clear_cache
+  end
+
+  def after_destroy
+    clear_cache
+  end
 
   ###############################################################
   ## Synchronization Methods
@@ -319,7 +318,7 @@ public
   end
 
   def self.search_conditions_for(params, language = Tr8n::Config.current_language)
-    conditions = ["language_id = ?", language.id]
+    conditions = [String.new('language_id = ?'), language.id]
 
     # ensure that only allowed translations are visible
     conditions[0] << " and translation_key_id in (select id from tr8n_translation_keys where level <= ? "

@@ -1,11 +1,11 @@
 <%= tr8n_google_charts_js_tag %>
 <%= render :partial => "/tr8n/admin/common/header" %>
 <%= render :partial => "tabs" %>
-<%= tr8n_will_filter(@translators) %>
+<%= tr8n_will_filter(@translators.results) %>
 
-<%= link_to_function("+ Register new translator", "tr8nLightbox.show('/tr8n/admin/translator/lb_register', {'height':150})") %>
+<%= link_to_function("+ Register new translator", "tr8nLightbox.show('#{admin_translator_lb_register_path}', {'height':150})") %>
  |
-<%= link_to("Update translators stats", {:action => :update_stats}, :confirm => "Are you sure you want to run this opperation?")%>
+<%= link_to("Update translators stats", admin_translator_update_stats_path, :confirm => "Are you sure you want to run this operation?") %>
 
 <% form_tag("", :id => "translators_form") do %>
   <%= will_filter_table_tag(@translators, :columns => [
@@ -42,7 +42,7 @@
       translator.rank ? (translator.rank * 100).to_i / 100.0 : 0
     }, 'text-align:right'],
     [:translation_count, lambda{|translator|
-      link_to(translator.total_metric.total_translations || 0, "/tr8n/admin/translation?wf_c0=translator_id&wf_o0=is&wf_v0_0=#{translator.id}")
+      link_to(translator.total_metric.total_translations || 0, admin_translator_path(:wf_c0 => 'translator_id', :wf_o0 => 'is', :wf_v0_0 => translator.id))
     }, 'text-align:right'],
     [:vote_count, lambda{|translator|
       html = []
@@ -56,8 +56,8 @@
     }, 'text-align:right'],
     [:actions, lambda{|translator|
       html = []
-      html << link_to("View", :action => :view, :translator_id => translator.id)
-      html << link_to("Delete", {:action => :delete, :translator_id => translator.id}, :confirm => "Are you sure you want to do that?")
+      html << link_to("View", admin_translator_view_path(:translator_id => translator.id))
+      html << link_to("Delete", admin_translator_delete_path(:translator_id => translator.id), :confirm => "Are you sure you want to do that?")
       html.join(' | ')
     }, 'text-align:right;white-space:nowrap;']
   ]) %>
@@ -70,11 +70,11 @@
 
 <%= render :partial => "/tr8n/admin/common/footer" %>
 
-<% javascript_tag(nonce: true) do %>
+<%= javascript_tag(nonce: true) do %>
   function deleteSelectedTranslators() {
-    if (!confirm('Are you sure you want to run this opperation?'))
+    if (!confirm('Are you sure you want to run this operation?'))
        return;
-    Tr8n.element('translators_form').action = "/tr8n/admin/translator/delete";
+    Tr8n.element('translators_form').action = "<%= admin_translator_delete_path %>";
     Tr8n.element('translators_form').submit();
   }
 
@@ -97,6 +97,6 @@
       alert('At least one translator must be selected.');
       return;
     }
-    tr8nLightbox.show('/tr8n/admin/applications/lb_add_to_component?translators=' + translators, {height:400});
+    tr8nLightbox.show('<%= admin_applications_lb_add_to_component_path %>?translators=' + translators, {height:400});
   }
 <% end %>

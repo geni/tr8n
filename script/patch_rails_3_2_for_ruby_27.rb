@@ -55,53 +55,30 @@ def patch_has_many
   # Fix has_cached_counter?
   content.gsub!(
     /def has_cached_counter\?\(reflection = reflection\)/,
-    "def has_cached_counter?(refl = nil)\n        refl ||= reflection"
+    "def has_cached_counter?(reflection = self.reflection)"
   )
-  content.gsub!(
-    /has_cached_counter\?\(reflection\)/,
-    'has_cached_counter?(refl)'
-  )
-
   # Fix cached_counter_attribute_name
   content.gsub!(
     /def cached_counter_attribute_name\(reflection = reflection\)/,
-    "def cached_counter_attribute_name(refl = nil)\n        refl ||= reflection"
-  )
-  content.gsub!(
-    /cached_counter_attribute_name\(reflection\)/,
-    'cached_counter_attribute_name(refl)'
-  )
-  # Fix the one call that uses "reflection" variable
-  content.gsub!(
-    /"#\{reflection\.name\}_count"/,
-    '"#{refl.name}_count"'
+    "def cached_counter_attribute_name(reflection = self.reflection)"
   )
 
   # Fix update_counter
   content.gsub!(
     /def update_counter\(difference, reflection = reflection\)/,
-    "def update_counter(difference, refl = nil)\n        refl ||= reflection"
+    "def update_counter(difference, reflection = self.reflection)"
   )
 
   # Fix inverse_updates_counter_cache?
   content.gsub!(
     /def inverse_updates_counter_cache\?\(reflection = reflection\)/,
-    "def inverse_updates_counter_cache?(refl = nil)\n        refl ||= reflection"
-  )
-  # Update the body to use refl variable
-  content.gsub!(
-    /reflection\.klass\.reflect_on_all_associations/,
-    'refl.klass.reflect_on_all_associations'
+    "def inverse_updates_counter_cache?(reflection = self.reflection)"
   )
 
   # Fix delete_records
   content.gsub!(
     /def delete_records\(records, method = method\)/,
-    "def delete_records(records, meth = nil)\n        meth ||= method"
-  )
-  content.gsub!(
-    /^(\s+)case method$/,
-    '\1case meth'
+    "def delete_records(records, method = self.method)"
   )
 
   File.write(file_path, content)

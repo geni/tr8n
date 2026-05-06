@@ -44,7 +44,7 @@
 	        <% color = tk.can_be_translated? ? "#FDFDDF" : "#ECFFEF" %>
 	        <td style="padding:5px; background: <%=color%>; " dir="ltr">
 	          <% unless tk.can_be_translated? %>
-	            <div style="<%=tr8n_style_attribute_tag('float', 'right')%>"><%=image_tag( url_with_cache_version("/tr8n/images/lock.png"), :style=>"width:12px", :title => trla("This phrase is locked"))%></div>
+	            <div style="<%=tr8n_style_attribute_tag('float', 'right')%>"><%=image_tag('tr8n/lock.png', :style=>"width:12px", :title => trla("This phrase is locked"))%></div>
 	          <% end %>
 	          <%=link_to(tk.default_decoration, :action => :view, :translation_key_id => tk.id, :section_key => @section_key)%>
 	          <div style="color:grey;font-size:10px;padding-top:3px;" dir="ltr"><%=tk.description%></div>
@@ -56,7 +56,7 @@
 	            <%= tra("There are no translations for this phrase.") %>
 							<% if tk.can_be_translated? %>
 		            <%= tra("Be the first one to [link: translate it].", "",
-		                    :link => lambda{|str| link_to(str, :controller => "/tr8n/phrases", :action => :view, :translation_key_id => tk.id, :section_key => @section_key)}  ) %>
+		                    :link => lambda{|str| link_to(str, phrases_view_path(:translation_key_id => tk.id, :section_key => @section_key))} ) %>
 							<% end %>
 				    <% else %>
 	            <%= render :partial => "/tr8n/common/translation_votes", :locals => {:translation_key => tk, :translations => translations[0..4], :section_key => @section_key} %>
@@ -77,7 +77,7 @@
 	</div>
 	<%= render :partial => "/tr8n/common/footer" %>
 
-	<% javascript_tag(nonce: true) do %>
+	<%= javascript_tag(nonce: true) do %>
 	  function toggleFilterOptions() {
 	    if (Tr8n.element("phrase_type").value == "with") {
 	      Tr8n.Effects.show("extended_filter_options");

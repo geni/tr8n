@@ -13,5 +13,4 @@ module ApplicationHelper
 
     links.join(" | ").html_safe
   end
-
-end # module ApplicationHelper
+end

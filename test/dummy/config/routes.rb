@@ -1,9 +1,8 @@
-Rails.application.routes.draw do
-  # This will also mount Tr8n::Engine at /tr8n and WillFilter::Engine at will_filter
-  mount Tr8n::Engine => "/tr8n"
-  #mount Platform::Engine => "/platform"
+Dummy::Application.routes.draw do
+  # mount at /foo to make sure the links work
+  # this will also mount will_filter at /will_filter
+  mount Tr8n::Engine => '/foo'
 
-  get '/login', to: 'dummy#index', as: :login
   get '/dummy/switch_user', to: 'dummy#switch_user', as: :switch_user
   get '/', to: 'dummy#index', as: :root
 end

@@ -3,7 +3,7 @@
     <%=tra("Translator Details") %>
   </div>
 
-  <% form_for(:translator, tr8n_current_translator, :url => {:action => :index}, :html => {:id => 'basic_info_form', :method => :post}) do |f| %>
+  <%= form_for(tr8n_current_translator, :as => 'translator', :url => translator_path, :html => {:id => 'basic_info_form', :method => :post}) do |f| %>
     <div class="section_box colored">
       <div>
         <table>
