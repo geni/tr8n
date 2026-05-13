@@ -93,8 +93,9 @@ module Tr8n
     end
 
     def login!(user: self.user, translator: true)
-      Tr8n::Translator.register(user) if translator
+      t = Tr8n::Translator.register(user) if translator
       request.session[:user_id] = user.id
+      t
     end
 
     def logout

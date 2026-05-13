@@ -1,4 +1,5 @@
 class Tr8n::Admin::ForumController < Tr8n::Admin::BaseController
+  protect_from_forgery
 
   def index
     @topics = Tr8n::LanguageForumTopic.filter(:params => params, :filter => Tr8n::LanguageForumTopicFilter)
