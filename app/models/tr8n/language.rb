@@ -25,6 +25,11 @@
 #
 class Tr8n::Language < ApplicationRecord
 
+  # Rails 3.2 mass-assignment protection
+  attr_accessible :locale, :english_name, :native_name, :enabled, :right_to_left,
+                  :completeness, :fallback_language_id, :curse_words, :featured_index,
+                  :google_key, :facebook_key, :myheritage_key
+
   belongs_to :fallback_language,    :class_name => 'Tr8n::Language',            :foreign_key => :fallback_language_id
 
   has_many :language_rules,         :class_name => 'Tr8n::LanguageRule',        :dependent => :destroy, :order => "type asc"

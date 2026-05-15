@@ -26,6 +26,10 @@ require 'digest/md5'
 
 class Tr8n::TranslationKey < ApplicationRecord
 
+  # Rails 3.2 mass-assignment protection
+  attr_accessible :label, :description, :key, :locale, :level, :admin, :verified_at,
+                  :translation_count, :type
+
   has_many :translations,             :dependent => :destroy
   has_many :translation_key_locks,    :dependent => :destroy
   has_many :translation_key_sources,  :dependent => :destroy
