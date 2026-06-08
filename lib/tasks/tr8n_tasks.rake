@@ -239,9 +239,10 @@ namespace :tr8n do
     puts "Cutoff date: #{cutoff_date}"
     puts "=" * 80
 
-    unused_keys = Tr8n::TranslationKey.where(
-      "verified_at is null OR verified_at < ?", cutoff_date
-    ).order("verified_at ASC NULLS FIRST")
+    unused_keys = Tr8n::TranslationKey.find(:all,
+      :conditions => ["verified_at is null OR verified_at < ?", cutoff_date],
+      :order => "verified_at ASC"
+    )
 
     total_keys = Tr8n::TranslationKey.count
     unused_count = unused_keys.count
@@ -256,7 +257,7 @@ namespace :tr8n do
       puts "Sample of unused keys (showing first 20):"
       puts "-" * 80
 
-      unused_keys.limit(20).each do |key|
+      unused_keys[0...20].each do |key|
         last_used = key.verified_at ? key.verified_at.strftime('%Y-%m-%d') : 'never'
         label_preview = key.label.length > 60 ? "#{key.label[0..60]}..." : key.label
         puts "  [#{last_used}] #{label_preview}"
@@ -289,9 +290,10 @@ namespace :tr8n do
 
     puts "Exporting unused translation keys to #{filename}..."
 
-    unused_keys = Tr8n::TranslationKey.where(
-      "verified_at is null OR verified_at < ?", cutoff_date
-    ).order("verified_at ASC NULLS FIRST")
+    unused_keys = Tr8n::TranslationKey.find(:all,
+      :conditions => ["verified_at is null OR verified_at < ?", cutoff_date],
+      :order => "verified_at ASC"
+    )
 
     CSV.open(filename, 'w') do |csv|
       csv << ['ID', 'Key Hash', 'Label', 'Description', 'Last Verified', 'Days Since Verified', 'Created At']
