@@ -588,7 +588,8 @@ class Tr8n::TranslationKey < ActiveRecord::Base
     # Don't touch sources if only verified_at changed
     return if @only_verified_at_changed
 
-    sources.each do |source|
+    # Reload the association to ensure we have fresh data
+    sources.reload.each do |source|
       # Only touch if not touched recently (within 24 hours)
       next if source.updated_at && source.updated_at > 24.hours.ago
       source.touch
