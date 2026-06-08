@@ -70,11 +70,11 @@ class Tr8n::TranslationKey < ActiveRecord::Base
 
       mark_as_admin(existing_key, options)
       update_default_locale(existing_key, options)
-      verify_key(existing_key, options)
 
       existing_key
     end
 
+    verify_key(existing_key, options)
     track_source(tkey, options)
     tkey
   end
