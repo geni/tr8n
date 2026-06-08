@@ -78,7 +78,7 @@ class Tr8n::TranslationKey < ApplicationRecord
       existing_key
     end
 
-    verify_key(existing_key, options)
+    verify_key(tkey, options)
     track_source(tkey, options)
     tkey
   end
