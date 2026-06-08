@@ -347,4 +347,93 @@ class Tr8n::TranslationKeyTest < Tr8n::TestCase
     end
   end
 
+  test "touch_sources not called when only verified_at changes" do
+    # Create a translation source
+    source = Tr8n::TranslationSource.create!(
+      :source => "test_controller#test_action_#{Time.now.to_f}"
+    )
+
+    # Create a translation key associated with this source
+    key = Tr8n::TranslationKey.find_or_create("Test no touch on verify #{Time.now.to_f}")
+    Tr8n::TranslationKeySource.create!(
+      :translation_key => key,
+      :translation_source => source
+    )
+
+    # Record source's current updated_at
+    source.reload
+    original_updated_at = source.updated_at
+
+    # Update only verified_at (simulating usage tracking)
+    sleep 0.1 # Small delay to ensure timestamp would change if touched
+    key.update_attributes(:verified_at => Time.now)
+
+    # Reload source
+    source.reload
+
+    # updated_at should NOT have changed when only verified_at was updated
+    assert_equal original_updated_at.to_i, source.updated_at.to_i,
+                 "source.updated_at should not be touched when only verified_at changes"
+  end
+
+  test "touch_sources respects 24-hour throttle" do
+    # Create a translation source
+    source = Tr8n::TranslationSource.create!(
+      :source => "test_controller#test_action_#{Time.now.to_f}"
+    )
+
+    # Create a translation key associated with this source
+    key = Tr8n::TranslationKey.find_or_create("Test touch throttle #{Time.now.to_f}")
+    Tr8n::TranslationKeySource.create!(
+      :translation_key => key,
+      :translation_source => source
+    )
+
+    # Update source's updated_at to 12 hours ago (within throttle window)
+    recent_time = 12.hours.ago
+    source.update_attributes(:updated_at => recent_time)
+    original_updated_at = source.updated_at
+
+    # Trigger after_save which calls touch_sources (change something other than verified_at)
+    key.update_attributes(:description => "Modified")
+
+    # Reload source
+    source.reload
+
+    # updated_at should NOT have changed due to 24-hour throttle
+    assert_equal original_updated_at.to_i, source.updated_at.to_i,
+                 "source.updated_at should not be touched within 24-hour throttle window"
+  end
+
+  test "touch_sources updates old sources" do
+    # Create a translation source with old updated_at
+    source = Tr8n::TranslationSource.create!(
+      :source => "test_controller#test_action_old_#{Time.now.to_f}"
+    )
+
+    # Create a translation key associated with this source
+    key = Tr8n::TranslationKey.find_or_create("Test touch old #{Time.now.to_f}")
+    Tr8n::TranslationKeySource.create!(
+      :translation_key => key,
+      :translation_source => source
+    )
+
+    # Update source's updated_at to 3 days ago (outside throttle window)
+    old_time = 3.days.ago
+    source.update_attributes(:updated_at => old_time)
+
+    # Trigger after_save which calls touch_sources
+    current_time = Time.now
+    key.update_attributes(:description => "Modified again")
+
+    # Reload source
+    source.reload
+
+    # updated_at should have been updated
+    assert source.updated_at > old_time,
+           "source.updated_at should be touched when older than 24 hours"
+    assert (source.updated_at - current_time).abs < 5,
+           "source.updated_at should be close to current time"
+  end
+
 end # class Tr8n::TranslationKeyTest

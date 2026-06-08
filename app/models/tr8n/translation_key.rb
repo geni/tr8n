@@ -578,15 +578,27 @@ class Tr8n::TranslationKey < ActiveRecord::Base
   end
 
   # FIXME: make sure this does not create deadlocks
+  # Throttled to touch at most once per day to reduce database write contention
   def touch_sources
     sources.each do |source|
+      # Only touch if not touched recently (within 24 hours)
+      next if source.updated_at && source.updated_at > 24.hours.ago
       source.touch
     end
   end
 
+  def before_save
+    # Track if only verified_at is changing (for after_save optimization)
+    @only_verified_at_changed = (changed == ['verified_at'])
+    true
+  end
+
   def after_save
     # Tr8n::Cache.delete(cache_key)
-    touch_sources
+    # Don't touch sources if only verified_at changed (usage tracking only)
+    touch_sources unless @only_verified_at_changed
+
+    true
   end
 
   def after_destroy
