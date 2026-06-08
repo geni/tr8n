@@ -101,9 +101,11 @@ class Tr8n::TranslationKey < ApplicationRecord
 
   # mark each key as verified - but only if caching is enabled
   # verification is used to cleanup unused keys
+  # throttled to update at most once per day to reduce database write contention
   def self.verify_key(tkey, options)
     return unless Tr8n::Config.enable_key_verification?
-    existing_key.update_attributes(:verified_at => Time.now)
+    return if tkey.verified_at && tkey.verified_at > 24.hours.ago
+    tkey.update_attributes(:verified_at => Time.now)
   end
 
   # creates associations between the translation keys and sources

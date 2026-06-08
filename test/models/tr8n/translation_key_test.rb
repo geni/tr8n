@@ -511,6 +511,112 @@ class TranslationKeyTest < Tr8n::TestCase
     assert_equal "10 сообщений", key.translate(russian, :count => 10, :_messages => "messages")
   end
 
+  test "verified_at gets updated when key is accessed with verification enabled" do
+    # Save original config value
+    original_config = Tr8n::Config.config[:enable_key_verification]
+
+    begin
+      # Enable key verification
+      Tr8n::Config.config[:enable_key_verification] = true
+
+      # Create a key with verified_at in the past
+      past_time = 3.days.ago
+      unique_label = "Test verification #{Time.now.to_f}"
+      key = Tr8n::TranslationKey.create!(
+        :key => Tr8n::TranslationKey.generate_key(unique_label, ""),
+        :label => unique_label,
+        :description => "",
+        :locale => default_language.locale,
+        :verified_at => past_time
+      )
+
+      # Access the key through find_or_create (which calls verify_key)
+      current_time = Time.now
+      Tr8n::TranslationKey.find_or_create(unique_label, "")
+
+      # Reload to get fresh data from database
+      key.reload
+
+      # verified_at should be updated to approximately now
+      assert_not_nil key.verified_at
+      assert key.verified_at > past_time, "verified_at should be updated from past time"
+      assert (key.verified_at - current_time).abs < 5, "verified_at should be close to current time"
+    ensure
+      # Restore original config
+      Tr8n::Config.config[:enable_key_verification] = original_config
+    end
+  end
+
+  test "verified_at respects 24-hour throttle" do
+    # Save original config value
+    original_config = Tr8n::Config.config[:enable_key_verification]
+
+    begin
+      # Enable key verification
+      Tr8n::Config.config[:enable_key_verification] = true
+
+      # Create a key with verified_at 12 hours ago (within throttle window)
+      recent_time = 12.hours.ago
+      unique_label = "Test throttle #{Time.now.to_f}"
+      key = Tr8n::TranslationKey.create!(
+        :key => Tr8n::TranslationKey.generate_key(unique_label, ""),
+        :label => unique_label,
+        :description => "",
+        :locale => default_language.locale,
+        :verified_at => recent_time
+      )
+
+      original_verified_at = key.verified_at
+
+      # Access the key through find_or_create
+      Tr8n::TranslationKey.find_or_create(unique_label, "")
+
+      # Reload to get fresh data from database
+      key.reload
+
+      # verified_at should NOT be updated due to 24-hour throttle
+      assert_equal original_verified_at.to_i, key.verified_at.to_i,
+                   "verified_at should not be updated within 24-hour throttle window"
+    ensure
+      # Restore original config
+      Tr8n::Config.config[:enable_key_verification] = original_config
+    end
+  end
+
+  test "verified_at not updated when verification disabled" do
+    # Save original config value
+    original_config = Tr8n::Config.config[:enable_key_verification]
+
+    begin
+      # Disable key verification
+      Tr8n::Config.config[:enable_key_verification] = false
+
+      # Create a key with verified_at in the past
+      past_time = 3.days.ago
+      unique_label = "Test disabled #{Time.now.to_f}"
+      key = Tr8n::TranslationKey.create!(
+        :key => Tr8n::TranslationKey.generate_key(unique_label, ""),
+        :label => unique_label,
+        :description => "",
+        :locale => default_language.locale,
+        :verified_at => past_time
+      )
+
+      # Access the key through find_or_create
+      Tr8n::TranslationKey.find_or_create(unique_label, "")
+
+      # Reload to get fresh data from database
+      key.reload
+
+      # verified_at should NOT be updated when verification is disabled
+      assert_equal past_time.to_i, key.verified_at.to_i,
+                   "verified_at should not be updated when verification is disabled"
+    ensure
+      # Restore original config
+      Tr8n::Config.config[:enable_key_verification] = original_config
+    end
+  end
+
 private
 
   def default_language

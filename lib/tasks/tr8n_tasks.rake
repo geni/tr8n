@@ -9,13 +9,13 @@ namespace :tr8n do
   task :sync_db do
     system "rsync -ruv vendor/plugins/tr8n/db/migrate ./db"
   end
-  
+
   desc "Initializes all of the tables with default data"
   task :init => :environment do
     raise "This action is prohibited in this environment" if ['production', 'stage', 'staging'].include?(Rails.env) and env('force') != 'true'
     Tr8n::Config.reset_all!
   end
-  
+
   desc "Switches from manager flag to levels approach"
   task :upgrade_managers => :environment do
     # both of the following management approaches are deprecated, now use level only
@@ -25,18 +25,18 @@ namespace :tr8n do
     end
     Tr8n::Translator.connection.execute("update tr8n_translators set level = #{Tr8n::Config.manager_level} where manager = true")
   end
-  
+
   desc "Adds missing languages from the yml file"
   task :import_languages => :environment do
     Tr8n::Config.default_languages.each do |locale, info|
       lang = Tr8n::Language.for(locale)
       next if lang
-      
+
       info[:right_to_left] = false if info[:right_to_left].nil?
       info[:locale] = locale
       info[:enabled] = false
       lang = Tr8n::Language.create(info)
-      
+
       lang.reset!
     end
   end
@@ -46,10 +46,10 @@ namespace :tr8n do
     Tr8n::Config.default_languages.each do |locale, info|
       lang = Tr8n::Language.for(locale)
       next unless lang
-      
-      lang.google_key = info[:google_key] 
-      lang.facebook_key = info[:facebook_key] 
-      lang.save      
+
+      lang.google_key = info[:google_key]
+      lang.facebook_key = info[:facebook_key]
+      lang.save
     end
   end
 
@@ -67,7 +67,7 @@ namespace :tr8n do
   task :language_cases => :environment do
     Tr8n::Language.all.each do |lang|
       lang.reset_language_cases!
-    end 
+    end
   end
 
   desc "Creates featured languages"
@@ -78,17 +78,17 @@ namespace :tr8n do
       lang.save
     end
   end
-  
+
   task :rtl_languages => :environment do
-    File.open('rtllanguages.yml', 'w') do |f| 
+    File.open('rtllanguages.yml', 'w') do |f|
       Tr8n::Language.find(:all, :conditions => ["right_to_left = ?", true], :order => "english_name asc").each do |l|
         f.puts("\"#{l.locale}\":\n")
       end
     end
   end
-  
+
   task :export_languages => :environment do
-    File.open('languages.yml', 'w') do |f| 
+    File.open('languages.yml', 'w') do |f|
       Tr8n::Language.find(:all, :order => "english_name asc").each do |l|
         f.puts("\"#{l.locale}\":\n")
         f.puts("\tenglish_name: \"#{l.english_name}\"\n")
@@ -98,7 +98,7 @@ namespace :tr8n do
       end
     end
   end
-  
+
   task :configure_fallbacks => :environment do
     Tr8n::Language.all.each do |lang|
       locale = lang.locale
@@ -108,72 +108,72 @@ namespace :tr8n do
       lang.save
     end
   end
-  
+
   task :verify_keys => :environment do
     used_keys = {}
-    
+
     # verification timestamp
     v_time = Time.now
-    
+
     puts "Running verification process..."
     t0 = Time.now
 
     log_path = Tr8n::KeyLogger.logfile_path
-    
+
     puts "Looking up log file at location..."
     puts "File path: #{log_path}"
-   
+
     unless File.exists?(log_path)
       puts "Log file not found. Key logging process is not running."
-      return 
+      return
     end
 
     puts "Log file found. Renaming log file..."
     new_log_path = Tr8n::KeyLogger.switch_log(v_time)
     puts "Renamed file path: #{new_log_path}"
-    
+
     puts "Scanning log file..."
-    
+
     counter = 1
     file = File.new(new_log_path, "r")
     while (key_line = file.gets)
       key_id = key_line.strip
       used_keys[key_id] = true
       counter += 1
-      
+
       puts "Scanned #{counter} lines..." if counter % 100 == 0
     end
     file.close
     t1 = Time.now
     puts "Scanned #{used_keys.keys.size} unique keys"
     puts "Scanning process took #{t1-t0} mls"
-    
+
     puts "Marking keys as verified..."
     puts "There are #{Tr8n::TranslationKey.count} keys in the system"
-    
-    verify_count = 0 
+
+    verify_count = 0
     used_keys.keys.each do |key|
       tkey = Tr8n::TranslationKey.find_by_id(key)
       next unless tkey
       tkey.verify!(v_time)
       verify_count += 1
     end
-    
+
     t2 = Time.now
     puts "Verified #{verify_count} keys"
     puts "Verification process took #{t2-t1} mls"
-  end  
-  
+  end
+
   # will delete all keys that have not been verified in the last 2 weeks
   task :delete_unverified_keys => :environment do
     date = env('before') || (Date.today - 2.weeks)
-    
+
     puts "Running key destruction process..."
     t0 = Time.now
-    
+
     puts "All keys not verified after #{date} will be destroyed!"
     unverified_keys = Tr8n::TranslationKey.find(:all, :conditions => ["verified_at is null or verified_at < ?", date])
-    
+
     puts "There are #{unverified_keys.size} keys to be destroyed."
     puts "Destroying unverified keys..." if unverified_keys.size > 0
 
@@ -183,18 +183,18 @@ namespace :tr8n do
       destroy_count += 1
       puts "Destroyed #{destroy_count} keys..." if destroy_count % 100 == 0
     end
-    
+
     t1 = Time.now
-  
+
     puts "Destroyed #{destroy_count} keys"
     puts "Destruction process took #{t1-t0} mls"
   end
-  
+
   desc 'Update IP to Location table (file=<file|config/tr8n/data/ip_locations.csv>)'
   task :import_ip_locations => :environment do
     Tr8n::IpLocation.import_from_file('config/tr8n/data/ip_locations.csv', :verbose => true)
   end
-  
+
   desc 'imports language cases'
   task :import_language_cases => :environment do
     Tr8n::Config.init_language_cases
@@ -214,19 +214,108 @@ namespace :tr8n do
   task :delete_orphan_translations => :environment do
     trns = Tr8n::Translation.find(:all, :conditions => "translation_key_id not in (select tr8n_translation_keys.id from tr8n_translation_keys)")
     puts "Deleting #{trns.count} translations..."
-    
+
     trns.each do |trn|
       trn.destroy
     end
-    
+
     puts "Done."
   end
-    
+
   desc 'syncs up translations'
   task :exchange => :environment do
     opts = {}
     opts[:force] = true if ENV["force"] == "true"
     Tr8n::SyncLog.sync(opts)
   end
-  
+
+  desc 'Find unused translation keys (days=90)'
+  task :find_unused_keys => :environment do
+    days = (ENV['days'] || '90').to_i
+    cutoff_date = Date.today - days.days
+
+    puts "=" * 80
+    puts "Finding translation keys not used in the last #{days} days"
+    puts "Cutoff date: #{cutoff_date}"
+    puts "=" * 80
+
+    unused_keys = Tr8n::TranslationKey.where(
+      "verified_at is null OR verified_at < ?", cutoff_date
+    ).order("verified_at ASC NULLS FIRST")
+
+    total_keys = Tr8n::TranslationKey.count
+    unused_count = unused_keys.count
+
+    puts "\nSummary:"
+    puts "  Total translation keys: #{total_keys}"
+    puts "  Unused keys found: #{unused_count}"
+    puts "  Percentage unused: #{'%.2f' % (unused_count.to_f / total_keys * 100)}%"
+    puts ""
+
+    if unused_count > 0
+      puts "Sample of unused keys (showing first 20):"
+      puts "-" * 80
+
+      unused_keys.limit(20).each do |key|
+        last_used = key.verified_at ? key.verified_at.strftime('%Y-%m-%d') : 'never'
+        label_preview = key.label.length > 60 ? "#{key.label[0..60]}..." : key.label
+        puts "  [#{last_used}] #{label_preview}"
+        puts "    Description: #{key.description}" unless key.description.blank?
+        puts ""
+      end
+
+      if unused_count > 20
+        puts "... and #{unused_count - 20} more unused keys"
+      end
+
+      puts "\nTo export full list to CSV:"
+      puts "  rake tr8n:export_unused_keys days=#{days}"
+      puts "\nTo delete these keys (DANGEROUS - backup first!):"
+      puts "  rake tr8n:delete_unverified_keys before=#{cutoff_date}"
+    else
+      puts "Great! All translation keys have been used recently."
+    end
+
+    puts "=" * 80
+  end
+
+  desc 'Export unused translation keys to CSV (days=90, file=unused_keys.csv)'
+  task :export_unused_keys => :environment do
+    require 'csv'
+
+    days = (ENV['days'] || '90').to_i
+    filename = ENV['file'] || 'unused_keys.csv'
+    cutoff_date = Date.today - days.days
+
+    puts "Exporting unused translation keys to #{filename}..."
+
+    unused_keys = Tr8n::TranslationKey.where(
+      "verified_at is null OR verified_at < ?", cutoff_date
+    ).order("verified_at ASC NULLS FIRST")
+
+    CSV.open(filename, 'w') do |csv|
+      csv << ['ID', 'Key Hash', 'Label', 'Description', 'Last Verified', 'Days Since Verified', 'Created At']
+
+      unused_keys.each do |key|
+        days_since = if key.verified_at
+          (Date.today - key.verified_at.to_date).to_i
+        else
+          'never'
+        end
+
+        csv << [
+          key.id,
+          key.key,
+          key.label,
+          key.description,
+          key.verified_at ? key.verified_at.strftime('%Y-%m-%d %H:%M:%S') : 'never',
+          days_since,
+          key.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        ]
+      end
+    end
+
+    puts "Exported #{unused_keys.count} unused keys to #{filename}"
+  end
+
 end
