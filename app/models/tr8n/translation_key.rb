@@ -43,6 +43,10 @@ class Tr8n::TranslationKey < ApplicationRecord
   alias :domains      :translation_domains
   alias :comments     :translation_key_comments
 
+  before_save :track_verified_at_only_change
+  after_save :touch_sources
+  after_destroy :clear_cache
+
   def self.cache_key(key_hash)
     "translation_key_#{key_hash}"
   end
@@ -582,18 +586,21 @@ class Tr8n::TranslationKey < ApplicationRecord
 
   # FIXME: make sure this does not create deadlocks
   def touch_sources
-    sources.each do |source|
+    # Don't touch sources if only verified_at changed
+    return if @only_verified_at_changed
+
+    # Reload the association to ensure we have fresh data
+    sources.reload.each do |source|
+      # Only touch if not touched recently (within 24 hours)
+      next if source.updated_at && source.updated_at > 24.hours.ago
       source.touch
     end
   end
 
-  def after_save
-    # Tr8n::Cache.delete(cache_key)
-    touch_sources
-  end
-
-  def after_destroy
-    # Tr8n::Cache.delete(cache_key)
+  def track_verified_at_only_change
+    # Track if only verified_at is changing (for touch_sources optimization)
+    @only_verified_at_changed = (changed == ['verified_at'])
+    true
   end
 
   def add_translation(label, rules = nil, lang = Tr8n::Config.current_language, translator = Tr8n::Config.current_translator)
@@ -605,6 +612,14 @@ class Tr8n::TranslationKey < ApplicationRecord
     translation.vote!(translator, 1)
     translation
   end
+
+private
+
+  def clear_cache
+    # Tr8n::Cache.delete(cache_key)
+  end
+
+public
 
   ###############################################################
   ## Offline Tasks
