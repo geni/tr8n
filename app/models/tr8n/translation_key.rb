@@ -39,6 +39,10 @@ class Tr8n::TranslationKey < ActiveRecord::Base
   alias :domains      :translation_domains
   alias :comments     :translation_key_comments
 
+  before_save :track_verified_at_only_change
+  after_save :touch_sources
+  after_destroy :clear_cache
+
   def self.cache_key(key_hash)
     "translation_key_#{key_hash}"
   end
@@ -578,13 +582,23 @@ class Tr8n::TranslationKey < ActiveRecord::Base
   end
 
   # FIXME: make sure this does not create deadlocks
-  after_save :touch_sources
-  after_destroy :clear_cache
-
+  # Throttled to touch at most once per day to reduce database write contention
+  # Skip touching if only verified_at changed (usage tracking only)
   def touch_sources
+    # Don't touch sources if only verified_at changed
+    return if @only_verified_at_changed
+
     sources.each do |source|
+      # Only touch if not touched recently (within 24 hours)
+      next if source.updated_at && source.updated_at > 24.hours.ago
       source.touch
     end
+  end
+
+  def track_verified_at_only_change
+    # Track if only verified_at is changing (for touch_sources optimization)
+    @only_verified_at_changed = (changed == ['verified_at'])
+    true
   end
 
   def add_translation(label, rules = nil, lang = Tr8n::Config.current_language, translator = Tr8n::Config.current_translator)
