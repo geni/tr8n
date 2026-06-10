@@ -369,6 +369,5 @@ Tr8n.Translator.prototype = {
     new_script.src = source;
     document.getElementsByTagName('head')[0].appendChild(new_script);
   }
-
 }
 
