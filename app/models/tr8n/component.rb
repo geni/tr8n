@@ -41,7 +41,7 @@
 #
 class Tr8n::Component < ApplicationRecord
 
-  belongs_to :application
+  belongs_to :application, optional: true
 
   has_many :component_sources,       :dependent => :destroy
   has_many :translation_sources,     :through => :component_sources
@@ -65,11 +65,11 @@ class Tr8n::Component < ApplicationRecord
   end
 
   def self.find_or_create(key)
-    return component if key.is_a?(Tr8n::Component)
+    return key if key.is_a?(Tr8n::Component)
     key = key.to_s
 
     Tr8n::Cache.fetch(cache_key(key)) do
-      find(:first, :conditions => ["key = ?", key.to_s]) || create(:key => key.to_s, :state => "restricted")
+      where(key: key.to_s).first || create(key: key.to_s, state: 'restricted')
     end
   end
 
