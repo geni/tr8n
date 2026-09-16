@@ -111,6 +111,37 @@ class LanguageCaseRuleTest < Tr8n::TestCase
     assert_equal 'pervii', lcrule2.apply('1')
   end
 
+  # Issue 2581 - non word characters surrounding the value are ignored
+  test 'evaluate and apply ignore non word characters around the value' do
+    lcrule = Tr8n::LanguageCaseRule.create(
+        :language => english,
+        :language_case => lcase_en,
+        :definition => {
+          part1: 'does_not_end_in',
+          value1: 's',
+          operation: 'append',
+          operation_value: "'s"
+    })
+
+    assert lcrule.evaluate(nil, '(foo)')
+    assert_equal "(foo's)", lcrule.apply('(foo)')
+
+    refute lcrule.evaluate(nil, '(foos)')
+
+    lcrule = Tr8n::LanguageCaseRule.create(
+        :language => english,
+        :language_case => lcase_en,
+        :definition => {
+          part1: 'ends_in',
+          value1: 's',
+          operation: 'append',
+          operation_value: "'"
+    })
+
+    assert lcrule.evaluate(nil, '(foos)')
+    assert_equal "(foos')", lcrule.apply('(foos)')
+  end
+
   test 'apply should replace values' do
     lcrule = Tr8n::LanguageCaseRule.create(
         :language => english,
@@ -124,6 +155,22 @@ class LanguageCaseRuleTest < Tr8n::TestCase
 
     assert lcrule.evaluate(nil, '1')
     assert_equal '1st', lcrule.apply('1')
+  end
+
+  # Issue 2587 - the ending of a non ascii value is replaced
+  test 'apply should replace the ending of a value' do
+    lcrule = Tr8n::LanguageCaseRule.create(
+        :language => russian,
+        :language_case => lcase_ru,
+        :definition => {
+          part1: 'ends_in',
+          value1: 'ой',
+          operation: 'replace',
+          operation_value: 'ому',
+    })
+
+    assert lcrule.evaluate(nil, 'дорогой')
+    assert_equal 'дорогому', lcrule.apply('дорогой')
   end
 
   test 'apply should append values' do
