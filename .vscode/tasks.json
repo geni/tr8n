@@ -10,12 +10,9 @@
       }
     },{
       "label": "run all tests in file",
-      "group": {
-        "kind": "test",
-        "isDefault": true
-      },
+      "group": "test",
       "type": "shell",
-      "command": "bundle exec ${workspaceFolder}/bin/test ${file}",
+      "command": "bundle exec ${workspaceFolder}/bin/test ${file} 2>&1 | tee ${fileBasenameNoExtension}.out",
       "problemMatcher": [],
       "presentation": {
         "clear": true
@@ -29,5 +26,6 @@
       "presentation": {
         "clear": true
       }
+    },
   ]
 }
