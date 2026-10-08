@@ -39,24 +39,25 @@
 #
 # Indexes
 #
-#  index_tr8n_translator_metrics_on_created_at                     (created_at)
-#  index_tr8n_translator_metrics_on_translator_id                  (translator_id)
-#  index_tr8n_translator_metrics_on_translator_id_and_language_id  (translator_id,language_id)
+#  index_tr8n_translator_metrics_on_created_at                  (created_at)
+#  index_tr8n_translator_metrics_on_translator_id               (translator_id)
+#  tr8n_translator_metrics_translator_id_and_language_id_uniq   (translator_id,COALESCE(language_id,-1)) UNIQUE
 #
 class Tr8n::TranslatorMetric < ApplicationRecord
 
   belongs_to :translator
   belongs_to :language, optional: true
 
+  # create_or_find_by leans on the unique index to settle the race between two
+  # concurrent callers, so neither can end up inserting a duplicate row -- most
+  # visibly the language_id IS NULL "totals" row, which a plain unique index
+  # wouldn't protect, since it treats NULL as distinct from NULL. The find_by
+  # keeps the common case (the metric already exists) from burning an id on an
+  # INSERT that is only going to be rejected.
   def self.find_or_create(translator, language)
-    if language
-      tm = where(:translator_id => translator.id, :language_id => language.id).first
-    else
-      tm = where(:translator_id => translator.id, :language_id => nil).first
-    end
+    attributes = {:translator_id => translator.id, :language_id => language&.id}
 
-    return tm if tm
-    create(:translator => translator, :language => language, :total_translations => 0, :total_votes => 0, :positive_votes => 0, :negative_votes => 0)
+    find_by(attributes) || create_or_find_by(attributes)
   end
 
   # updated when an action is done by the translator
