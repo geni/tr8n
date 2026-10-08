@@ -19,7 +19,7 @@
 #
 #  index_tr8n_translator_metrics_on_created_at                     (created_at)
 #  index_tr8n_translator_metrics_on_translator_id                  (translator_id)
-#  index_tr8n_translator_metrics_on_translator_id_and_language_id  (translator_id,language_id)
+#  tr8n_translator_metrics_translator_id_and_language_id_uniq      (translator_id,COALESCE(language_id,-1)) UNIQUE
 #
 class Tr8n::TranslatorMetric < ApplicationRecord
 
@@ -27,14 +27,33 @@ class Tr8n::TranslatorMetric < ApplicationRecord
   belongs_to :language
 
   def self.find_or_create(translator, language)
-    if language
-      tm = where(:translator_id => translator.id, :language_id => language.id).first
-    else
-      tm = where(:translator_id => translator.id, :language_id => nil).first
-    end
+    metric_for(translator, language) || create_metric(translator, language)
+  end
 
-    return tm if tm
-    create(:translator => translator, :language => language, :total_translations => 0, :total_votes => 0, :positive_votes => 0, :negative_votes => 0)
+  def self.create_metric(translator, language)
+    # The NOT EXISTS guard below must match on translator_id, not id (this table's own
+    # primary key), or it fails to prevent concurrent callers from both inserting a
+    # duplicate row for the same translator (most visibly the language_id IS NULL
+    # "totals" row, since unique indexes treat NULL as distinct from NULL and so don't
+    # block it at the DB level either).
+    language_match = language ? "language_id = #{language.id}" : 'language_id IS NULL'
+
+    connection.update %{
+      INSERT INTO #{quoted_table_name}
+      (translator_id, language_id, total_translations, total_votes, positive_votes, negative_votes, created_at, updated_at)
+      SELECT #{translator.id}, #{language ? language.id : 'NULL'}, 0, 0, 0, 0,
+             #{connection.quote(Time.now.utc)}, #{connection.quote(Time.now.utc)}
+      WHERE NOT EXISTS (
+        SELECT id FROM #{quoted_table_name}
+        WHERE translator_id = #{translator.id} and #{language_match}
+      )
+    }
+
+    metric_for(translator, language)
+  end
+
+  def self.metric_for(translator, language)
+    where(:translator_id => translator.id, :language_id => language && language.id).first
   end
 
   # updated when an action is done by the translator
