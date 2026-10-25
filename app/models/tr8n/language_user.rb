@@ -45,7 +45,10 @@ class Tr8n::LanguageUser < ApplicationRecord
 
   belongs_to :user, :class_name => Tr8n::Config.user_class_name
   belongs_to :language
-  belongs_to :translator
+  # optional because of the comment below -- translator_id is nullable, and a user who has only
+  # chosen a language has no translator.  belongs_to is required by default on Rails 8, so without
+  # this every create failed validation and silently wrote nothing.
+  belongs_to :translator, optional: true
 
   # this object can belong to both the user and the translator
   # users may choose to switch to a language without becoming translators
