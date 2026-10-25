@@ -56,6 +56,11 @@ class Tr8n::Language < ApplicationRecord
   has_many :translation_key_locks,  :dependent => :destroy
   has_many :language_metrics,       :dependent => :destroy
 
+  # Rails 2.3 ran an instance method named after a callback *as* that callback; Rails 8 only runs
+  # callbacks that were declared, so these have to be named for what they do and declared.
+  after_save    :clear_language_caches
+  after_destroy :clear_language_caches
+
   def self.find_or_create(lcl, english_name)
     find_by_locale(lcl) || create(:locale => lcl, :english_name => english_name)
   end
@@ -318,13 +323,7 @@ class Tr8n::Language < ApplicationRecord
     # TODO: handle change event
   end
 
-  def after_save
-    Tr8n::Cache.delete("language_#{locale}")
-    Tr8n::Cache.delete("featured_languages")
-    Tr8n::Cache.delete("enabled_languages")
-  end
-
-  def after_destroy
+  def clear_language_caches
     Tr8n::Cache.delete("language_#{locale}")
     Tr8n::Cache.delete("featured_languages")
     Tr8n::Cache.delete("enabled_languages")
