@@ -45,8 +45,9 @@ class Tr8n::ComponentSource < ApplicationRecord
   has_many :translation_keys,        :through => :translation_key_sources
 
   def self.find_or_create(component, source)
-    cs = find(:first, :conditions => ["component_id = ? and translation_source_id = ?", component.id, source.id])
-    cs || create(:component => component, :translation_source => source)
+    attributes = {:component_id => component.id, :translation_source_id => source.id}
+
+    find_by(attributes) || create(attributes)
   end
 
 end
